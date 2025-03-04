@@ -6,8 +6,8 @@ import {Product} from "./product/products.types";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error
 export default async function Page({ searchParams }) {
-    const SHEET_ID = process.env.NEXT_PUBLIC_SHEET_ID;
-    const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
+    const SHEET_ID = process.env.SHEET_ID;
+    const API_KEY = process.env.SHEET_API_KEY;
     const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Sheet1?key=${API_KEY}`;
 
     // Extract search parameters from the request
