@@ -1,0 +1,271 @@
+/* Quirky Footer Styles */
+.quirkyFooter {
+    position: relative;
+    padding: 3rem 2rem 2rem;
+    margin-top: 4rem;
+    background: linear-gradient(to bottom, transparent, rgba(255, 105, 180, 0.1));
+    overflow: hidden;
+}
+
+/* Wavy border top */
+.footerWave {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 20px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 30'%3E%3Cpath fill='%23ff69b4' d='M0,0 C50,30 150,30 200,0 C250,30 350,30 400,0 C450,30 550,30 600,0 C650,30 750,30 800,0 C850,30 950,30 1000,0 C1050,30 1150,30 1200,0 L1200,30 L0,30 Z'%3E%3C/path%3E%3C/svg%3E") repeat-x;
+}
+
+/* Footer content container */
+.footerContent {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    position: relative;
+    z-index: 1;
+}
+
+@media (min-width: 768px) {
+    .footerContent {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+}
+
+/* Footer sections */
+.footerSection {
+    position: relative;
+}
+
+.footerTitle {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: mediumpurple;
+    margin-bottom: 1rem;
+    transform: rotate(-2deg);
+}
+
+.footerLinks {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.footerLink {
+    color: #666;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    position: relative;
+    width: fit-content;
+}
+
+.footerLink:hover {
+    color: #ff69b4;
+    transform: translateX(5px) rotate(-1deg);
+}
+
+.footerLink:hover::before {
+    content: "→";
+    position: absolute;
+    left: -20px;
+    color: #ff69b4;
+    animation: bounce 0.5s infinite;
+}
+
+/* Newsletter sign up */
+.newsletterForm {
+    display: flex;
+    margin-top: 1rem;
+    position: relative;
+}
+
+.newsletterInput {
+    flex: 1;
+    padding: 0.8rem 1rem;
+    border: 2px dashed #ff69b4;
+    border-radius: 2rem 0 0 2rem;
+    font-size: 1rem;
+    background: rgba(255, 255, 255, 0.8);
+}
+
+.newsletterInput:focus {
+    outline: none;
+    border-style: solid;
+}
+
+.newsletterBtn {
+    padding: 0.8rem 1.2rem;
+    background: #ff69b4;
+    color: white;
+    border: none;
+    border-radius: 0 2rem 2rem 0;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.newsletterBtn:hover {
+    background: #ff1493;
+    transform: scale(1.05);
+}
+
+/* Social media icons */
+.socialIcons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.socialIcon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ff69b4;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+
+.socialIcon:hover {
+    transform: translateY(-5px) rotate(10deg);
+    background: #ff69b4;
+    color: white;
+}
+
+/* Funny disclaimer and copyright */
+.footerBottom {
+    text-align: center;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 2px dotted rgba(255, 105, 180, 0.3);
+    font-size: 0.9rem;
+    color: #888;
+    position: relative;
+}
+
+.footerDisclaimer {
+    font-style: italic;
+    max-width: 600px;
+    margin: 0 auto 1rem;
+}
+
+.footerMadeWith {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.heartIcon {
+    color: #ff69b4;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+.coffeeIcon {
+    color: #8B4513;
+}
+
+/* Random doodle for footer */
+.footerDoodle {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.footerDoodle1 {
+    bottom: 60px;
+    right: 10%;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23ff69b4' d='M8,5.14V19.14L19,12.14L8,5.14Z'/%3E%3C/svg%3E");
+    animation: float 3s ease-in-out infinite;
+}
+
+.footerDoodle2 {
+    bottom: 30px;
+    left: 5%;
+    width: 60px;
+    height: 60px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23ff69b4' d='M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M12,6A6,6 0 0,0 6,12A6,6 0 0,0 12,18A6,6 0 0,0 18,12A6,6 0 0,0 12,6M12,8A4,4 0 0,1 16,12A4,4 0 0,1 12,16A4,4 0 0,1 8,12A4,4 0 0,1 12,8Z'/%3E%3C/svg%3E");
+    animation: float 4s ease-in-out infinite 1s;
+}
+
+/* Easter egg hover effect */
+.secretMessage {
+    cursor: help;
+    position: relative;
+}
+
+.secretMessage:hover::after {
+    content: "You found a secret! 🎉";
+    position: absolute;
+    top: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #ff69b4;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 1rem;
+    white-space: nowrap;
+    z-index: 10;
+    font-weight: bold;
+}
+
+/* Back to top button */
+.backToTop {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: #ff69b4;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+    z-index: 3;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.backToTop.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.backToTop:hover {
+    transform: translateY(-5px) rotate(10deg);
+    background: #ff1493;
+}
+
+/* Animations */
+@keyframes bounce {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(3px); }
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-20px);
+    }
+}

@@ -1,0 +1,6 @@
+.navigation-holder {
+    justify-content: center;
+    display: flex;
+    position: fixed;
+    width: 100%;
+}

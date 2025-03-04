@@ -1,0 +1,161 @@
+/* Quirky Pagination Styles */
+.quirky-pagination {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    margin: 40px 0;
+    padding: 15px;
+    position: relative;
+    background: #fffdfa;
+    border-radius: 20px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.pagination-btn {
+    background: linear-gradient(145deg, #ff79a7, #ff9eaf);
+    border: none;
+    color: white;
+    font-weight: bold;
+    padding: 10px 15px;
+    border-radius: 25px;
+    margin: 0 10px;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(255, 122, 167, 0.3);
+}
+
+.pagination-btn:hover:not(:disabled) {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 6px 15px rgba(255, 122, 167, 0.4);
+}
+
+.pagination-btn:active:not(:disabled) {
+    transform: translateY(1px);
+}
+
+.pagination-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: #e0e0e0;
+}
+
+.btn-icon {
+    font-size: 20px;
+    margin: 0 5px;
+}
+
+.prev-btn .btn-icon {
+    margin-right: 8px;
+}
+
+.next-btn .btn-icon {
+    margin-left: 8px;
+}
+
+.page-numbers {
+    display: flex;
+    align-items: center;
+    margin: 0 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+    min-width: 385px;
+}
+
+.page-number {
+    width: 45px;
+    height: 45px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0 5px;
+    border-radius: 50%;
+    background: #f3f4f6;
+    border: 2px solid #d1d5db;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.page-number:hover:not(.active) {
+    background: #e5e7eb;
+    transform: scale(1.1);
+}
+
+.page-number.active {
+    background: #ff9eaf;
+    border: 2px solid #ff79a7;
+    color: #333;
+    transform: scale(1.15);
+    box-shadow: 0 5px 15px rgba(45, 218, 235, 0.3);
+}
+
+.page-emoji {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    font-size: 24px;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    opacity: 0;
+}
+
+.page-number:hover .page-emoji,
+.page-number.active .page-emoji {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+}
+
+.page-number:hover .page-num,
+.page-number.active .page-num {
+    opacity: 0;
+}
+
+.page-num {
+    color: #666;
+    transition: opacity 0.3s ease;
+}
+
+.ellipsis {
+    margin: 0 17.5px;
+    font-weight: bold;
+    font-size: 18px;
+    color: #666;
+}
+
+.quirky-message {
+    width: 100%;
+    text-align: center;
+    margin-top: 15px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #666;
+    font-style: italic;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .quirky-pagination {
+        display: none; /* Hide on mobile for infinite scroll */
+    }
+}
+
+/* Animation for page change */
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+    40% {transform: translateY(-20px);}
+    60% {transform: translateY(-10px);}
+}
+
+.page-number.active {
+    animation: bounce 1s ease;
+}
