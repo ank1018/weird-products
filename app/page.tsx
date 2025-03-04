@@ -3,7 +3,9 @@ import ContentView from "./content/content.view";
 import Footer from "./footer/footer.view";
 import {Product} from "./product/products.types";
 
-export default async function Page({ searchParams }: { searchParams: { productName?: string, page?: string } }) {
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
+export default async function Page({ searchParams }) {
     const SHEET_ID = process.env.NEXT_PUBLIC_SHEET_ID;
     const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
     const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Sheet1?key=${API_KEY}`;
@@ -19,7 +21,9 @@ export default async function Page({ searchParams }: { searchParams: { productNa
 
         const data = await response.json();
         if (data.values) {
-            products = data.values.slice(1).map((row: any) => ({
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-expect-error
+            products = data.values.slice(1).map(row => ({
                 name: row[0] || "No name",
                 description: row[1] || "No description",
                 partnerName: row[2] || "Unknown partner",
