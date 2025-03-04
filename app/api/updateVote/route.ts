@@ -1,7 +1,7 @@
 import { google } from "googleapis";
 import { NextRequest, NextResponse } from "next/server";
-import { promises as fs } from "fs";
-import path from "path";
+// import { promises as fs } from "fs";
+// import path from "path";
 
 export async function POST(req: NextRequest) {
     try {
@@ -16,10 +16,12 @@ export async function POST(req: NextRequest) {
         }
 
         // Google Sheets Authentication (Ensure valid JSON key file exists)
-        const credentialsPath = path.join(process.cwd(), "google-service-account.json");
+        // const credentialsPath = path.join(process.cwd(), "google-service-account.json");
         let credentials;
         try {
-            credentials = JSON.parse(await fs.readFile(credentialsPath, "utf-8"));
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-expect-error
+            credentials = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT);
         } catch (err) {
             console.error("Error reading credentials:", err);
             return NextResponse.json({ error: "Invalid Google API credentials" }, { status: 500 });
