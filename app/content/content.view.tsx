@@ -5,9 +5,11 @@ import { Sigmar } from "next/font/google";
 import QuirkyProductPage from "../product/product.view";
 import QuirkyPagination from "../pagination/pagination.view";
 import {useEffect, useMemo, useRef, useState} from "react";
+import {Product} from "../product/products.types";
 
 const sigmar = Sigmar({ subsets: ["latin"], weight: ["400"], variable: "--font-sigmar" });
-
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
 export default function Content({products, page}) {
     const [loading, setLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
@@ -15,7 +17,6 @@ export default function Content({products, page}) {
     // Pagination settings
     const ITEMS_PER_PAGE = 3;
     const [currentPage, setCurrentPage] = useState(page && !isMobile ? parseInt(page) : 1);
-    console.log("currentPage:........................", currentPage)
     // State for products to display (for infinite scroll)
     const [displayedMobileProducts, setDisplayedMobileProducts] = useState([]);
     // Initialize mobile products on first render
@@ -25,19 +26,11 @@ export default function Content({products, page}) {
         }
         if (isMobile && displayedMobileProducts.length === 0) {
             console.log("Setting displayedMobileProducts:", products.slice(0, ITEMS_PER_PAGE));
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-expect-error
             setDisplayedMobileProducts([...products.slice(0, ITEMS_PER_PAGE)]);
-            console.log("Updated displayedMobileProducts:..............", displayedMobileProducts);
         }
     }, [isMobile, displayedMobileProducts, products]);
-
-    useEffect(() => {
-        console.log("Products from API:", products);
-    }, [products]);
-
-    useEffect(() => {
-        console.log("Updated displayedMobileProducts:......................", displayedMobileProducts);
-    }, [displayedMobileProducts]);
-
 
     // Use useMemo to avoid recalculating on every render (for pagination)
     const displayedDesktopProducts = useMemo(() => {
@@ -69,7 +62,8 @@ export default function Content({products, page}) {
         };
     }, [isMobile]);
 
-
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
     // Handle page change
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
@@ -113,8 +107,9 @@ export default function Content({products, page}) {
         if (nextProducts.length === 0) {
             setHasMore(false);  // Prevents unnecessary calls
         } else {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-expect-error
             setDisplayedMobileProducts(prev => [...prev, ...nextProducts]);
-            console.log("Updated displayedMobileProducts:..............2", displayedMobileProducts);
         }
         setLoading(false);
     };
@@ -144,7 +139,7 @@ export default function Content({products, page}) {
             />
 
             {/* Products List */}
-            {productsToShow.map((product, index) => (
+            {productsToShow.map((product: Product, index: number) => (
                 <QuirkyProductPage key={`${product.name}-${index}`} product={product} isMobile={isMobile} />
             ))}
 

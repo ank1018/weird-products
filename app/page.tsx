@@ -1,6 +1,7 @@
 import HeaderView from "./header/header.view";
 import ContentView from "./content/content.view";
 import Footer from "./footer/footer.view";
+import {Product} from "./product/products.types";
 
 export default async function Page({ searchParams }: { searchParams: { productName?: string, page?: string } }) {
     const SHEET_ID = process.env.NEXT_PUBLIC_SHEET_ID;
@@ -10,8 +11,7 @@ export default async function Page({ searchParams }: { searchParams: { productNa
     // Extract search parameters from the request
     const productName = searchParams?.productName;
     const currentPage = searchParams?.page;
-    console.log("currentPage:........................", currentPage)
-    let products = [];
+    let products: Product[] = [];
     try {
         const response = await fetch(url, { cache: "no-store" });
         // const response = await fetch(url, { next: { revalidate: 360000 } });
@@ -19,7 +19,7 @@ export default async function Page({ searchParams }: { searchParams: { productNa
 
         const data = await response.json();
         if (data.values) {
-            products = data.values.slice(1).map(row => ({
+            products = data.values.slice(1).map((row: any) => ({
                 name: row[0] || "No name",
                 description: row[1] || "No description",
                 partnerName: row[2] || "Unknown partner",
@@ -36,7 +36,6 @@ export default async function Page({ searchParams }: { searchParams: { productNa
     // Filter products based on productName (case-insensitive)
     const filteredProducts = productName
         ? products.filter(product => {
-            console.log("product.name.toLowerCase():........................", product.name.toLowerCase(), productName.toLowerCase())
             return product.name.toLowerCase().includes(productName.toLowerCase())
         })
         : products

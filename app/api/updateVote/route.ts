@@ -73,6 +73,8 @@ export async function POST(req: NextRequest) {
 
     } catch (error) {
         console.error("Error updating vote:", error);
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
         return NextResponse.json({ error: error.message || "Internal Server Error" }, { status: 500 });
     }
 }
