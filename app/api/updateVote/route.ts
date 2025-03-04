@@ -19,6 +19,7 @@ export async function POST(req: NextRequest) {
         // const credentialsPath = path.join(process.cwd(), "google-service-account.json");
         let credentials;
         try {
+            console.log("GOOGLE_SERVICE_ACCOUNT:................", process.env.GOOGLE_SERVICE_ACCOUNT?.slice(0, 50)); // Print first 50 chars to check
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-expect-error
             credentials = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT);
