@@ -22,6 +22,7 @@ export async function POST(req: NextRequest) {
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-expect-error
             credentials = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT);
+            // credentials = JSON.parse(await fs.readFile(credentialsPath, "utf-8"));
         } catch (err) {
             console.error("Error reading credentials:", err);
             return NextResponse.json({ error: "Invalid Google API credentials" }, { status: 500 });
