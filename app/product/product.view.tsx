@@ -64,7 +64,7 @@ const QuirkyProductPage: React.FC<ProductsPageProps> = ({ product, isMobile }) =
                 toast.error(`Vote failed: ${result.error}`);
             }
         } catch (error) {
-            toast.error("An error occurred. Please try again.");
+            toast.error(`An error occurred. Please try again. ${error}`);
         } finally {
             setIsVoting(false);
         }

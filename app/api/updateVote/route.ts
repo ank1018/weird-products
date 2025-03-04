@@ -58,7 +58,7 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: "Invalid sheet structure" }, { status: 500 });
         }
 
-        let currentValue = parseInt(data.values[productIndex][voteType === "weird" ? weirdIndex : usefulIndex] || "0", 10);
+        const currentValue = parseInt(data.values[productIndex][voteType === "weird" ? weirdIndex : usefulIndex] || "0", 10);
         const newValue = currentValue + 1;
 
         // Update Google Sheets

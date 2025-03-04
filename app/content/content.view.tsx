@@ -28,7 +28,7 @@ export default function Content({products, page}) {
             setDisplayedMobileProducts([...products.slice(0, ITEMS_PER_PAGE)]);
             console.log("Updated displayedMobileProducts:..............", displayedMobileProducts);
         }
-    }, [isMobile, displayedMobileProducts]);
+    }, [isMobile, displayedMobileProducts, products]);
 
     useEffect(() => {
         console.log("Products from API:", products);
