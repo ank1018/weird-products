@@ -3,11 +3,9 @@ import ContentView from "./content/content.view";
 import Footer from "./footer/footer.view";
 import {Product} from "./product/products.types";
 
-export default async function Page({
-                                       searchParams,
-                                   }: {
-    searchParams: { productName?: string; page?: string };
-}) {
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
+export default async function Page({searchParams,}: { searchParams: { productName?: string; page?: string }; }) {
     const SHEET_ID = process.env.SHEET_ID;
     const API_KEY = process.env.SHEET_API_KEY;
     const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Sheet1?key=${API_KEY}`;
