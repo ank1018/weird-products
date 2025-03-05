@@ -1,6 +1,6 @@
 {
   "functions": {
-    "api/updateVote.js": {
+    "app/api/updateVote/route.ts": {
       "includeFiles": "google-service-account.json"
     }
   }
