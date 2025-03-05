@@ -1,7 +1,7 @@
 {
   "functions": {
     "api/updateVote.js": {
-      "includeFiles": ["google-service-account.json"]
+      "includeFiles": "google-service-account.json"
     }
   }
 }
