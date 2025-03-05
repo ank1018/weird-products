@@ -3,20 +3,20 @@ import ContentView from "./content/content.view";
 import Footer from "./footer/footer.view";
 import {Product} from "./product/products.types";
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-expect-error
-export default async function Page({ searchParams }) {
+export default async function Page({
+                                       searchParams,
+                                   }: {
+    searchParams: { productName?: string; page?: string };
+}) {
     const SHEET_ID = process.env.SHEET_ID;
     const API_KEY = process.env.SHEET_API_KEY;
     const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Sheet1?key=${API_KEY}`;
 
-    // Extract search parameters from the request
-    const productName = searchParams?.productName;
-    const currentPage = searchParams?.page;
+    const { productName, page: currentPage } = await searchParams
+
     let products: Product[] = [];
     try {
         const response = await fetch(url, { cache: "no-store" });
-        // const response = await fetch(url, { next: { revalidate: 360000 } });
         if (!response.ok) throw new Error(`Error: ${response.statusText}`);
 
         const data = await response.json();
@@ -39,10 +39,11 @@ export default async function Page({ searchParams }) {
     }
     // Filter products based on productName (case-insensitive)
     const filteredProducts = productName
-        ? products.filter(product => {
-            return product.name.toLowerCase().includes(productName.toLowerCase())
-        })
-        : products
+        ? products.filter(product =>
+            product.name.toLowerCase().includes(productName.toLowerCase())
+        )
+        : products;
+
     return (
         <div className="background">
             <HeaderView />
