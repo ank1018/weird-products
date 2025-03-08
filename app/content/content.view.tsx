@@ -35,7 +35,6 @@ export default function Content({products, page}) {
             setHasMore(false);
         }
     }, [page, products.length]);
-    console.log('displayedMobileProducts......................', products, displayedMobileProducts)
 
     // Initialize mobile products after isMobile is properly set
     useEffect(() => {
@@ -97,7 +96,6 @@ export default function Content({products, page}) {
         if (nextProducts.length === 0) {
             setHasMore(false);  // Prevents unnecessary calls
         } else {
-            console.log('loading more products.......................', [...nextProducts])
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-expect-error
             setDisplayedMobileProducts(prev => [...prev, ...nextProducts]);
