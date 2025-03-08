@@ -2,6 +2,7 @@ import HeaderView from "./header/header.view";
 import ContentView from "./content/content.view";
 import Footer from "./footer/footer.view";
 import {Product} from "./product/products.types";
+import SeeAllProductsCtaView from "./see-all-products-cta/see-all-products-cta.view";
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error
@@ -41,12 +42,12 @@ export default async function Page({searchParams}) {
             product.name.toLowerCase().includes(productName.toLowerCase())
         )
         : products;
-
     return (
         <div className="background">
-            <HeaderView />
-            <ContentView products={filteredProducts} page={currentPage} />
-            <Footer />
+            <HeaderView/>
+            <ContentView products={filteredProducts} page={currentPage}/>
+            {productName ? <SeeAllProductsCtaView/> : null}
+            <Footer/>
         </div>
     );
 }

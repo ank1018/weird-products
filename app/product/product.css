@@ -164,13 +164,15 @@
     white-space: pre-line;
     @media (max-width: 768px) {
         font-size: 1rem;
+        margin-bottom: 1.2rem;
     }
 }
 
 .vote-buttons {
     display: flex;
-    gap: 1rem;
-    margin-bottom: 2rem;
+    gap: 12px;
+    margin-bottom: 0;
+    width: 100%;
 }
 
 .vote-button-svg {
@@ -267,10 +269,6 @@
         font-size: 1.5rem;
     }
 
-    .vote-buttons {
-        flex-direction: column;
-    }
-
     .images-section {
         gap: 0.5rem;
         position: relative;
@@ -299,17 +297,9 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 12px;
+    /*gap: 12px;*/
     width: 100%;
     margin-bottom: 20px;
-}
-
-/* Keep existing vote buttons styling, just move it here */
-.vote-buttons {
-    display: flex;
-    gap: 12px;
-    margin-bottom: 0;
-    width: 100%;
 }
 
 /* Doodly Share button styles */

@@ -13,24 +13,38 @@ const sigmar = Sigmar({ subsets: ["latin"], weight: ["400"], variable: "--font-s
 export default function Content({products, page}) {
     const [loading, setLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
-    const [isMobile, setIsMobile] = useState(typeof window !== "undefined" ? window.innerWidth <= 768 : false);
+    const [isMobile, setIsMobile] = useState(false); // Initialize without window check
     // Pagination settings
-    const ITEMS_PER_PAGE = 3;
-    const [currentPage, setCurrentPage] = useState(page && !isMobile ? parseInt(page) : 1);
+    const ITEMS_PER_PAGE = 6;
+    const [currentPage, setCurrentPage] = useState(1); // Initialize with default value
     // State for products to display (for infinite scroll)
     const [displayedMobileProducts, setDisplayedMobileProducts] = useState([]);
-    // Initialize mobile products on first render
+
+    // Handle client-side initialization
     useEffect(() => {
+        // Set isMobile based on window width
+        setIsMobile(window.innerWidth <= 768);
+
+        // Set page number if provided and not mobile
+        if (page && window.innerWidth > 768) {
+            setCurrentPage(parseInt(page));
+        }
+
+        // Initialize displayed products
         if (products.length < ITEMS_PER_PAGE) {
             setHasMore(false);
         }
-        if (isMobile && displayedMobileProducts.length === 0) {
-            console.log("Setting displayedMobileProducts:", products.slice(0, ITEMS_PER_PAGE));
+    }, [page, products.length]);
+    console.log('displayedMobileProducts......................', products, displayedMobileProducts)
+
+    // Initialize mobile products after isMobile is properly set
+    useEffect(() => {
+        if (isMobile && displayedMobileProducts.length < ITEMS_PER_PAGE  && products.length > 0) {
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-expect-error
             setDisplayedMobileProducts([...products.slice(0, ITEMS_PER_PAGE)]);
         }
-    }, [isMobile, displayedMobileProducts, products]);
+    }, [isMobile, displayedMobileProducts.length, products]);
 
     // Use useMemo to avoid recalculating on every render (for pagination)
     const displayedDesktopProducts = useMemo(() => {
@@ -39,20 +53,21 @@ export default function Content({products, page}) {
         return products.slice(startIndex, endIndex);
     }, [currentPage, products, ITEMS_PER_PAGE]);
 
-    const resizeTimeoutRef = useRef<number | null>(null); // Use a ref instead of window
+    const resizeTimeoutRef = useRef(null); // Use a ref instead of window
 
     useEffect(() => {
         const handleResize = () => {
             const mobileStatus = window.innerWidth <= 768;
             if (mobileStatus !== isMobile) {
-                console.log("isMobile status changed:", mobileStatus);
                 setIsMobile(mobileStatus);
             }
         };
 
         const debounceResize = () => {
             if (resizeTimeoutRef.current) clearTimeout(resizeTimeoutRef.current);
-            resizeTimeoutRef.current = setTimeout(handleResize, 200) as unknown as number;
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
+            resizeTimeoutRef.current = setTimeout(handleResize, 200);
         };
 
         window.addEventListener("resize", debounceResize);
@@ -71,13 +86,30 @@ export default function Content({products, page}) {
 
     // Create a reference for infinite scroll detection
     const observerRef = useRef(null);
+    // Function to load more products (for infinite scroll)
+    const loadMoreProducts = () => {
+        if (loading || !hasMore || products.length < ITEMS_PER_PAGE) return;
 
+        setLoading(true);
+        const currentLength = displayedMobileProducts.length;
+        const nextProducts = products.slice(currentLength, currentLength + ITEMS_PER_PAGE);
+
+        if (nextProducts.length === 0) {
+            setHasMore(false);  // Prevents unnecessary calls
+        } else {
+            console.log('loading more products.......................', [...nextProducts])
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-expect-error
+            setDisplayedMobileProducts(prev => [...prev, ...nextProducts]);
+        }
+        setLoading(false);
+    };
     // Intersection Observer for infinite scroll on mobile
     useEffect(() => {
         if (!isMobile || !hasMore) return;
 
         const observer = new IntersectionObserver(entries => {
-            if (entries[0].isIntersecting && !loading && hasMore) {
+            if (entries[0].isIntersecting && !loading && hasMore && displayedMobileProducts.length > 0) {
                 loadMoreProducts();
             }
         }, { threshold: 0.1 }); // Lower threshold for earlier detection
@@ -93,26 +125,7 @@ export default function Content({products, page}) {
                 currentObserver.unobserve(observerRef.current);
             }
         };
-    }, [isMobile, loading, hasMore, displayedMobileProducts]);
-
-    // Function to load more products (for infinite scroll)
-    const loadMoreProducts = () => {
-        if (loading || !hasMore || products.length < ITEMS_PER_PAGE) return;
-        console.log("loadMoreProducts triggered");
-
-        setLoading(true);
-        const currentLength = displayedMobileProducts.length;
-        const nextProducts = products.slice(currentLength, currentLength + ITEMS_PER_PAGE);
-
-        if (nextProducts.length === 0) {
-            setHasMore(false);  // Prevents unnecessary calls
-        } else {
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-expect-error
-            setDisplayedMobileProducts(prev => [...prev, ...nextProducts]);
-        }
-        setLoading(false);
-    };
+    }, [isMobile, loading, hasMore, displayedMobileProducts, products, loadMoreProducts]);
 
     // Choose which products to display based on mobile or desktop
     const productsToShow = isMobile ? displayedMobileProducts : displayedDesktopProducts;
@@ -158,9 +171,13 @@ export default function Content({products, page}) {
                 <div className="loading">Loading more products...</div>
             )}
 
-            {/* Intersection observer target element */}
+            {/* Intersection observer target element - only rendered client-side */}
             {isMobile && hasMore && (
-                <div ref={observerRef} className="observer-element" style={{ height: '20px', margin: '20px 0' }}></div>
+                <div
+                    ref={observerRef}
+                    className="observer-element"
+                    style={{ height: '20px', margin: '20px 0' }}
+                ></div>
             )}
         </div>
     );

@@ -1,4 +1,4 @@
-'use client'
+// 'use client'
 import React, { useEffect, useState } from 'react';
 import { ShoppingCart } from 'lucide-react';
 import './product.css';
@@ -125,7 +125,6 @@ const QuirkyProductPage: React.FC<ProductsPageProps> = ({ product, isMobile }) =
             setIsSharing(false);
         }
     };
-
     return (
         <div className="quirky-page">
             <div className="doodle-container">
@@ -159,6 +158,7 @@ const QuirkyProductPage: React.FC<ProductsPageProps> = ({ product, isMobile }) =
                             </p>
 
                             {/* Action Buttons Row */}
+                            {/*<div className="vote-text">Vote here:</div>*/}
                             <div className="action-buttons">
                                 {/* Voting Buttons */}
                                 <div className="vote-buttons">
@@ -210,7 +210,7 @@ const QuirkyProductPage: React.FC<ProductsPageProps> = ({ product, isMobile }) =
                             {/* Buy Button */}
                             <a href={product.buyLink} target="_blank" className="buy-button">
                                 <ShoppingCart className="buy-icon"/>
-                                Grab It from {product.partnerName}! 🤯
+                                Buy now from {product.partnerName}! 🤯
                             </a>
                         </div>
                     </div>

@@ -90,7 +90,6 @@ const QuirkyPagination = ({ totalItems, itemsPerPage = 5, currentPage, onPageCha
             {/* Page numbers */}
             <div className="page-numbers">
                 {getPageNumbers().map((page, index) => {
-                    console.log("page:........................", currentPage === page, currentPage, page, getPageNumbers())
                         return typeof page === 'number' ? (
                             <button
                                 key={`page-${page}`}
