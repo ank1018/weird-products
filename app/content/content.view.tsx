@@ -139,7 +139,7 @@ export default function Content({products, page}) {
                 className="floating-images-1"
             />
             <div className={`${sigmar.className} website-description`}>
-                Discover the weirdest yet most surprisingly useful products! From the absurd to the genius, we help you decide: is it wacky or wise?
+                Browse and buy the weirdest, most surprisingly useful products on the internet! Whether it&#39;s absurd or genius, you decide—vote if it&#39;s Wacky or Wise!&#34;
             </div>
             <Image
                 className={'banner-image'}

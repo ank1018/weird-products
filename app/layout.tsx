@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     siteName: "WackyOrWise",
     images: [
       {
-        url: "https://www.wackyorwise.com/images/wow-banner.png",
+        url: "https://www.wackyorwise.com/images/wow-logo.png",
         width: 900,
         height: 450,
         alt: "Wacky or Wise - Bizarre & Useful Products",
