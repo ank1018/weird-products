@@ -42,7 +42,7 @@ const fetchProducts = cache(async () => {
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error
 export async function generateMetadata({searchParams}) {
-    const {productName} = searchParams || {};
+    const {productName} = await searchParams || {};
 
     // If no product name is specified, return default metadata
     if (!productName) {
