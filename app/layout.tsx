@@ -45,19 +45,22 @@ export default function RootLayout({
   return (
       <html lang="en">
       <head>
-        {/* Structured Data for SEO */}
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "WebSite",
-            "name": "Wacky or Wise",
-            "url": "https://www.wackyorwise.com",
-            "description": "Explore bizarre, viral, and surprisingly useful products. Vote on whether they are genius or just plain weird!",
-            "publisher": {
-              "@type": "Organization",
-              "name": "WackyOrWise",
-              "logo": "https://www.wackyorwise.com/images/logo.png"
-            }
-          }) }} />
+          {/* Structured Data for SEO */}
+          <script type="application/ld+json" dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                  "@context": "https://schema.org",
+                  "@type": "WebSite",
+                  "name": "Wacky or Wise",
+                  "url": "https://www.wackyorwise.com",
+                  "description": "Explore bizarre, viral, and surprisingly useful products. Vote on whether they are genius or just plain weird!",
+                  "publisher": {
+                      "@type": "Organization",
+                      "name": "WackyOrWise",
+                      "logo": "https://www.wackyorwise.com/images/logo.png"
+                  }
+              })
+          }}/>
+          <meta name="google-adsense-account" content="ca-pub-2405880474323539"/>
       </head>
       <body className={sigmar.variable}>
       <Toaster position="top-right" reverseOrder={false} />
