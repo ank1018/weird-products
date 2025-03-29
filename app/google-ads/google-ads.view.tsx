@@ -24,8 +24,7 @@ export default function GoogleAd({
   const [isLoaded, setIsLoaded] = useState(false);
   const [adError, setAdError] = useState<string | null>(null);
   const [isClient, setIsClient] = useState(false);
-  const NEXT_PUBLIC_GOOGLE_ADS_CLIENT_ID =
-    process.env.NEXT_PUBLIC_GOOGLE_ADS_CLIENT_ID;
+
   useEffect(() => {
     setIsClient(true);
     // Check if we're in a browser environment
@@ -50,7 +49,7 @@ export default function GoogleAd({
 
       // Push the ad configuration
       window.adsbygoogle.push({
-        google_ad_client: NEXT_PUBLIC_GOOGLE_ADS_CLIENT_ID,
+        google_ad_client: "ca-pub-2405880474323539",
         enable_page_level_ads: false,
         params: { google_ad_slot: slot },
         callback: () => {
@@ -67,7 +66,7 @@ export default function GoogleAd({
   }, [slot, testMode, isLoaded]);
 
   if (!isClient) {
-    return null;
+    return <div className={`ad-container ${className}`} style={style}></div>;
   }
 
   // Render a placeholder in test mode
@@ -115,7 +114,7 @@ export default function GoogleAd({
       <ins
         className="adsbygoogle"
         style={style || { display: "block" }}
-        data-ad-client={NEXT_PUBLIC_GOOGLE_ADS_CLIENT_ID}
+        data-ad-client={"ca-pub-2405880474323539"}
         data-ad-slot={slot}
         data-ad-format={format}
         data-ad-layout={layout}
