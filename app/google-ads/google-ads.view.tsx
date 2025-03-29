@@ -50,7 +50,6 @@ export default function GoogleAd({
       // Push the ad configuration
       window.adsbygoogle.push({
         google_ad_client: "ca-pub-2405880474323539",
-        enable_page_level_ads: false,
         params: { google_ad_slot: slot },
         callback: () => {
           clearTimeout(timeoutId);
