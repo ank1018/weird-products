@@ -1,5 +1,5 @@
 "use client";
-import { CSSProperties, useEffect, useState } from "react";
+import { CSSProperties, useEffect, useState, useRef } from "react";
 import "./google-ads.css";
 
 interface GoogleAdProps {
@@ -24,6 +24,8 @@ export default function GoogleAd({
   const [isLoaded, setIsLoaded] = useState(false);
   const [adError, setAdError] = useState<string | null>(null);
   const [isClient, setIsClient] = useState(false);
+  const adRef = useRef<HTMLDivElement>(null);
+  const attemptedRef = useRef(false);
 
   useEffect(() => {
     setIsClient(true);
@@ -36,33 +38,51 @@ export default function GoogleAd({
       return;
     }
 
+    // Prevent multiple attempts to load the same ad
+    if (attemptedRef.current) return;
+    attemptedRef.current = true;
+
     try {
       // Define adsbygoogle if it doesn't exist
-      window.adsbygoogle = window.adsbygoogle || [];
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
 
       // Create a timeout to detect if ads don't load
       const timeoutId = setTimeout(() => {
         if (!isLoaded) {
           setAdError("Ad failed to load within timeout period");
         }
-      }, 3000);
+      }, 5000);
 
-      // Push the ad configuration
-      window.adsbygoogle.push({
-        google_ad_client: "ca-pub-2405880474323539",
-        params: { google_ad_slot: slot },
-        callback: () => {
-          clearTimeout(timeoutId);
-          setIsLoaded(true);
-        },
-      });
+      // Set up event listener for ad load success/failure
+      const handleAdLoad = () => {
+        clearTimeout(timeoutId);
+        setIsLoaded(true);
+      };
 
-      return () => clearTimeout(timeoutId);
+      // Wait a bit to ensure the ins element is properly in the DOM
+      setTimeout(() => {
+        if (adRef.current) {
+          const adElement = adRef.current.querySelector('.adsbygoogle');
+          if (adElement) {
+            adElement.addEventListener('load', handleAdLoad);
+          }
+        }
+      }, 100);
+
+      return () => {
+        clearTimeout(timeoutId);
+        if (adRef.current) {
+          const adElement = adRef.current.querySelector('.adsbygoogle');
+          if (adElement) {
+            adElement.removeEventListener('load', handleAdLoad);
+          }
+        }
+      };
     } catch (err) {
       console.error("AdSense error:", err);
       setAdError(err instanceof Error ? err.message : "Unknown ad error");
     }
-  }, [slot, testMode, isLoaded]);
+  }, [slot, testMode]);
 
   if (!isClient) {
     return <div className={`ad-container ${className}`} style={style}></div>;
@@ -97,6 +117,7 @@ export default function GoogleAd({
 
   // Show error state
   if (adError) {
+    console.log(`Ad error for slot ${slot}: ${adError}`);
     return (
       <div
         className={`ad-container ad-error ${className}`}
@@ -109,11 +130,11 @@ export default function GoogleAd({
 
   // Actual ad component
   return (
-    <div className={`ad-container ${className}`}>
+    <div ref={adRef} className={`ad-container ${className}`}>
       <ins
         className="adsbygoogle"
         style={style || { display: "block" }}
-        data-ad-client={"ca-pub-2405880474323539"}
+        data-ad-client="ca-pub-2405880474323539"
         data-ad-slot={slot}
         data-ad-format={format}
         data-ad-layout={layout}

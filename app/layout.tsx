@@ -82,13 +82,13 @@ export default function RootLayout({
           name="google-adsense-account"
           content={"ca-pub-2405880474323539"}
         />
-      </head>
-      <body className={sigmar.variable}>
         <Script
           strategy="afterInteractive"
           src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2405880474323539`}
           crossOrigin="anonymous"
         />
+      </head>
+      <body className={sigmar.variable}>
         <Toaster position="top-right" reverseOrder={false} />
         {children}
       </body>

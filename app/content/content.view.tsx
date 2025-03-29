@@ -180,13 +180,13 @@ export default function Content({ products, page }) {
         alt="banner image"
       />
 
-      <GoogleAd slot={"4077644091"} className="ad-top" />
+      <GoogleAd slot={"4077644091"} className="ad-top" key="top-ad" />
 
       {/* Products List */}
       {productsToShow.map((product: Product, index: number) => (
         <div key={`${product.name}-${index}`}>
           <QuirkyProductPage product={product} isMobile={isMobile} />
-          <GoogleAd slot={"5420878871"} className="ad-top" />
+          <GoogleAd slot={"5420878871"} className="ad-top" key={`ad-${product.name}`} />
         </div>
       ))}
 
