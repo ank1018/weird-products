@@ -56,7 +56,8 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const GOOGLE_ADS_CLIENT_ID = process.env.GOOGLE_ADS_CLIENT_ID
+  const NEXT_PUBLIC_GOOGLE_ADS_CLIENT_ID =
+    process.env.NEXT_PUBLIC_GOOGLE_ADS_CLIENT_ID;
   return (
     <html lang="en">
       <head>
@@ -79,12 +80,15 @@ export default function RootLayout({
             }),
           }}
         />
-        <meta name="google-adsense-account" content={GOOGLE_ADS_CLIENT_ID} />
+        <meta
+          name="google-adsense-account"
+          content={NEXT_PUBLIC_GOOGLE_ADS_CLIENT_ID}
+        />
       </head>
       <body className={sigmar.variable}>
         <Script
           strategy="afterInteractive"
-          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${GOOGLE_ADS_CLIENT_ID}`}
+          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${NEXT_PUBLIC_GOOGLE_ADS_CLIENT_ID}`}
           crossOrigin="anonymous"
         />
         <Toaster position="top-right" reverseOrder={false} />

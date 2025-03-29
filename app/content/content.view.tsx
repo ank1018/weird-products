@@ -156,7 +156,8 @@ export default function Content({ products, page }) {
   const productsToShow = isMobile
     ? displayedMobileProducts
     : displayedDesktopProducts;
-  const GOOGLE_ADS_SLOT_ID_1 = process.env.GOOGLE_ADS_SLOT_ID_1;
+  const NEXT_PUBLIC_GOOGLE_ADS_SLOT_ID_1 =
+    process.env.NEXT_PUBLIC_GOOGLE_ADS_SLOT_ID_1;
 
   return (
     <div className="floating-icons">
@@ -181,13 +182,19 @@ export default function Content({ products, page }) {
         alt="banner image"
       />
 
-      <GoogleAd slot={GOOGLE_ADS_SLOT_ID_1 ?? ''} className="ad-top" />
+      <GoogleAd
+        slot={NEXT_PUBLIC_GOOGLE_ADS_SLOT_ID_1 ?? ""}
+        className="ad-top"
+      />
 
       {/* Products List */}
       {productsToShow.map((product: Product, index: number) => (
         <div key={`${product.name}-${index}`}>
           <QuirkyProductPage product={product} isMobile={isMobile} />
-          <GoogleAd slot={GOOGLE_ADS_SLOT_ID_1 ?? ''} className="ad-top" />
+          <GoogleAd
+            slot={NEXT_PUBLIC_GOOGLE_ADS_SLOT_ID_1 ?? ""}
+            className="ad-top"
+          />
         </div>
       ))}
 

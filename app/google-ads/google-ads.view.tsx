@@ -24,7 +24,8 @@ export default function GoogleAd({
   const [isLoaded, setIsLoaded] = useState(false);
   const [adError, setAdError] = useState<string | null>(null);
   const [isClient, setIsClient] = useState(false);
-  const GOOGLE_ADS_CLIENT_ID = process.env.GOOGLE_ADS_CLIENT_ID;
+  const NEXT_PUBLIC_GOOGLE_ADS_CLIENT_ID =
+    process.env.NEXT_PUBLIC_GOOGLE_ADS_CLIENT_ID;
   useEffect(() => {
     setIsClient(true);
     // Check if we're in a browser environment
@@ -49,7 +50,7 @@ export default function GoogleAd({
 
       // Push the ad configuration
       window.adsbygoogle.push({
-        google_ad_client: GOOGLE_ADS_CLIENT_ID,
+        google_ad_client: NEXT_PUBLIC_GOOGLE_ADS_CLIENT_ID,
         enable_page_level_ads: false,
         params: { google_ad_slot: slot },
         callback: () => {
@@ -114,7 +115,7 @@ export default function GoogleAd({
       <ins
         className="adsbygoogle"
         style={style || { display: "block" }}
-        data-ad-client={GOOGLE_ADS_CLIENT_ID}
+        data-ad-client={NEXT_PUBLIC_GOOGLE_ADS_CLIENT_ID}
         data-ad-slot={slot}
         data-ad-format={format}
         data-ad-layout={layout}
