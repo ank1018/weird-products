@@ -32,7 +32,7 @@ export default function NavBarView() {
             </li> */}
             <li className="nav-item">
               <Link href="/find-my-ip" className="nav-link">
-                What's My IP &amp; Network?
+                {"What's My IP & Network?"}
               </Link>
             </li>
           </ul>
@@ -72,7 +72,7 @@ export default function NavBarView() {
                 className="nav-link"
                 onClick={() => setMenuOpen(false)}
               >
-                What's My IP &amp; Network?
+                {"What's My IP & Network?"}
               </Link>
             </li>
           </ul>

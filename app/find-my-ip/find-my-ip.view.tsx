@@ -9,6 +9,7 @@ import GoogleAd from "../google-ads/google-ads.view";
 import "./find-my-ip.css";
 
 export default function FindMyIpPage() {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [ipInfo, setIpInfo] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -42,8 +43,11 @@ export default function FindMyIpPage() {
 
         // Get network info, if available.
         const connection =
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (navigator as any).connection ||
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (navigator as any).mozConnection ||
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (navigator as any).webkitConnection;
         const network = connection
           ? {
@@ -63,7 +67,9 @@ export default function FindMyIpPage() {
         });
         setLoading(false);
       } catch (err) {
-        setError("Unable to fetch IP information. Please try again later.");
+        setError(
+          `Unable to fetch IP information. Please try again later.${err}`
+        );
         setLoading(false);
       }
     };
