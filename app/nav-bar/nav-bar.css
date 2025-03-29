@@ -1,0 +1,145 @@
+/* Navigation Container */
+.navigation-container {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(8px);
+    border-bottom: 2px dashed mediumpurple;
+    z-index: 1000;
+  }
+  
+  /* Navbar */
+  .navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1rem;
+    height: 3.6rem;
+  }
+  
+  /* Brand Styling */
+  .nav-brand .brand-link {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: mediumpurple;
+    text-decoration: none;
+  }
+  
+  /* Desktop Navigation */
+  .nav-desktop {
+    display: none;
+  }
+  
+  .nav-links {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 1.5rem;
+  }
+  
+  .nav-item {
+    position: relative;
+  }
+  
+  .nav-link {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 1.2rem;
+    color: mediumpurple;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    position: relative;
+  }
+  
+  .nav-link:hover {
+    transform: rotate(-2deg) scale(1.05);
+    border: 2px dashed #ff69b4;
+    border-radius: 1rem;
+  }
+  
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background-color: #ff69b4;
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+  }
+  
+  .nav-link:hover::after {
+    width: 80%;
+  }
+  
+  /* Mobile Navigation Toggle */
+  .nav-mobile {
+    display: block;
+  }
+  
+  .menu-toggle {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: mediumpurple;
+  }
+  
+  /* Mobile Menu */
+  .mobile-menu {
+    background: rgba(255, 255, 255, 0.95);
+    position: fixed;
+    top: 3.7rem;
+    left: 0;
+    width: 100%;
+    padding: 1rem 0;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    z-index: 999;
+    text-align: center;
+  }
+  
+  .mobile-nav-links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .mobile-nav-links .nav-item {
+    margin: 0.5rem 0;
+  }
+  
+  .mobile-nav-links .nav-link {
+    display: block;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 1.2rem;
+    color: mediumpurple;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    transition: all 0.3s ease;
+  }
+  
+  /* Hover effect for mobile nav-links */
+  .mobile-nav-links .nav-link:hover {
+    transform: rotate(-2deg) scale(1.05);
+    border: 2px dashed #ff69b4;
+    border-radius: 1rem;
+  }
+  
+  /* Desktop Styles */
+  @media (min-width: 768px) {
+    .nav-desktop {
+      display: block;
+    }
+    .nav-mobile {
+      display: none;
+    }
+    /* Hide mobile menu if open */
+    .mobile-menu {
+      display: none;
+    }
+  }
+  

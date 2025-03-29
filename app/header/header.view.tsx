@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default function HeaderView() {
   return (
-    <div className="navigation-holder">
+    <div className="logo-container">
       <Link
         href="/"
         aria-current="page"

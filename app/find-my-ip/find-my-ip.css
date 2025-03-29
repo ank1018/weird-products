@@ -1,0 +1,256 @@
+/* Container & Card */
+.findmyip-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 4rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .findmyip-card {
+    background: white;
+    border-radius: 1.5rem;
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    position: relative;
+    padding-top: 50px;
+  }
+  
+  /* Title */
+  .findmyip-title {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 2rem;
+    color: mediumpurple;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+  
+  /* Loading & Error */
+  .findmyip-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    min-height: 200px;
+  }
+  
+  .loader {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid mediumpurple;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1rem;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  .findmyip-error {
+    color: #d32f2f;
+    padding: 1rem;
+    background-color: #ffebee;
+    border-radius: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  /* Header */
+  .ip-header {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px dashed #ff69b4;
+  }
+  
+  .ip-header h2 {
+    font-family: 'Fredoka', sans-serif;
+    color: #333;
+    font-size: 1.2rem;
+    font-weight: normal;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  
+  .ip-value {
+    font-family: monospace;
+    color: mediumpurple;
+    font-weight: bold;
+    margin-left: 0.5rem;
+  }
+  
+  .copy-btn {
+    background-color: #f0f0f0;
+    border: none;
+    border-radius: 4px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #666;
+    transition: all 0.2s ease;
+  }
+  
+  .copy-btn:hover {
+    background-color: #e0e0e0;
+  }
+  
+  /* Table & Info Sections */
+  .info-section {
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+  }
+  
+  .info-section h3 {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 1.5rem;
+    color: mediumpurple;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #eaeaea;
+    padding-bottom: 0.5rem;
+  }
+  
+  .ip-table-wrapper {
+    overflow-x: auto;
+    border-radius: 0.5rem;
+    border: 1px solid #eaeaea;
+  }
+  
+  .ip-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Fredoka', sans-serif;
+  }
+  
+  .ip-table thead {
+    background-color: #f9f4ff;
+  }
+  
+  .ip-table th {
+    text-align: left;
+    padding: 1rem;
+    font-weight: bold;
+    color: mediumpurple;
+    border-bottom: 2px solid #eaeaea;
+  }
+  
+  .ip-table td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #eaeaea;
+  }
+  
+  .ip-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  .ip-table tr:last-child td {
+    border-bottom: none;
+  }
+  
+  .ip-table tr:hover {
+    background-color: #f5f0ff;
+  }
+  
+  /* First & Second Column Styling */
+  .ip-table td:first-child {
+    font-weight: 500;
+    color: #555;
+    width: 30%;
+  }
+  
+  .ip-table td:nth-child(2) {
+    color: #333;
+  }
+  
+  /* Note */
+  .ip-note {
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    border-left: 4px solid mediumpurple;
+  }
+  
+  .ip-note p {
+    font-family: 'Fredoka', sans-serif;
+    color: #666;
+    margin: 0;
+    line-height: 1.5;
+  }
+  
+  /* Responsive Styles */
+  @media (max-width: 768px) {
+    .findmyip-title {
+      font-size: 1.5rem;
+    }
+    
+    .ip-header h2 {
+      font-size: 1rem;
+    }
+    
+    .ip-table td, .ip-table th {
+      padding: 0.5rem;
+    }
+  }
+
+  /* New layout container for left ad, main content, and right ad */
+.findmyip-layout {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 5rem;
+  }
+  
+  /* Left & Right Ads */
+  .left-ad,
+  .right-ad {
+    flex: 1;
+    /* max-width: 160px; Adjust based on your ad size */
+    display: none; /* Hide by default on smaller screens */
+  }
+  
+  /* Main Content */
+  .main-content {
+    flex: 2;
+    max-width: 800px;
+  }
+  
+  /* Display ads on larger screens */
+  @media (min-width: 1024px) {
+    .left-ad,
+    .right-ad {
+      display: block;
+    }
+  }
+  
+  /* Existing styles for findmyip-container and findmyip-card */
+  .findmyip-container {
+    /* Remove centering from here as layout is handled by .findmyip-layout */
+    width: 100%;
+  }
+  
+  .findmyip-card {
+    background: white;
+    border-radius: 1.5rem;
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    position: relative;
+    padding-top: 50px;
+  }
+  
+  .map-container {
+    margin-top: 1rem;
+    border: 1px solid #eaeaea;
+    border-radius: 0.5rem;
+    overflow: hidden;
+  }
+  
+  
+  

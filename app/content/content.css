@@ -15,7 +15,7 @@ color: hotpink;
     font-size: 25px;
     margin-top: -260px;
     @media (max-width: 768px) {
-    margin-top: -164px;
+    margin-top: -8rem;
     padding: 1rem;
         width: 100%;
 }

@@ -1,6 +1,7 @@
-.navigation-holder {
+.logo-container {
     justify-content: center;
     display: flex;
     position: fixed;
     width: 100%;
+    margin-top: 40px;
 }
