@@ -1,21 +1,35 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Sigmar } from "next/font/google";
-import {Toaster} from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
+import Script from "next/script";
 
-const sigmar = Sigmar({ subsets: ['latin'], weight: ['400'], variable: '--font-sigmar' });
+const sigmar = Sigmar({
+  subsets: ["latin"],
+  weight: ["400"],
+  variable: "--font-sigmar",
+});
 
 export const metadata: Metadata = {
   title: "Wacky or Wise - Discover Weird, Confusing & Useful Products",
-  description: "Explore the most bizarre, viral, and surprisingly useful products on WackyOrWise.com. Vote on whether they are genius or just plain weird!",
+  description:
+    "Explore the most bizarre, viral, and surprisingly useful products on WackyOrWise.com. Vote on whether they are genius or just plain weird!",
   keywords: [
-    "weird products", "unusual gadgets", "confusing items", "useful inventions",
-    "bizarre shopping", "funny Amazon Flipkart finds", "quirky gifts", "strange but useful",
-    "viral products", "TikTok, reels famous products"
+    "weird products",
+    "unusual gadgets",
+    "confusing items",
+    "useful inventions",
+    "bizarre shopping",
+    "funny Amazon Flipkart finds",
+    "quirky gifts",
+    "strange but useful",
+    "viral products",
+    "TikTok, reels famous products",
   ].join(", "),
   openGraph: {
     title: "Wacky or Wise - The Most Bizarre & Useful Products Online",
-    description: "Find the weirdest yet useful products that will leave you questioning their genius. Vote 'Wacky' or 'Wise' now!",
+    description:
+      "Find the weirdest yet useful products that will leave you questioning their genius. Vote 'Wacky' or 'Wise' now!",
     url: "https://www.wackyorwise.com",
     siteName: "WackyOrWise",
     images: [
@@ -38,34 +52,44 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({
-                                     children,
-                                   }: Readonly<{
+  children,
+}: Readonly<{
   children: React.ReactNode;
 }>) {
+  const GOOGLE_ADS_CLIENT_ID = process.env.GOOGLE_ADS_CLIENT_ID
   return (
-      <html lang="en">
+    <html lang="en">
       <head>
-          {/* Structured Data for SEO */}
-          <script type="application/ld+json" dangerouslySetInnerHTML={{
-              __html: JSON.stringify({
-                  "@context": "https://schema.org",
-                  "@type": "WebSite",
-                  "name": "Wacky or Wise",
-                  "url": "https://www.wackyorwise.com",
-                  "description": "Explore bizarre, viral, and surprisingly useful products. Vote on whether they are genius or just plain weird!",
-                  "publisher": {
-                      "@type": "Organization",
-                      "name": "WackyOrWise",
-                      "logo": "https://www.wackyorwise.com/images/logo.png"
-                  }
-              })
-          }}/>
-          <meta name="google-adsense-account" content="ca-pub-2405880474323539"/>
+        {/* Structured Data for SEO */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              name: "Wacky or Wise",
+              url: "https://www.wackyorwise.com",
+              description:
+                "Explore bizarre, viral, and surprisingly useful products. Vote on whether they are genius or just plain weird!",
+              publisher: {
+                "@type": "Organization",
+                name: "WackyOrWise",
+                logo: "https://www.wackyorwise.com/images/logo.png",
+              },
+            }),
+          }}
+        />
+        <meta name="google-adsense-account" content={GOOGLE_ADS_CLIENT_ID} />
       </head>
       <body className={sigmar.variable}>
-      <Toaster position="top-right" reverseOrder={false} />
-      {children}
+        <Script
+          strategy="afterInteractive"
+          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${GOOGLE_ADS_CLIENT_ID}`}
+          crossOrigin="anonymous"
+        />
+        <Toaster position="top-right" reverseOrder={false} />
+        {children}
       </body>
-      </html>
+    </html>
   );
 }
