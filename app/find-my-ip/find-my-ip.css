@@ -214,6 +214,10 @@
     .right-ad {
       display: block;
     }
+    .copy-btn {
+      width: 32px;
+      height: 32px;
+    }
   }
   
   /* Existing styles for findmyip-container and findmyip-card */
@@ -240,6 +244,9 @@
 
   /* Responsive Styles */
   @media (max-width: 768px) {
+    .findmyip-card {
+      padding: 1rem;
+    }
     .findmyip-title {
       font-size: 1.5rem;
     }
@@ -258,6 +265,11 @@
 
     .main-content{
       max-width: 95%;
+    }
+
+    .info-section {
+      padding: 1rem 0;
+      box-shadow: none;
     }
   }
   

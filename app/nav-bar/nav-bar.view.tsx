@@ -25,11 +25,11 @@ export default function NavBarView() {
                 Wacky Products
               </Link>
             </li>
-            {/* <li className="nav-item">
+            <li className="nav-item">
               <Link href="/json-formatter" className="nav-link">
                 JSON Formatter
               </Link>
-            </li> */}
+            </li>
             <li className="nav-item">
               <Link href="/find-my-ip" className="nav-link">
                 {"What's My IP & Network?"}
@@ -57,7 +57,7 @@ export default function NavBarView() {
                 Wacky Products
               </Link>
             </li>
-            {/* <li className="nav-item">
+            <li className="nav-item">
               <Link
                 href="/json-formatter"
                 className="nav-link"
@@ -65,7 +65,7 @@ export default function NavBarView() {
               >
                 JSON Formatter
               </Link>
-            </li> */}
+            </li>
             <li className="nav-item">
               <Link
                 href="/find-my-ip"
