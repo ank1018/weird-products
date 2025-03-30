@@ -256,8 +256,10 @@
   /* Info Section */
   .info-section {
     margin-top: 2rem;
+    font-family: 'Fredoka', sans-serif;
+    color: #000000;
   }
-  
+
   .info-section h3 {
     font-family: 'Fredoka', sans-serif;
     font-size: 1.5rem;
@@ -265,6 +267,7 @@
     margin-bottom: 1rem;
     border-bottom: 1px solid #eaeaea;
     padding-bottom: 0.5rem;
+    margin-top: 1rem;
   }
   
   /* Table Styles (copied from your existing CSS) */
@@ -440,7 +443,6 @@
     }
     
     .jsonformatter-layout {
-      padding: 5rem;
     }
 
     .editors-container {

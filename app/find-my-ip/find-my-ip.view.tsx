@@ -7,6 +7,7 @@ import NavBarView from "../nav-bar/nav-bar.view";
 import Footer from "../footer/footer.view";
 import GoogleAd from "../google-ads/google-ads.view";
 import "./find-my-ip.css";
+import FindMyIpPageDescription from "./find-my-ip-description";
 
 export default function FindMyIpPage() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -346,27 +347,7 @@ export default function FindMyIpPage() {
                     This information is generally visible to websites you visit.
                   </p>
                 </div>
-
-                {/* Expanded Description for SEO */}
-                <div className="info-section seo-description">
-                  <h3>About This Tool</h3>
-                  <p>
-                    This free online tool helps you quickly determine your
-                    public IP address and provides comprehensive details about
-                    your location, browser, and network connection. By
-                    displaying information such as your country, region, city,
-                    postal code, and even your device details, it empowers you
-                    to understand your online footprint better. Whether you are
-                    troubleshooting network issues, seeking insights into your
-                    digital privacy, or simply curious about your connection
-                    quality, our tool offers a user-friendly interface with
-                    accurate, real-time data. Explore additional features like
-                    an interactive map showing your approximate location and
-                    detailed browser information that is parsed for readability.
-                    Enhance your online security by knowing more about the
-                    digital environment in which you operate.
-                  </p>
-                </div>
+                <FindMyIpPageDescription />
               </>
             )}
           </div>

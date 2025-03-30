@@ -21,6 +21,7 @@ import dynamic from "next/dynamic";
 import { json } from "@codemirror/lang-json";
 import { oneDark } from "@codemirror/theme-one-dark";
 import GoogleAd from "../google-ads/google-ads.view";
+import JsonFormatterPageDescription from "./json-formatter-description";
 
 // Import the Controlled editor from @uiw/react-codemirror dynamically
 const CodeMirror = dynamic(() => import("@uiw/react-codemirror"), {
@@ -447,57 +448,7 @@ export default function JsonFormatterPage() {
             {/* END UPDATED LAYOUT */}
 
             {/* JSON Specification */}
-            <div className="info-section">
-              <h3>JSON Specification</h3>
-              <div className="ip-table-wrapper">
-                <table className="ip-table">
-                  <thead>
-                    <tr>
-                      <th>Element</th>
-                      <th>Description</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>Objects</td>
-                      <td>
-                        Enclosed in curly braces {} and contain name/value pairs
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Arrays</td>
-                      <td>
-                        Enclosed in square brackets [] and contain a list of
-                        values
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Strings</td>
-                      <td>Must be written with double quotes " "</td>
-                    </tr>
-                    <tr>
-                      <td>Numbers</td>
-                      <td>Can be integers or floating point numbers</td>
-                    </tr>
-                    <tr>
-                      <td>Boolean</td>
-                      <td>Can be true or false (lowercase)</td>
-                    </tr>
-                    <tr>
-                      <td>null</td>
-                      <td>Represents a null value</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <div className="ip-note">
-                <p>
-                  JSON (JavaScript Object Notation) is a lightweight
-                  data-interchange format that is easy for humans to read and
-                  write and easy for machines to parse and generate.
-                </p>
-              </div>
-            </div>
+            <JsonFormatterPageDescription />
           </div>
         </div>
       </div>
