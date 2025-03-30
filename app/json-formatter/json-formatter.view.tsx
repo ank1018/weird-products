@@ -9,10 +9,6 @@ import {
   Download,
   Upload,
   Zap,
-  FileJson,
-  FileSpreadsheet,
-  FileText,
-  FileCode,
 } from "lucide-react";
 import NavBarView from "../nav-bar/nav-bar.view";
 import Footer from "../footer/footer.view";
@@ -35,18 +31,6 @@ export default function JsonFormatterPage() {
   const [copied, setCopied] = useState(false);
   const [loading, setLoading] = useState(false);
   const [outputFormat, setOutputFormat] = useState("json");
-  const [template, setTemplate] = useState({
-    selected: "empty",
-    options: {
-      empty: "{}",
-      person:
-        '{\n  "name": "",\n  "age": null,\n  "email": "",\n  "address": {\n    "street": "",\n    "city": "",\n    "country": ""\n  },\n  "hobbies": []\n}',
-      product:
-        '{\n  "id": "",\n  "name": "",\n  "price": null,\n  "description": "",\n  "category": "",\n  "inStock": true,\n  "specifications": {}\n}',
-      event:
-        '{\n  "id": "",\n  "title": "",\n  "startDate": "",\n  "endDate": "",\n  "location": {\n    "name": "",\n    "address": ""\n  },\n  "attendees": []\n}',
-    },
-  });
 
   useEffect(() => {
     document.body.classList.add("jsonformatter-route-body");
@@ -100,7 +84,7 @@ export default function JsonFormatterPage() {
     if (!input.trim()) return;
     try {
       setLoading(true);
-      let fixed = input
+      const fixed = input
         .replace(/'/g, '"')
         .replace(/([{,]\s*)(\w+)\s*:/g, '$1"$2":')
         .replace(/,\s*([}\]])/g, "$1");
@@ -123,9 +107,10 @@ export default function JsonFormatterPage() {
   // --------------------------
   // Format Conversions
   // --------------------------
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const jsonToXml = (obj: any, root = "root") => {
     let xml = `<?xml version="1.0" encoding="UTF-8"?>\n<${root}>`;
-
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const parseObject = (o: any) => {
       for (const key in o) {
         const value = o[key];
@@ -153,7 +138,7 @@ export default function JsonFormatterPage() {
     xml += `\n</${root}>`;
     return xml;
   };
-
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const jsonToYaml = (obj: any, indent = 0) => {
     let yaml = "";
     const spaces = " ".repeat(indent);
@@ -178,7 +163,7 @@ export default function JsonFormatterPage() {
     }
     return yaml;
   };
-
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const jsonToCsv = (obj: any) => {
     if (!Array.isArray(obj)) {
       if (typeof obj === "object" && obj !== null) {
@@ -193,6 +178,7 @@ export default function JsonFormatterPage() {
     const headers = Object.keys(obj[0]);
     let csv = headers.join(",") + "\n";
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     obj.forEach((row: any) => {
       const values = headers.map((header) => {
         const value = row[header];
@@ -209,20 +195,22 @@ export default function JsonFormatterPage() {
   // --------------------------
   // Template & File Handling
   // --------------------------
-  const loadTemplate = (templateKey: string) => {
-    setTemplate((prev) => ({
-      ...prev,
-      selected: templateKey,
-    }));
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-expect-error
-    setInput(template.options[templateKey]);
-  };
+  //   const loadTemplate = (templateKey: string) => {
+  //     setTemplate((prev) => ({
+  //       ...prev,
+  //       selected: templateKey,
+  //     }));
+  //     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  //     // @ts-expect-error
+  //     setInput(template.options[templateKey]);
+  //   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const uploadJSON = (e: any) => {
     const file = e.target.files[0];
     if (!file) return;
     const reader = new FileReader();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     reader.onload = (event: any) => {
       setInput(event.target.result);
     };
@@ -287,20 +275,20 @@ export default function JsonFormatterPage() {
   };
 
   // Icon helper
-  const getFormatIcon = () => {
-    switch (outputFormat) {
-      case "json":
-        return <FileJson size={16} />;
-      case "xml":
-        return <FileCode size={16} />;
-      case "yaml":
-        return <FileText size={16} />;
-      case "csv":
-        return <FileSpreadsheet size={16} />;
-      default:
-        return <FileJson size={16} />;
-    }
-  };
+  //   const getFormatIcon = () => {
+  //     switch (outputFormat) {
+  //       case "json":
+  //         return <FileJson size={16} />;
+  //       case "xml":
+  //         return <FileCode size={16} />;
+  //       case "yaml":
+  //         return <FileText size={16} />;
+  //       case "csv":
+  //         return <FileSpreadsheet size={16} />;
+  //       default:
+  //         return <FileJson size={16} />;
+  //     }
+  //   };
 
   return (
     <div className="background">

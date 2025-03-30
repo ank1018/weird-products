@@ -1,4 +1,4 @@
-import './json-formatter.css'
+import "./json-formatter.css";
 
 export default function JsonFormatterPageDescription() {
   return (
@@ -32,7 +32,7 @@ export default function JsonFormatterPageDescription() {
               <tr>
                 <td>Strings</td>
                 <td>
-                  Must be written with double quotes <code>" "</code>
+                  Must be written with double quotes <code>&quot; &quot;</code>
                 </td>
               </tr>
               <tr>

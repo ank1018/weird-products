@@ -70,11 +70,11 @@ export default function FindMyIpPageDescription() {
           (such as your public IP address) from the incoming request headers. It
           then uses geolocation services to estimate your general
           location—country, region, city, and postal code—based on this IP
-          address. Additionally, it parses your browser’s <em>User Agent</em>{" "}
-          string to display relevant details like the browser name, version,
-          operating system, and device type (desktop, mobile, or tablet). No
-          personal data beyond what is already publicly available via your IP or
-          user agent is stored or shared.
+          address. Additionally, it parses your browser&quot;s{" "}
+          <em>User Agent</em> string to display relevant details like the
+          browser name, version, operating system, and device type (desktop,
+          mobile, or tablet). No personal data beyond what is already publicly
+          available via your IP or user agent is stored or shared.
         </p>
 
         <h3>Browser Details</h3>
@@ -83,8 +83,8 @@ export default function FindMyIpPageDescription() {
           agent string, which can reveal your operating system, browser version,
           and basic device type. For instance, a user agent might look like:
           <em>
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36
-            (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36"
+            &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36
+            (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36&quot;
           </em>
           . Our tool decodes this so you have a clear, human-readable summary of
           what websites see when you visit them.
