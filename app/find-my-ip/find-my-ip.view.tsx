@@ -123,7 +123,7 @@ export default function FindMyIpPage() {
         </div>
 
         {/* Main Content */}
-        <div className="main-content">
+        <div className="ip-main-content">
           <div className="findmyip-card">
             <h1 className="findmyip-title">Find My IP Address</h1>
 
@@ -143,7 +143,7 @@ export default function FindMyIpPage() {
                     Your IP Address:
                     <span className="ip-value">{ipInfo.ip}</span>
                     <button
-                      className="copy-btn"
+                      className="ip-copy-btn"
                       onClick={() => copyToClipboard(ipInfo.ip)}
                       title="Copy to clipboard"
                     >

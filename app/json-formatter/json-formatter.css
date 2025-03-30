@@ -13,13 +13,6 @@
     padding: 5rem 1rem;
   }
   
-  /* Left & Right Ads */
-  .left-ad,
-  .right-ad {
-    flex: 1;
-    display: none; /* Hide by default on smaller screens */
-  }
-  
   /* Main Content */
   .main-content {
     flex: 2;
@@ -437,11 +430,6 @@
   
   /* Responsive Design */
   @media (min-width: 1024px) {
-    .left-ad,
-    .right-ad {
-      display: block;
-    }
-    
     .jsonformatter-layout {
     }
 
