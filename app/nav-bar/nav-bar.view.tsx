@@ -35,6 +35,11 @@ export default function NavBarView() {
                 {"What's My IP & Network?"}
               </Link>
             </li>
+            <li className="nav-item">
+              <Link href="/ai-personality-predictor" className="nav-link">
+                {"Check Your Personality"}
+              </Link>
+            </li>
           </ul>
         </div>
         {/* Mobile Navigation Toggle */}
@@ -73,6 +78,15 @@ export default function NavBarView() {
                 onClick={() => setMenuOpen(false)}
               >
                 {"What's My IP & Network?"}
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link
+                href="/personality-predictor"
+                className="nav-link"
+                onClick={() => setMenuOpen(false)}
+              >
+                {"Check Your Personality"}
               </Link>
             </li>
           </ul>
