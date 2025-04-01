@@ -44,7 +44,6 @@ Return ONLY valid JSON in the exact format below, with no additional text before
     }
 
     const apiResult = await response.json();
-    console.log("API response:........", apiResult);
 
     // The response format may vary depending on the model
     const generatedText =

@@ -33,7 +33,7 @@ const EnhancedPersonalityPredictor = () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [result, setResult] = useState<any>(null);
   const [userFeedback, setUserFeedback] = useState<boolean | null>(null);
-  // const [loading, setLoading] = useState(false);
+  const [isLoading, setLoading] = useState(false);
   // const [accuracy, setAccuracy] = useState(0);
   const [totalPlayed, setTotalPlayed] = useState(0);
 
@@ -158,13 +158,13 @@ const EnhancedPersonalityPredictor = () => {
   };
 
   const analyzePersonality = async () => {
-    // setLoading(true);
+    setLoading(true);
     try {
       const response = await analyzeWithHuggingFace();
       const personalityResult = generatePersonalityResult(response);
       setResult(personalityResult);
       setStage("results");
-      // setLoading(false);
+      setLoading(false);
       setTotalPlayed((prev) => prev + 1);
     } catch (err) {
       console.error("Error analyzing personality:", err);
@@ -172,7 +172,7 @@ const EnhancedPersonalityPredictor = () => {
       const personalityResult = generatePersonalityResult(fallbackData);
       setResult(personalityResult);
       setStage("results");
-      // setLoading(false);
+      setLoading(false);
       setTotalPlayed((prev) => prev + 1);
     }
   };
@@ -203,14 +203,14 @@ const EnhancedPersonalityPredictor = () => {
     value: number;
     label: string;
   }) => (
-    <div className="mb-3">
-      <div className="flex justify-between text-sm mb-1">
-        <span className="font-medium">{label}</span>
-        <span>{Math.round(value * 100)}%</span>
+    <div className="trait-bar">
+      <div className="trait-bar-header">
+        <span className="trait-label">{label}</span>
+        <span className="trait-value">{Math.round(value * 100)}%</span>
       </div>
-      <div className="w-full h-3 bg-indigo-100 rounded-full overflow-hidden">
+      <div className="trait-bar-container">
         <div
-          className="h-full rounded-full trait-bar-fill"
+          className="trait-bar-fill"
           style={{ width: `${value * 100}%` }}
           data-trait={trait}
         ></div>
@@ -221,50 +221,61 @@ const EnhancedPersonalityPredictor = () => {
   return (
     <>
       <NavBarView />
-      <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-50 p-4 flex items-center justify-center enhanced-personality-container">
-        <div className="w-full max-w-md mx-auto">
-          {stage === "intro" && (
-            <div className="bg-white rounded-3xl shadow-xl overflow-hidden transform hover:scale-105 transition-all duration-300 border-2 border-purple-300 doodle-card">
-              <div className="px-6 py-8 sm:p-8">
-                <div className="flex justify-center mb-6">
-                  <div className="brain-icon-wrapper">
-                    <div className="brain-ping"></div>
-                    <Brain className="w-16 h-16 text-purple-600 relative z-10" />
-                  </div>
+      <div className="personality-container">
+        <div className="doodle-container">
+          <div className="doodle doodle-star"></div>
+          <div className="doodle doodle-circle"></div>
+          <div className="doodle doodle-squiggle"></div>
+        </div>
+
+        <div className="content-wrapper">
+          {isLoading && (
+            <div className="loader-container">
+              <div className="loader"></div>
+              <p>Loading your personality adventure...</p>
+            </div>
+          )}
+
+          {!isLoading && stage === "intro" && (
+            <div className="card intro-card">
+              <div className="card-content">
+                <div className="brain-icon-wrapper">
+                  <div className="brain-ping"></div>
+                  <Brain className="brain-icon" />
                 </div>
-                <h2 className="text-2xl font-bold text-center mb-4 gradient-text">
+                <h2 className="card-title">
                   Ready to be psychoanalyzed by a computer?
                 </h2>
-                <p className="text-gray-600 text-center mb-8">
+                <p className="card-description">
                   Answer a few bizarre questions, and our AI will expose your
                   deepest personality secrets!
                 </p>
                 <button
                   onClick={() => setStage("questions")}
-                  className="w-full py-4 px-6 gradient-button text-white font-medium rounded-xl shadow-lg hover:shadow-xl flex items-center justify-center space-x-2 transform hover:translate-y-1 transition-all duration-300"
+                  className="gradient-button"
                 >
                   <span>Expose My Soul</span>
-                  <ChevronRight className="w-5 h-5" />
+                  <ChevronRight className="button-icon" />
                 </button>
               </div>
-              <div className="gradient-footer p-4 flex justify-between items-center text-sm text-gray-600">
-                <div className="flex items-center">
-                  <Sparkles className="w-4 h-4 text-purple-500 mr-2" />
+              <div className="card-footer">
+                <div className="footer-item">
+                  <Sparkles className="footer-icon sparkle-icon" />
                   <span>100% Accurate*</span>
                 </div>
-                <div className="flex items-center">
-                  <Star className="w-4 h-4 text-yellow-500 mr-2" />
+                <div className="footer-item">
+                  <Star className="footer-icon star-icon" />
                   <span>Played {totalPlayed} times</span>
                 </div>
               </div>
             </div>
           )}
 
-          {stage === "questions" && questions.length > 0 && (
-            <div className="bg-white rounded-3xl shadow-xl p-6 sm:p-8 border-2 border-purple-300 doodle-card">
-              <div className="mb-6">
-                <div className="flex justify-between text-sm text-gray-600 mb-2">
-                  <span className="font-medium">
+          {!isLoading && stage === "questions" && questions.length > 0 && (
+            <div className="card question-card">
+              <div className="progress-container">
+                <div className="progress-text">
+                  <span>
                     Question {currentQuestion + 1} of {questions.length}
                   </span>
                   <span>
@@ -274,9 +285,9 @@ const EnhancedPersonalityPredictor = () => {
                     % Complete
                   </span>
                 </div>
-                <div className="w-full h-3 bg-gray-200 rounded-full overflow-hidden">
+                <div className="progress-bar-container">
                   <div
-                    className="h-full gradient-progress rounded-full transition-all duration-500"
+                    className="progress-bar"
                     style={{
                       width: `${
                         ((currentQuestion + 1) / questions.length) * 100
@@ -286,24 +297,24 @@ const EnhancedPersonalityPredictor = () => {
                 </div>
               </div>
 
-              <div className="mb-8">
-                <h2 className="text-xl font-bold text-gray-800 mb-4 text-center question-text">
+              <div className="question-container">
+                <h2 className="question-text">
                   {questions[currentQuestion]?.text}
                 </h2>
-                <div className="space-y-3">
+                <div className="options-container">
                   {questions[currentQuestion]?.options.map(
                     (option: string, idx: number) => (
                       <button
                         key={idx}
                         onClick={() => handleOptionSelect(option)}
-                        className={`w-full py-3 px-4 rounded-xl text-left font-medium transition-all duration-200 flex items-center option-button ${
+                        className={`option-button ${
                           idx % 2 === 0 ? "option-purple" : "option-indigo"
                         }`}
                       >
-                        <div className="w-6 h-6 rounded-full flex items-center justify-center mr-3 bg-white option-circle">
+                        <div className="option-circle">
                           {String.fromCharCode(65 + idx)}
                         </div>
-                        {option}
+                        <span className="option-text">{option}</span>
                       </button>
                     )
                   )}
@@ -312,23 +323,17 @@ const EnhancedPersonalityPredictor = () => {
             </div>
           )}
 
-          {stage === "followup" && followUpQuestion && (
-            <div className="bg-white rounded-3xl shadow-xl p-6 sm:p-8 border-2 border-purple-300 doodle-card">
-              <div className="flex justify-center mb-6">
-                <div className="lightbulb-wrapper">
-                  <Lightbulb className="w-12 h-12 text-yellow-500" />
-                </div>
+          {!isLoading && stage === "followup" && followUpQuestion && (
+            <div className="card followup-card">
+              <div className="lightbulb-wrapper">
+                <Lightbulb className="lightbulb-icon" />
               </div>
-              <h2 className="text-xl font-bold text-center mb-4">
-                One more question...
-              </h2>
-              <div className="gradient-light-bg p-4 rounded-xl mb-6">
-                <p className="text-gray-800 font-medium text-center">
-                  {followUpQuestion}
-                </p>
+              <h2 className="followup-title">One more question...</h2>
+              <div className="followup-question-container">
+                <p className="followup-question">{followUpQuestion}</p>
               </div>
               <textarea
-                className="w-full p-4 border-2 border-purple-200 rounded-xl mb-6 focus:border-purple-400 focus:ring focus:ring-purple-200 focus:ring-opacity-50 resize-none transition-all duration-200 doodle-textarea"
+                className="followup-textarea"
                 rows={4}
                 placeholder="Don't overthink it... or do!"
                 value={textInput}
@@ -336,32 +341,28 @@ const EnhancedPersonalityPredictor = () => {
               />
               <button
                 onClick={handleFollowUpSubmit}
-                className="w-full py-3 px-6 gradient-button text-white font-medium rounded-xl shadow-md hover:shadow-lg flex items-center justify-center space-x-2 disabled:opacity-70 disabled:cursor-not-allowed transition-all duration-200"
+                className="followup-button"
                 disabled={!textInput.trim()}
               >
-                <MessageSquare className="w-5 h-5" />
+                <MessageSquare className="button-icon" />
                 <span>That&apos;s My Final Answer</span>
               </button>
             </div>
           )}
 
-          {stage === "freetext" && (
-            <div className="bg-white rounded-3xl shadow-xl p-6 sm:p-8 border-2 border-purple-300 doodle-card">
-              <div className="flex justify-center mb-6">
-                <div className="coffee-wrapper">
-                  <div className="coffee-pulse"></div>
-                  <Coffee className="w-12 h-12 text-amber-600 relative z-10" />
-                </div>
+          {!isLoading && stage === "freetext" && (
+            <div className="card freetext-card">
+              <div className="coffee-wrapper">
+                <div className="coffee-pulse"></div>
+                <Coffee className="coffee-icon" />
               </div>
-              <h2 className="text-xl font-bold text-center mb-2">
-                Let&apos;s go deeper...
-              </h2>
-              <p className="text-gray-600 text-center mb-6">
+              <h2 className="freetext-title">Let&apos;s go deeper...</h2>
+              <p className="freetext-description">
                 Share anything else! The more random, the better our AI can read
                 your mind.
               </p>
               <textarea
-                className="w-full p-4 border-2 border-purple-200 rounded-xl mb-6 focus:border-purple-400 focus:ring focus:ring-purple-200 focus:ring-opacity-50 resize-none transition-all duration-200 doodle-textarea"
+                className="freetext-textarea"
                 rows={4}
                 value={textInput}
                 onChange={(e) => setTextInput(e.target.value)}
@@ -372,140 +373,123 @@ const EnhancedPersonalityPredictor = () => {
                   setStage("analyzing");
                   analyzePersonality();
                 }}
-                className="w-full py-3 px-6 orange-pink-gradient text-white font-medium rounded-xl shadow-md hover:shadow-lg flex items-center justify-center space-x-2 transition-all duration-200"
+                className="freetext-button"
               >
-                <Camera className="w-5 h-5" />
+                <Camera className="button-icon" />
                 <span>Scan My Brain!</span>
               </button>
             </div>
           )}
 
-          {stage === "analyzing" && (
-            <div className="bg-white rounded-3xl shadow-xl p-6 sm:p-8 text-center border-2 border-purple-300 doodle-card">
-              <div className="relative mx-auto mb-8 w-20 h-20 analyzing-brain-wrapper">
+          {!isLoading && stage === "analyzing" && (
+            <div className="card analyzing-card">
+              <div className="analyzing-brain-wrapper">
                 <div className="analyzing-ping"></div>
                 <div className="analyzing-spinner"></div>
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <Brain className="w-10 h-10 text-indigo-600" />
+                <div className="brain-center">
+                  <Brain className="analyzing-brain-icon" />
                 </div>
               </div>
-              <h2 className="font-bold text-xl mb-4">
-                Reading your thoughts...
-              </h2>
-              <div className="space-y-2 text-gray-600 italic mb-4">
-                <p className="analysis-text-1">
+              <h2 className="analyzing-title">Reading your thoughts...</h2>
+              <div className="analyzing-texts">
+                <p className="analysis-text analysis-text-1">
                   Analyzing your secret quirks...
                 </p>
-                <p className="analysis-text-2">
+                <p className="analysis-text analysis-text-2">
                   Comparing you to 7 billion humans...
                 </p>
-                <p className="analysis-text-3">
+                <p className="analysis-text analysis-text-3">
                   Calculating your weirdness level...
                 </p>
               </div>
-              <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
-                <div className="h-full gradient-loading"></div>
+              <div className="analyzing-progress-container">
+                <div className="analyzing-progress-bar"></div>
               </div>
             </div>
           )}
 
-          {stage === "results" && result && (
-            <div className="bg-white rounded-3xl shadow-xl border-2 border-purple-300 overflow-hidden doodle-card">
-              <div className="p-6 sm:p-8">
-                <div className="text-center mb-6">
-                  <div className="inline-block gradient-circle p-4 rounded-full mb-4">
-                    <Sparkles className="w-8 h-8 text-white sparkle-icon" />
-                  </div>
-                  <h2 className="text-2xl font-bold gradient-text mb-3">
-                    {result.title}
-                  </h2>
-                  <p className="text-gray-700">{result.description}</p>
+          {!isLoading && stage === "results" && result && (
+            <div className="card results-card">
+              <div className="results-header">
+                <div className="sparkle-circle">
+                  <Sparkles className="sparkle-icon" />
                 </div>
-
-                <div className="gradient-light-bg rounded-xl p-5 mb-6">
-                  <h3 className="text-lg font-semibold mb-4 text-center">
-                    Your Personality Breakdown
-                  </h3>
-
-                  <TraitBar
-                    trait="extroversion"
-                    value={result.traits.extroversion}
-                    label="Extroversion"
-                  />
-                  <TraitBar
-                    trait="openness"
-                    value={result.traits.openness}
-                    label="Openness"
-                  />
-                  <TraitBar
-                    trait="conscientiousness"
-                    value={result.traits.conscientiousness}
-                    label="Conscientiousness"
-                  />
-                  <TraitBar
-                    trait="agreeableness"
-                    value={result.traits.agreeableness}
-                    label="Agreeableness"
-                  />
-
-                  <div className="mt-4 pt-3 border-t border-purple-100">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium">
-                        Emotional Vibe:
-                      </span>
-                      <span
-                        className={`px-3 py-1 rounded-full text-sm font-medium capitalize vibe-badge ${result.sentiment}-vibe`}
-                      >
-                        {result.sentiment}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                {userFeedback === null && (
-                  <div className="mb-6">
-                    <h3 className="font-semibold text-center mb-4">
-                      Did we read your mind correctly?
-                    </h3>
-                    <div className="flex space-x-3">
-                      <button
-                        onClick={() => handleFeedback(true)}
-                        className="flex-1 py-3 px-4 bg-green-100 text-green-700 font-medium rounded-xl hover:bg-green-200 transition-colors duration-200 flex items-center justify-center doodle-button correct-button"
-                      >
-                        <Check className="w-5 h-5 mr-2" />
-                        Scary Accurate!
-                      </button>
-                      <button
-                        onClick={() => handleFeedback(false)}
-                        className="flex-1 py-3 px-4 bg-red-100 text-red-700 font-medium rounded-xl hover:bg-red-200 transition-colors duration-200 flex items-center justify-center doodle-button wrong-button"
-                      >
-                        <AlertCircle className="w-5 h-5 mr-2" />
-                        Not Even Close
-                      </button>
-                    </div>
-                  </div>
-                )}
-
-                {userFeedback !== null && (
-                  <div className="mb-6 p-4 rounded-xl bg-indigo-50 border border-indigo-100 text-center feedback-message">
-                    <p className="text-indigo-700">
-                      {userFeedback
-                        ? "Wow! The AI is unstoppable! Soon it'll know your Netflix password too."
-                        : "Our AI failed you. It promises to do better next time!"}
-                    </p>
-                  </div>
-                )}
-
-                <button
-                  onClick={resetGame}
-                  className="w-full py-3 px-6 gradient-button text-white font-medium rounded-xl shadow-md hover:shadow-lg flex items-center justify-center space-x-2 transition-all duration-200"
-                >
-                  <RefreshCw className="w-5 h-5" />
-                  <span>Try Again with a Different Brain!</span>
-                </button>
+                <h2 className="results-title">{result.title}</h2>
+                <p className="results-description">{result.description}</p>
               </div>
 
-              <div className="gradient-footer p-4 text-center text-xs text-gray-600">
+              <div className="personality-breakdown">
+                <h3 className="breakdown-title">Your Personality Breakdown</h3>
+
+                <TraitBar
+                  trait="extroversion"
+                  value={result.traits.extroversion}
+                  label="Extroversion"
+                />
+                <TraitBar
+                  trait="openness"
+                  value={result.traits.openness}
+                  label="Openness"
+                />
+                <TraitBar
+                  trait="conscientiousness"
+                  value={result.traits.conscientiousness}
+                  label="Conscientiousness"
+                />
+                <TraitBar
+                  trait="agreeableness"
+                  value={result.traits.agreeableness}
+                  label="Agreeableness"
+                />
+
+                <div className="emotional-vibe">
+                  <span className="vibe-label">Emotional Vibe:</span>
+                  <span className={`vibe-badge ${result.sentiment}-vibe`}>
+                    {result.sentiment}
+                  </span>
+                </div>
+              </div>
+
+              {userFeedback === null && (
+                <div className="feedback-section">
+                  <h3 className="feedback-title">
+                    Did we read your mind correctly?
+                  </h3>
+                  <div className="feedback-buttons">
+                    <button
+                      onClick={() => handleFeedback(true)}
+                      className="feedback-button correct-button"
+                    >
+                      <Check className="feedback-icon" />
+                      Scary Accurate!
+                    </button>
+                    <button
+                      onClick={() => handleFeedback(false)}
+                      className="feedback-button wrong-button"
+                    >
+                      <AlertCircle className="feedback-icon" />
+                      Not Even Close
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {userFeedback !== null && (
+                <div className="feedback-message">
+                  <p>
+                    {userFeedback
+                      ? "Wow! The AI is unstoppable! Soon it'll know your Netflix password too."
+                      : "Our AI failed you. It promises to do better next time!"}
+                  </p>
+                </div>
+              )}
+
+              <button onClick={resetGame} className="restart-button">
+                <RefreshCw className="button-icon" />
+                <span>Try Again with a Different Brain!</span>
+              </button>
+
+              <div className="results-footer">
                 * Results may vary. Our AI is still learning the complexity of
                 human personalities.
               </div>

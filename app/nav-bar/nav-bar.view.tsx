@@ -36,7 +36,7 @@ export default function NavBarView() {
               </Link>
             </li>
             <li className="nav-item">
-              <Link href="/ai-personality-predictor" className="nav-link">
+              <Link href="/personality-predictor" className="nav-link">
                 {"Check Your Personality"}
               </Link>
             </li>
