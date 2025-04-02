@@ -1,10 +1,11 @@
 "use client";
 
 import React from "react";
+import './personality-predictor.css';
 
 const PersonalityDetectorExplanation = () => {
   return (
-    <div className="info-section seo-description">
+    <div className="pp-info-section seo-description">
       <h3>How Our AI Personality Detector Works</h3>
 
       <p>
