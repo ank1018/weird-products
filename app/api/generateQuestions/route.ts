@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import {getRandomQuestions} from "./fallbackQuestions";
 
 const HUGGING_FACE_API_KEY = process.env.HUGGING_FACE_API_KEY;
 const MODEL_ID = "mistralai/Mistral-7B-Instruct-v0.2";
@@ -6,7 +7,7 @@ const API_URL = `https://api-inference.huggingface.co/models/${MODEL_ID}`;
 
 export async function GET() {
   // Create a prompt that instructs the model to generate JSON
-  const prompt = `<s>[INST] Generate 10 personality assessment questions that combine real-life scenarios with humor.
+  const prompt = `<s>[INST] Generate 10 personality different assessment questions that combine real-life scenarios with humor.
   Each question should reveal something meaningful about personality traits (like introversion/extroversion, conscientiousness, openness, etc.) while keeping users engaged with funny options.
 Each question should have a "text" field with the question and an "options" field with exactly 4 witty answer choices.
 Return ONLY valid JSON in the exact format below, with no additional text before or after:
@@ -44,7 +45,6 @@ Return ONLY valid JSON in the exact format below, with no additional text before
     }
 
     const apiResult = await response.json();
-
     // The response format may vary depending on the model
     const generatedText =
       apiResult[0]?.generated_text ||
@@ -53,6 +53,50 @@ Return ONLY valid JSON in the exact format below, with no additional text before
 
     if (!generatedText) {
       throw new Error("No generated text found in API response");
+    }
+
+    // Try to parse the response as JSON first
+    try {
+      // Extract JSON content if there's text before or after JSON
+      const jsonMatch = generatedText.match(/\{[\s\S]*\}/);
+      const jsonContent = jsonMatch ? jsonMatch[0] : generatedText;
+      const parsedData = JSON.parse(jsonContent);
+
+      if (parsedData.questions && Array.isArray(parsedData.questions)) {
+        // Verify and normalize all questions
+        const validQuestions = parsedData.questions
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-expect-error
+          .filter((q) => q.text && Array.isArray(q.options))
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-expect-error
+          .map((q) => ({
+            text: q.text,
+            options: q.options.slice(0, 4),
+          }));
+
+        // Ensure each question has exactly 4 options
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
+        const normalizedQuestions = validQuestions.map((q) => {
+          if (q.options.length === 4) return q;
+
+          // If we have fewer than 4 options, add some generic ones
+          const options = [...q.options];
+          while (options.length < 4) {
+            options.push(`Option ${options.length + 1}`);
+          }
+
+          return {
+            text: q.text,
+            options: options.slice(0, 4), // Make sure we have exactly 4
+          };
+        });
+
+        return NextResponse.json(normalizedQuestions);
+      }
+    } catch (parseError) {
+      console.log("JSON parsing failed, trying manual extraction", parseError);
     }
 
     // Extract questions using a line-by-line approach
@@ -130,6 +174,25 @@ Return ONLY valid JSON in the exact format below, with no additional text before
     const formattedQuestions = extractedQuestions
       .filter((q) => q.text && q.text.trim() !== "")
       .map((q) => {
+        // Fix for long comma-separated options string
+        // Check if the first option is actually a comma-separated list
+        if (
+          q.options.length >= 1 &&
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-expect-error
+          q.options[0].includes(", ") &&
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-expect-error
+          q.options[0].split(", ").length >= 3
+        ) {
+          // Split the first option by commas
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-expect-error
+          const splitOptions = q.options[0].split(", ");
+          // Replace options with the split array
+          q.options = splitOptions;
+        }
+
         // Remove placeholder options like "Option 1"
         const cleanOptions = q.options
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -144,10 +207,9 @@ Return ONLY valid JSON in the exact format below, with no additional text before
         if (cleanOptions.length === 0) return null;
 
         const finalOptions = [...cleanOptions];
+        // Generate unique options for any missing slots
         while (finalOptions.length < 4) {
-          finalOptions.push(
-            `${cleanOptions[finalOptions.length % cleanOptions.length]} (alt)`
-          );
+          finalOptions.push(`Additional option ${finalOptions.length + 1}`);
         }
 
         return {
@@ -186,6 +248,19 @@ Return ONLY valid JSON in the exact format below, with no additional text before
     while ((optionsMatch = optionsRegex.exec(generatedText)) !== null) {
       const parsedQuestion = { options: [] };
       parseOptionsFromText(optionsMatch[1], parsedQuestion);
+
+      // Special handling for comma-separated options in a single string
+      if (
+        parsedQuestion.options.length === 1 &&
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
+        parsedQuestion.options[0].includes(", ")
+      ) {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
+        parsedQuestion.options = parsedQuestion.options[0].split(", ");
+      }
+
       optionSets.push(parsedQuestion.options);
     }
 
@@ -195,9 +270,17 @@ Return ONLY valid JSON in the exact format below, with no additional text before
       i < Math.min(questionTexts.length, optionSets.length);
       i++
     ) {
+      // Ensure we have 4 options
+      const options = optionSets[i].slice(0, 4);
+      while (options.length < 4) {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
+        options.push(`Additional option ${options.length + 1}`);
+      }
+
       regexQuestions.push({
         text: questionTexts[i],
-        options: optionSets[i].slice(0, 4),
+        options: options,
       });
     }
 
@@ -210,44 +293,7 @@ Return ONLY valid JSON in the exact format below, with no additional text before
     console.error("Error in generateQuestions API:", error);
 
     // Fallback mock data in case of failure
-    const fallbackQuestions = [
-      {
-        text: "If you were a kitchen appliance, which would you be?",
-        options: [
-          "Blender - I mix things up and make noise doing it!",
-          "Refrigerator - Cool, reliable, and always stocked with good stuff",
-          "Microwave - I get hot fast but cool down quickly",
-          "Coffee maker - I help others function in the morning",
-        ],
-      },
-      {
-        text: "Your friend calls with an emergency at 3 AM. You...",
-        options: [
-          "Jump out of bed ready for action - sleep is for the weak!",
-          "Answer groggily but offer to help anyway",
-          "Send them a helpful text but promise to call in the morning",
-          "Sleep through it and feel terrible in the morning",
-        ],
-      },
-      {
-        text: "Choose your ideal superpower:",
-        options: [
-          "Mind reading - I'm all about understanding people",
-          "Invisibility - Sometimes I just need to disappear",
-          "Flying - Freedom and new perspectives!",
-          "Time manipulation - I need more hours in my day",
-        ],
-      },
-      {
-        text: "You find $100 on the street. You...",
-        options: [
-          "Buy a round of drinks for friends!",
-          "Put it in savings (boring but responsible)",
-          "Treat yourself to something nice",
-          "Donate it to a cause you care about",
-        ],
-      },
-    ];
+    const fallbackQuestions = getRandomQuestions(6)
 
     return NextResponse.json(fallbackQuestions);
   }
@@ -281,6 +327,21 @@ function parseOptionsFromText(
     cleanedText = cleanedText.substring(0, cleanedText.length - 1);
   }
 
+  // Special case: check for comma-separated items in quotes
+  // This pattern looks for options like: "Option 1", "Option 2", "Option 3", "Option 4"
+  const quotedOptionsPattern = /"([^"]+)"/g;
+  const quotedMatches = [...cleanedText.matchAll(quotedOptionsPattern)];
+
+  if (quotedMatches.length >= 2) {
+    // We found quoted options, use these instead of other parsing methods
+    quotedMatches.forEach((match) => {
+      if (match[1] && match[1].trim()) {
+        questionObj.options.push(match[1].trim());
+      }
+    });
+    return;
+  }
+
   // Case 1: Options formatted as a single string with A), B), etc.
   if (cleanedText.includes("A)") && cleanedText.includes("B)")) {
     const singleOption = cleanedText.replace(/^"/, "").replace(/"$/, "");
@@ -309,17 +370,16 @@ function parseOptionsFromText(
       "Mr. Joker (constantly cracking jokes, but gets work done)]"
     )
   ) {
-    // const fixedText = cleanedText.replace("]", "");
     questionObj.options.push(
       "Mr. Joker (constantly cracking jokes, but gets work done)"
     );
     return;
   }
 
-  // Case 3: Normal comma-separated options
-  // Split by commas while respecting quotes
+  // Case 3: Split by commas, but only outside quotes
   let inQuote = false;
   let currentOption = "";
+  const options = [];
 
   for (let i = 0; i < cleanedText.length; i++) {
     const char = cleanedText[i];
@@ -329,7 +389,7 @@ function parseOptionsFromText(
       currentOption += char;
     } else if (char === "," && !inQuote) {
       // End of an option
-      addOptionToQuestion(currentOption, questionObj);
+      options.push(currentOption.trim());
       currentOption = "";
     } else {
       currentOption += char;
@@ -338,14 +398,21 @@ function parseOptionsFromText(
 
   // Add the last option if there is one
   if (currentOption.trim()) {
-    addOptionToQuestion(currentOption, questionObj);
+    options.push(currentOption.trim());
   }
+
+  // Process each option
+  options.forEach((opt) => {
+    addOptionToQuestion(opt, questionObj);
+  });
 }
 
 // Helper function to clean and add an option to a question
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error
 function addOptionToQuestion(optionText, questionObj) {
+  if (!optionText) return;
+
   const cleanedOption = optionText
     .trim()
     .replace(/^"/, "")

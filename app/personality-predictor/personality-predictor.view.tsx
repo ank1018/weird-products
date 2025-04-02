@@ -3,10 +3,7 @@ import React, { useState, useEffect } from "react";
 import {
   Sparkles,
   Brain,
-  AlertCircle,
-  Check,
   ChevronRight,
-  RefreshCw,
   MessageSquare,
   Lightbulb,
   Star,
@@ -18,6 +15,7 @@ import NavBarView from "../nav-bar/nav-bar.view";
 import GoogleAd from "../google-ads/google-ads.view";
 import Footer from "../footer/footer.view";
 import PersonalityDetectorExplanation from "./personality-predictor-description";
+import ResultView from "./result/result.view";
 
 const EnhancedPersonalityPredictor = () => {
   const [stage, setStage] = useState<
@@ -81,73 +79,67 @@ const EnhancedPersonalityPredictor = () => {
     setStage("freetext");
   };
 
-  // Simulate an analysis API call (replace with real Hugging Face call if desired)
-  const analyzeWithHuggingFace = async () => {
-    // Here you would call your Hugging Face API endpoint for analysis.
-    // For demonstration, we'll simulate a delay and return random traits.
-    await new Promise((res) => setTimeout(res, 2000));
-
-    const fullText = answers.map((a) => a.selected).join(" ") + " " + textInput;
-    const traits = {
-      extroversion: Math.random(),
-      openness: Math.random(),
-      conscientiousness: Math.random(),
-      agreeableness: Math.random(),
-    };
-
-    let sentiment = "neutral";
-    const lowerText = fullText.toLowerCase();
-    if (
-      lowerText.includes("love") ||
-      lowerText.includes("happy") ||
-      lowerText.includes("excited")
-    ) {
-      sentiment = "positive";
-    } else if (
-      lowerText.includes("hate") ||
-      lowerText.includes("sad") ||
-      lowerText.includes("angry")
-    ) {
-      sentiment = "negative";
-    }
-
-    return { traits, sentiment };
-  };
-
   // Basic fallback analysis
   const basicAnalysis = () => {
-    const fullText = answers.map((a) => a.selected).join(" ") + " " + textInput;
-    return {
-      sentiment: "neutral",
-      traits: {
-        extroversion: fullText.includes("friends") ? 0.7 : 0.3,
-        openness: fullText.includes("new") ? 0.7 : 0.3,
-        conscientiousness: fullText.includes("plan") ? 0.7 : 0.3,
-        agreeableness: fullText.includes("help") ? 0.7 : 0.3,
-      },
+      const traits = {
+        extroversion: 0,
+        openness: 0,
+        conscientiousness: 0,
+        agreeableness: 0,
+      };
+
+      answers.forEach(answer => {
+        const selected = answer.selected.toLowerCase();
+
+        if (/party|socializing|friends|attention|adventure|lead|excitement|karaoke|center|sing|brunch|funny|late|dramatic|social|outdoors|action|drinks|espresso|memes|fashionably|predict|intense|socializing/.test(selected)) {
+          traits.extroversion += 3;
+        }
+        if (/meditate|daydream|improvise|curiosity|random|free spirit|explore|creative|ideas|new|netflix|cluttered|comfy|documentary|relax|zone|hide|quietly|lurking|invisibility|freedom|mysterious|sleep|spontaneous|whimsical|curious|adventure/.test(selected)) {
+          traits.openness += 3;
+        }
+        if (/organize|plan|precision|checklists|reliable|responsible|meticulously|meal prep|minimalist|order|lead|structured|gps|grammar|organized|coordinate|pack|meticulous|planner|notes|responsible|prepare/.test(selected)) {
+          traits.conscientiousness += 3;
+        }
+        if (/help|mediate|peace|pets|reliable|thoughtful|advice|friends|empathetic|cooperative|kind|harmony|grateful|comfort|advice|calming|friendly|agreeable|support|donate|cooperate|peacekeeper|peaceful|thoughtful/.test(selected)) {
+          traits.agreeableness += 3;
+        }
+      });
+
+      const total = answers.length;
+
+      return {
+        sentiment: traits.extroversion > total / 2 ? "positive" : "neutral",
+        traits: {
+          extroversion: traits.extroversion / total,
+          openness: traits.openness / total,
+          conscientiousness: traits.conscientiousness / total,
+          agreeableness: traits.agreeableness / total,
+        },
+        analysisText: "Based on your answers, we've determined your key personality traits!",
+      };
     };
-  };
 
   // Generate a fun personality result based on analysis data
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-expect-error
   const generatePersonalityResult = (data) => {
-    const { extroversion, openness, conscientiousness, agreeableness } =
-      data.traits;
+    const { extroversion, openness, conscientiousness, agreeableness } = data.traits;
     let title = "The Mysterious One";
-    let description =
-      "You defy categorization. The AI is both intrigued and slightly scared.";
+    let description = data.analysisText;
 
-    if (extroversion > 0.5 && agreeableness > 0.5) {
-      title = "The Social Butterfly on Espresso";
-      description =
-        "You've never met a stranger. Your energy could power a small city!";
-    } else if (openness > 0.5 && conscientiousness < 0.5) {
-      title = "The Whimsical Wonderer";
-      description =
-        "You're a free spirit, brimming with curiosity and random bursts of creativity!";
+    if (extroversion >= 0.6 && agreeableness >= 0.6) {
+      title = "The Social Butterfly";
+      description = "You're outgoing, friendly, and love to connect with others! You're always ready to engage, make new friends, and keep social situations lively and fun. Your vibrant energy lights up any room, and your warm personality makes everyone feel included.";
+    } else if (openness >= 0.6 && conscientiousness < 0.4) {
+      title = "The Whimsical Explorer";
+      description = "Creative and endlessly curious, you're always seeking out new experiences and adventures. Your spontaneous nature means there's never a dull moment around you. You embrace uncertainty and thrive in situations that require flexibility and imagination.";
+    } else if (conscientiousness >= 0.6) {
+      title = "The Master Planner";
+      description = "Reliable, organized, and thoughtful—you thrive on structure and precision. Your meticulous nature ensures everything is always in order and tasks get done efficiently. People count on you for your dependability and your ability to foresee and manage details.";
+    } else if (agreeableness >= 0.6) {
+      title = "The Peacekeeper";
+      description = "Kind-hearted, empathetic, and cooperative, you naturally mediate conflicts and strive to create harmony. Your calming presence is greatly valued by those around you. People trust you with their feelings because they know you genuinely care and listen.";
     }
-    // Additional personality mappings can be added here
 
     return {
       title,
@@ -160,7 +152,20 @@ const EnhancedPersonalityPredictor = () => {
   const analyzePersonality = async () => {
     setLoading(true);
     try {
-      const response = await analyzeWithHuggingFace();
+      const response = await fetch("/api/analyzePersonality", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          questions,
+          answers,
+          textInput,
+        }),
+      });
+      if (!response.ok) {
+        throw new Error(`API Error: ${response.statusText}`);
+      }
       const personalityResult = generatePersonalityResult(response);
       setResult(personalityResult);
       setStage("results");
@@ -193,30 +198,6 @@ const EnhancedPersonalityPredictor = () => {
     setUserFeedback(null);
     setFollowUpQuestion(null);
   };
-
-  const TraitBar = ({
-    trait,
-    value,
-    label,
-  }: {
-    trait: string;
-    value: number;
-    label: string;
-  }) => (
-    <div className="trait-bar">
-      <div className="trait-bar-header">
-        <span className="trait-label">{label}</span>
-        <span className="trait-value">{Math.round(value * 100)}%</span>
-      </div>
-      <div className="trait-bar-container">
-        <div
-          className="trait-bar-fill"
-          style={{ width: `${value * 100}%` }}
-          data-trait={trait}
-        ></div>
-      </div>
-    </div>
-  );
 
   return (
     <>
@@ -408,92 +389,15 @@ const EnhancedPersonalityPredictor = () => {
             </div>
           )}
 
+          {/* Results section */}
           {!isLoading && stage === "results" && result && (
-            <div className="card results-card">
-              <div className="results-header">
-                <div className="sparkle-circle">
-                  <Sparkles className="sparkle-icon" />
-                </div>
-                <h2 className="results-title">{result.title}</h2>
-                <p className="results-description">{result.description}</p>
-              </div>
-
-              <div className="personality-breakdown">
-                <h3 className="breakdown-title">Your Personality Breakdown</h3>
-
-                <TraitBar
-                  trait="extroversion"
-                  value={result.traits.extroversion}
-                  label="Extroversion"
-                />
-                <TraitBar
-                  trait="openness"
-                  value={result.traits.openness}
-                  label="Openness"
-                />
-                <TraitBar
-                  trait="conscientiousness"
-                  value={result.traits.conscientiousness}
-                  label="Conscientiousness"
-                />
-                <TraitBar
-                  trait="agreeableness"
-                  value={result.traits.agreeableness}
-                  label="Agreeableness"
-                />
-
-                <div className="emotional-vibe">
-                  <span className="vibe-label">Emotional Vibe:</span>
-                  <span className={`vibe-badge ${result.sentiment}-vibe`}>
-                    {result.sentiment}
-                  </span>
-                </div>
-              </div>
-
-              {userFeedback === null && (
-                <div className="feedback-section">
-                  <h3 className="feedback-title">
-                    Did we read your mind correctly?
-                  </h3>
-                  <div className="feedback-buttons">
-                    <button
-                      onClick={() => handleFeedback(true)}
-                      className="feedback-button correct-button"
-                    >
-                      <Check className="feedback-icon" />
-                      Scary Accurate!
-                    </button>
-                    <button
-                      onClick={() => handleFeedback(false)}
-                      className="feedback-button wrong-button"
-                    >
-                      <AlertCircle className="feedback-icon" />
-                      Not Even Close
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              {userFeedback !== null && (
-                <div className="feedback-message">
-                  <p>
-                    {userFeedback
-                      ? "Wow! The AI is unstoppable! Soon it'll know your Netflix password too."
-                      : "Our AI failed you. It promises to do better next time!"}
-                  </p>
-                </div>
-              )}
-
-              <button onClick={resetGame} className="restart-button">
-                <RefreshCw className="button-icon" />
-                <span>Try Again with a Different Brain!</span>
-              </button>
-
-              <div className="results-footer">
-                * Results may vary. Our AI is still learning the complexity of
-                human personalities.
-              </div>
-            </div>
+              <ResultView
+                  result={result}
+                  userFeedback={userFeedback}
+                  onFeedback={handleFeedback}
+                  onReset={resetGame}
+                  isLoading={isLoading}
+              />
           )}
         </div>
       </div>
