@@ -275,6 +275,7 @@ const Portfolio = () => {
                 <span className="skill-pill">Android</span>
                 <span className="skill-pill">Redux</span>
                 <span className="skill-pill">Angular</span>
+                <span className="skill-pill">NextJS</span>
                 <span className="skill-pill">Node.js</span>
                 <span className="skill-pill">HTML</span>
                 <span className="skill-pill">CSS</span>
