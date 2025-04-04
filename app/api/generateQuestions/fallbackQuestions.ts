@@ -331,7 +331,188 @@ export const fallbackQuestions = [
             "Go straight for desserts",
             "Get overwhelmed and regret your choices",
         ],
+    },
+    {
+        text: "How do you handle deadlines?",
+        options: [
+            "Finish everything early, just in case",
+            "Work steadily and finish on time",
+            "Start the night before and power through",
+            "Pretend the deadline doesn’t exist",
+        ],
+    },
+    {
+        text: "You win a free vacation. You choose...",
+        options: [
+            "A quiet cabin in the mountains",
+            "An all-inclusive beach resort",
+            "A city filled with museums and history",
+            "Backpacking with no plan",
+        ],
+    },
+    {
+        text: "Your favorite type of weather is...",
+        options: [
+            "Warm and sunny",
+            "Cold and cozy",
+            "Stormy and dramatic",
+            "Whatever suits my current mood",
+        ],
+    },
+    {
+        text: "When choosing a new hobby, you...",
+        options: [
+            "Research everything thoroughly first",
+            "Jump in and learn by doing",
+            "Convince friends to join you",
+            "Procrastinate but never actually start",
+        ],
+    },
+    {
+        text: "You’re known to binge-watch...",
+        options: [
+            "True crime documentaries",
+            "Sitcoms and feel-good shows",
+            "Fantasy or sci-fi epics",
+            "Cooking competitions (but never cook)",
+        ],
+    },
+    {
+        text: "Your phone wallpaper is...",
+        options: [
+            "A motivational quote",
+            "A pet or family photo",
+            "Abstract art or aesthetic vibes",
+            "Default. I’ve never changed it.",
+        ],
+    },
+    {
+        text: "You see someone crying in public. You...",
+        options: [
+            "Offer them tissues and comfort",
+            "Awkwardly hover nearby, unsure",
+            "Avoid eye contact and walk faster",
+            "Call someone else to help",
+        ],
+    },
+    {
+        text: "Your dream home would include...",
+        options: [
+            "A library or reading nook",
+            "A high-tech kitchen",
+            "A secret room or passage",
+            "A hammock and chill vibes",
+        ],
+    },
+    {
+        text: "You overslept and have 10 minutes to get ready. You...",
+        options: [
+            "Panic and rush out the door",
+            "Accept it, show up late and unapologetic",
+            "Throw on a hat and pretend it’s fashion",
+            "Call in sick instead",
+        ],
+    },
+    {
+        text: "What’s your favorite way to celebrate a win?",
+        options: [
+            "Party like there’s no tomorrow",
+            "Treat yourself to something nice",
+            "Quietly enjoy the moment",
+            "Tell literally everyone",
+        ],
+    },
+    {
+        text: "When you're home alone, you...",
+        options: [
+            "Dance around like you're in a music video",
+            "Start cleaning without realizing it",
+            "Talk to yourself or your plants",
+            "Nap. It's finally peaceful.",
+        ],
+    },
+    {
+        text: "Your idea of self-care includes...",
+        options: [
+            "Bubble baths and scented candles",
+            "A long walk in nature",
+            "Retail therapy",
+            "Turning off all notifications",
+        ],
+    },
+    {
+        text: "You’re handed the aux cord. You play...",
+        options: [
+            "A playlist of guilty pleasures",
+            "The latest hits, obviously",
+            "Obscure indie tracks no one's heard",
+            "Something safe—no risks here",
+        ],
+    },
+    {
+        text: "You’re writing a to-do list. It's mostly...",
+        options: [
+            "Detailed, color-coded, and overwhelming",
+            "Short and hopeful",
+            "Things you’ve already done, just to check them off",
+            "Blank. Lists stress you out",
+        ],
+    },
+    {
+        text: "What do you usually do during commercials?",
+        options: [
+            "Mute it and scroll your phone",
+            "Sing along if it's a jingle",
+            "Use it as a snack break",
+            "Overanalyze the ad’s effectiveness",
+        ],
+    },
+    {
+        text: "Your dream pet would be...",
+        options: [
+            "A loyal dog",
+            "An aloof but majestic cat",
+            "Something exotic like a parrot or lizard",
+            "No pets. Too much work.",
+        ],
+    },
+    {
+        text: "You hear a weird noise at night. You...",
+        options: [
+            "Investigate immediately",
+            "Pretend you didn’t hear it",
+            "Send a text to someone just in case",
+            "Hide under the covers. Classic.",
+        ],
+    },
+    {
+        text: "What’s your coffee/tea ritual like?",
+        options: [
+            "Elaborate and Instagram-worthy",
+            "Just need caffeine, fast",
+            "Multiple cups and still tired",
+            "No thanks, I prefer water or juice",
+        ],
+    },
+    {
+        text: "What kind of video games do you gravitate toward?",
+        options: [
+            "Fast-paced action or shooters",
+            "Chill farming or simulation games",
+            "Story-driven adventures",
+            "I don’t game, but I’ll watch others",
+        ],
+    },
+    {
+        text: "How do you handle compliments?",
+        options: [
+            "Graciously, with a smile",
+            "Deflect with a joke",
+            "Get awkward and change the subject",
+            "Replay it in your head for a week",
+        ],
     }
+
 ];
 
 export const getRandomQuestions = (num = 8) => {

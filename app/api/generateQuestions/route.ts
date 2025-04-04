@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import {getRandomQuestions} from "./fallbackQuestions";
+import { getRandomQuestions } from "./fallbackQuestions";
 
 const HUGGING_FACE_API_KEY = process.env.HUGGING_FACE_API_KEY;
 const MODEL_ID = "mistralai/Mistral-7B-Instruct-v0.2";
@@ -293,7 +293,7 @@ Return ONLY valid JSON in the exact format below, with no additional text before
     console.error("Error in generateQuestions API:", error);
 
     // Fallback mock data in case of failure
-    const fallbackQuestions = getRandomQuestions(6)
+    const fallbackQuestions = getRandomQuestions(8);
 
     return NextResponse.json(fallbackQuestions);
   }

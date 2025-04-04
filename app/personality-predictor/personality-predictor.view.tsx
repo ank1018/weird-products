@@ -16,6 +16,7 @@ import GoogleAd from "../google-ads/google-ads.view";
 import Footer from "../footer/footer.view";
 import PersonalityDetectorExplanation from "./personality-predictor-description";
 import ResultView from "./result/result.view";
+import { basicAnalysis } from "./helper/helper-functions";
 
 const EnhancedPersonalityPredictor = () => {
   const [stage, setStage] = useState<
@@ -28,6 +29,7 @@ const EnhancedPersonalityPredictor = () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [answers, setAnswers] = useState<any[]>([]);
   const [textInput, setTextInput] = useState("");
+  const [secretsInput, setSecretsInput] = useState("");
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [result, setResult] = useState<any>(null);
   const [userFeedback, setUserFeedback] = useState<boolean | null>(null);
@@ -79,66 +81,43 @@ const EnhancedPersonalityPredictor = () => {
     setStage("freetext");
   };
 
-  // Basic fallback analysis
-  const basicAnalysis = () => {
-      const traits = {
-        extroversion: 0,
-        openness: 0,
-        conscientiousness: 0,
-        agreeableness: 0,
-      };
-
-      answers.forEach(answer => {
-        const selected = answer.selected.toLowerCase();
-
-        if (/party|socializing|friends|attention|adventure|lead|excitement|karaoke|center|sing|brunch|funny|late|dramatic|social|outdoors|action|drinks|espresso|memes|fashionably|predict|intense|socializing/.test(selected)) {
-          traits.extroversion += 3;
-        }
-        if (/meditate|daydream|improvise|curiosity|random|free spirit|explore|creative|ideas|new|netflix|cluttered|comfy|documentary|relax|zone|hide|quietly|lurking|invisibility|freedom|mysterious|sleep|spontaneous|whimsical|curious|adventure/.test(selected)) {
-          traits.openness += 3;
-        }
-        if (/organize|plan|precision|checklists|reliable|responsible|meticulously|meal prep|minimalist|order|lead|structured|gps|grammar|organized|coordinate|pack|meticulous|planner|notes|responsible|prepare/.test(selected)) {
-          traits.conscientiousness += 3;
-        }
-        if (/help|mediate|peace|pets|reliable|thoughtful|advice|friends|empathetic|cooperative|kind|harmony|grateful|comfort|advice|calming|friendly|agreeable|support|donate|cooperate|peacekeeper|peaceful|thoughtful/.test(selected)) {
-          traits.agreeableness += 3;
-        }
-      });
-
-      const total = answers.length;
-
-      return {
-        sentiment: traits.extroversion > total / 2 ? "positive" : "neutral",
-        traits: {
-          extroversion: traits.extroversion / total,
-          openness: traits.openness / total,
-          conscientiousness: traits.conscientiousness / total,
-          agreeableness: traits.agreeableness / total,
-        },
-        analysisText: "Based on your answers, we've determined your key personality traits!",
-      };
-    };
-
   // Generate a fun personality result based on analysis data
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-expect-error
   const generatePersonalityResult = (data) => {
-    const { extroversion, openness, conscientiousness, agreeableness } = data.traits;
-    let title = "The Mysterious One";
+    const { extroversion, openness, conscientiousness, agreeableness } =
+      data.traits;
+    let title = "The Enigmatic Thinker";
     let description = data.analysisText;
 
-    if (extroversion >= 0.6 && agreeableness >= 0.6) {
+    if (extroversion >= 0.5 && agreeableness >= 0.5) {
       title = "The Social Butterfly";
-      description = "You're outgoing, friendly, and love to connect with others! You're always ready to engage, make new friends, and keep social situations lively and fun. Your vibrant energy lights up any room, and your warm personality makes everyone feel included.";
-    } else if (openness >= 0.6 && conscientiousness < 0.4) {
+      description =
+        "You're outgoing, friendly, and love to connect with others! You're always ready to engage, make new friends, and keep social situations lively and fun. Your vibrant energy lights up any room, and your warm personality makes everyone feel included.";
+    } else if (openness >= 0.5 && conscientiousness < 0.4) {
       title = "The Whimsical Explorer";
-      description = "Creative and endlessly curious, you're always seeking out new experiences and adventures. Your spontaneous nature means there's never a dull moment around you. You embrace uncertainty and thrive in situations that require flexibility and imagination.";
-    } else if (conscientiousness >= 0.6) {
+      description =
+        "Creative and endlessly curious, you're always seeking out new experiences and adventures. Your spontaneous nature means there's never a dull moment around you. You embrace uncertainty and thrive in situations that require flexibility and imagination.";
+    } else if (conscientiousness >= 0.5 && openness < 0.4) {
       title = "The Master Planner";
-      description = "Reliable, organized, and thoughtful—you thrive on structure and precision. Your meticulous nature ensures everything is always in order and tasks get done efficiently. People count on you for your dependability and your ability to foresee and manage details.";
-    } else if (agreeableness >= 0.6) {
+      description =
+        "Reliable, organized, and thoughtful—you thrive on structure and precision. Your meticulous nature ensures everything is always in order and tasks get done efficiently. People count on you for your dependability and your ability to foresee and manage details.";
+    } else if (agreeableness >= 0.5 && extroversion < 0.5) {
       title = "The Peacekeeper";
-      description = "Kind-hearted, empathetic, and cooperative, you naturally mediate conflicts and strive to create harmony. Your calming presence is greatly valued by those around you. People trust you with their feelings because they know you genuinely care and listen.";
+      description =
+        "Kind-hearted, empathetic, and cooperative, you naturally mediate conflicts and strive to create harmony. Your calming presence is greatly valued by those around you. People trust you with their feelings because they know you genuinely care and listen.";
+    } else if (openness >= 0.5 && agreeableness >= 0.5) {
+      title = "The Compassionate Dreamer";
+      description =
+        "You're a thoughtful soul with a rich inner world and a deep sense of empathy. Creative, imaginative, and emotionally attuned, you bring beauty, insight, and kindness into the lives of those around you.";
+    } else if (extroversion < 0.4 && openness >= 0.5) {
+      title = "The Quiet Visionary";
+      description =
+        "You prefer introspection over interaction, but your imagination is boundless. You think deeply, observe quietly, and often bring unique and innovative ideas into the world.";
+    } else if (extroversion >= 0.5 && conscientiousness >= 0.5) {
+      title = "The Charismatic Achiever";
+      description =
+        "You pair energy and enthusiasm with laser-sharp focus. You’re not just outgoing—you’re driven, goal-oriented, and people are inspired by your ability to lead while getting things done.";
     }
 
     return {
@@ -173,7 +152,7 @@ const EnhancedPersonalityPredictor = () => {
       setTotalPlayed((prev) => prev + 1);
     } catch (err) {
       console.error("Error analyzing personality:", err);
-      const fallbackData = basicAnalysis();
+      const fallbackData = basicAnalysis(answers, textInput, secretsInput);
       const personalityResult = generatePersonalityResult(fallbackData);
       setResult(personalityResult);
       setStage("results");
@@ -225,7 +204,7 @@ const EnhancedPersonalityPredictor = () => {
                   <Brain className="brain-icon" />
                 </div>
                 <h2 className="card-title">
-                  Ready to be psychoanalyzed by a computer?
+                  Ready to be psychoanalyzed by an AI? 😆
                 </h2>
                 <p className="card-description">
                   Answer a few bizarre questions, and our AI will expose your
@@ -244,10 +223,10 @@ const EnhancedPersonalityPredictor = () => {
                   <Sparkles className="footer-icon sparkle-icon" />
                   <span>100% Accurate*</span>
                 </div>
-                <div className="footer-item">
-                  <Star className="footer-icon star-icon" />
-                  <span>Played {totalPlayed} times</span>
-                </div>
+                {/*<div className="footer-item">*/}
+                {/*  <Star className="footer-icon star-icon" />*/}
+                {/*  <span>Played {totalPlayed} times</span>*/}
+                {/*</div>*/}
               </div>
             </div>
           )}
@@ -345,8 +324,8 @@ const EnhancedPersonalityPredictor = () => {
               <textarea
                 className="freetext-textarea"
                 rows={4}
-                value={textInput}
-                onChange={(e) => setTextInput(e.target.value)}
+                value={secretsInput}
+                onChange={(e) => setSecretsInput(e.target.value)}
                 placeholder="Tell us your favorite food, dream vacation, or darkest secret..."
               />
               <button
@@ -391,13 +370,13 @@ const EnhancedPersonalityPredictor = () => {
 
           {/* Results section */}
           {!isLoading && stage === "results" && result && (
-              <ResultView
-                  result={result}
-                  userFeedback={userFeedback}
-                  onFeedback={handleFeedback}
-                  onReset={resetGame}
-                  isLoading={isLoading}
-              />
+            <ResultView
+              result={result}
+              userFeedback={userFeedback}
+              onFeedback={handleFeedback}
+              onReset={resetGame}
+              isLoading={isLoading}
+            />
           )}
         </div>
       </div>
