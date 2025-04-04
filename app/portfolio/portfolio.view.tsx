@@ -43,6 +43,7 @@ const Portfolio = () => {
           content="Portfolio of Ankur Singh, Software Development Engineer"
         />
         <link rel="icon" href="/favicon.ico" />
+        <meta name="google-adsense-page-ads-disabled" content="true" />
       </Head>
 
       <nav className="navbar">
