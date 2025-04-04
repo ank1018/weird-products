@@ -6,7 +6,6 @@ import {
   ChevronRight,
   MessageSquare,
   Lightbulb,
-  Star,
   Coffee,
   Camera,
 } from "lucide-react";
@@ -35,7 +34,7 @@ const EnhancedPersonalityPredictor = () => {
   const [userFeedback, setUserFeedback] = useState<boolean | null>(null);
   const [isLoading, setLoading] = useState(false);
   // const [accuracy, setAccuracy] = useState(0);
-  const [totalPlayed, setTotalPlayed] = useState(0);
+  // const [totalPlayed, setTotalPlayed] = useState(0);
 
   // Pre-defined fallback follow-up questions
   const followUpQuestions = [
@@ -149,7 +148,7 @@ const EnhancedPersonalityPredictor = () => {
       setResult(personalityResult);
       setStage("results");
       setLoading(false);
-      setTotalPlayed((prev) => prev + 1);
+      // setTotalPlayed((prev) => prev + 1);
     } catch (err) {
       console.error("Error analyzing personality:", err);
       const fallbackData = basicAnalysis(answers, textInput, secretsInput);
@@ -157,7 +156,7 @@ const EnhancedPersonalityPredictor = () => {
       setResult(personalityResult);
       setStage("results");
       setLoading(false);
-      setTotalPlayed((prev) => prev + 1);
+      // setTotalPlayed((prev) => prev + 1);
     }
   };
 
