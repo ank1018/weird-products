@@ -178,6 +178,12 @@ const FindTheInvisibleAnimal: React.FC = () => {
     return "❄️ Freezing";
   };
 
+  const endGame = () => {
+    if (audioRef.current) audioRef.current.pause();
+    if (ambienceRef.current) ambienceRef.current.pause();
+    setGameStarted(false);
+  };
+
   return (
     <>
       <NavBarView />
@@ -189,9 +195,11 @@ const FindTheInvisibleAnimal: React.FC = () => {
           </p>
         </div>
 
-        <div className="controls">
+        <div
+          className={`controls ${gameStarted ? "game-started-controls" : ""}`}
+        >
           <button onClick={toggleAudio}>
-            {audioEnabled ? "Mute Sound" : "Enable Sound"}
+            {audioEnabled ? "Mute" : "Unmute"}
           </button>
           <div className="central-text">
             <strong className="score">Score: {score}</strong>
@@ -202,6 +210,11 @@ const FindTheInvisibleAnimal: React.FC = () => {
           <button onClick={startGame}>
             {gameStarted ? "New Game" : "Start Game"}
           </button>
+          {gameStarted && (
+            <button className="exit-button" onClick={endGame}>
+              ❌
+            </button>
+          )}
         </div>
 
         <div
@@ -209,7 +222,7 @@ const FindTheInvisibleAnimal: React.FC = () => {
           onMouseMove={handleMouseMove}
           onTouchMove={handleTouchMove}
           onClick={handleClick}
-          className={`game-area ${
+          className={`game-area ${gameStarted ? "game-started" : ""} ${
             animalFound || (guesses >= MAX_GUESSES && !animalFound)
               ? "disabled"
               : ""
