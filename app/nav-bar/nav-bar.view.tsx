@@ -41,6 +41,11 @@ export default function NavBarView() {
               </Link>
             </li>
             <li className="nav-item">
+              <Link href="/find-the-animal" className="nav-link">
+                {"Find The Animal"}
+              </Link>
+            </li>
+            <li className="nav-item">
               <Link href="/portfolio" className="nav-link">
                 {"Me"}
               </Link>
@@ -60,45 +65,54 @@ export default function NavBarView() {
           <ul className="mobile-nav-links">
             <li className="nav-item">
               <Link
-                  href="/"
-                  className="nav-link"
-                  onClick={() => setMenuOpen(false)}
+                href="/"
+                className="nav-link"
+                onClick={() => setMenuOpen(false)}
               >
                 Wacky Products
               </Link>
             </li>
             <li className="nav-item">
               <Link
-                  href="/json-formatter"
-                  className="nav-link"
-                  onClick={() => setMenuOpen(false)}
+                href="/json-formatter"
+                className="nav-link"
+                onClick={() => setMenuOpen(false)}
               >
                 JSON Formatter
               </Link>
             </li>
             <li className="nav-item">
               <Link
-                  href="/find-my-ip"
-                  className="nav-link"
-                  onClick={() => setMenuOpen(false)}
+                href="/find-my-ip"
+                className="nav-link"
+                onClick={() => setMenuOpen(false)}
               >
                 {"What's My IP & Network?"}
               </Link>
             </li>
             <li className="nav-item">
               <Link
-                  href="/personality-predictor"
-                  className="nav-link"
-                  onClick={() => setMenuOpen(false)}
+                href="/personality-predictor"
+                className="nav-link"
+                onClick={() => setMenuOpen(false)}
               >
                 {"Check Your Personality"}
               </Link>
             </li>
             <li className="nav-item">
               <Link
-                  href="/portfolio"
-                  className="nav-link"
-                  onClick={() => setMenuOpen(false)}
+                href="/find-the-animal"
+                className="nav-link"
+                onClick={() => setMenuOpen(false)}
+              >
+                {"Find The Animal"}
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link
+                href="/portfolio"
+                className="nav-link"
+                onClick={() => setMenuOpen(false)}
               >
                 {"Me"}
               </Link>

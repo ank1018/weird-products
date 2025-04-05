@@ -1,0 +1,155 @@
+.gameContainer {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    max-height: 600px;
+    background-color: #121212;
+    overflow: hidden;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  }
+  
+  .startScreen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    z-index: 10;
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .startScreen h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+  }
+  
+  .startButton, .restartButton {
+    padding: 12px 24px;
+    font-size: 1.2rem;
+    background: linear-gradient(135deg, #8a2387, #e94057, #f27121);
+    color: white;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    margin-top: 20px;
+    box-shadow: 0 0 15px rgba(233, 64, 87, 0.6);
+    transition: all 0.3s ease;
+  }
+  
+  .startButton:hover, .restartButton:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(233, 64, 87, 0.8);
+  }
+  
+  .gameHeader {
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+  }
+  
+  .scoreBoard {
+    display: flex;
+    gap: 20px;
+    font-size: 1.1rem;
+  }
+  
+  .gameArea {
+    position: relative;
+    width: 100%;
+    height: calc(100% - 60px);
+    background-color: #121212;
+    cursor: none;
+  }
+  
+  .flashlight {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0) 70%);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 5;
+    box-shadow: 0 0 30px 10px rgba(255, 255, 255, 0.5);
+  }
+  
+  .shadowShape {
+    position: absolute;
+    background-color: rgba(20, 20, 20, 0.7);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: all 0.5s ease;
+  }
+  
+  .shadowShape.discovered {
+    background-color: rgba(255, 255, 255, 0.1);
+    animation: pulse 2s infinite;
+  }
+  
+  @keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7); }
+    70% { box-shadow: 0 0 0 20px rgba(255, 255, 255, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+  }
+  
+  .transformedShape {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+    animation: fadeIn 0.5s ease-in-out;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.5); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  
+  .emoji {
+    font-size: 3rem;
+    margin-bottom: 5px;
+  }
+  
+  .shapeName {
+    font-size: 1rem;
+    font-weight: bold;
+  }
+  
+  .gameComplete {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    z-index: 10;
+    text-align: center;
+    animation: fadeIn 1s ease-in-out;
+  }
+  
+  .gameComplete h2 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+  }
