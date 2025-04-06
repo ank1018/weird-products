@@ -4,7 +4,7 @@ import "./content.css";
 import { Sigmar } from "next/font/google";
 import QuirkyProductPage from "../product/product.view";
 import QuirkyPagination from "../pagination/pagination.view";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import { Product } from "../product/products.types";
 import GoogleAd from "../google-ads/google-ads.view";
 
@@ -94,8 +94,9 @@ export default function Content({ products, page }) {
 
   // Create a reference for infinite scroll detection
   const observerRef = useRef(null);
+  
   // Function to load more products (for infinite scroll)
-  const loadMoreProducts = () => {
+  const loadMoreProducts = useCallback(() => {
     if (loading || !hasMore || products.length < ITEMS_PER_PAGE) return;
 
     setLoading(true);
@@ -113,7 +114,8 @@ export default function Content({ products, page }) {
       setDisplayedMobileProducts((prev) => [...prev, ...nextProducts]);
     }
     setLoading(false);
-  };
+  }, [loading, hasMore, products, ITEMS_PER_PAGE, displayedMobileProducts.length]);
+
   // Intersection Observer for infinite scroll on mobile
   useEffect(() => {
     if (!isMobile || !hasMore) return;
@@ -133,24 +135,18 @@ export default function Content({ products, page }) {
     ); // Lower threshold for earlier detection
 
     const currentObserver = observer;
+    const currentRef = observerRef.current;
 
-    if (observerRef.current) {
-      currentObserver.observe(observerRef.current);
+    if (currentRef) {
+      currentObserver.observe(currentRef);
     }
 
     return () => {
-      if (observerRef.current) {
-        currentObserver.unobserve(observerRef.current);
+      if (currentRef) {
+        currentObserver.unobserve(currentRef);
       }
     };
-  }, [
-    isMobile,
-    loading,
-    hasMore,
-    displayedMobileProducts,
-    products,
-    loadMoreProducts,
-  ]);
+  }, [isMobile, loading, hasMore, displayedMobileProducts.length, loadMoreProducts]);
 
   // Choose which products to display based on mobile or desktop
   const productsToShow = isMobile

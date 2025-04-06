@@ -82,7 +82,7 @@ const PersonalityDetectorExplanation = () => {
 
           <p>
             Our model is designed to be fun, insightful, and surprisingly
-            accurate—but remember, it's all in good fun. Use it as a conversation
+            accurate—but remember, it&apos;s all in good fun. Use it as a conversation
             starter, self-reflection tool, or just a quirky AI experiment!
           </p>
 

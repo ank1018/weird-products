@@ -27,9 +27,9 @@ const Description: React.FC = () => {
         <GoogleAd slot={"8071302378"} format="in-article" />
 
         <h2>❓ FAQ</h2>
-        <h4>Why can't I hear any sound?</h4>
+        <h4>Why can&apos;t I hear any sound?</h4>
         <p>
-          Ensure you've tapped once to enable audio. Mobile browsers block
+          Ensure you&apos;ve tapped once to enable audio. Mobile browsers block
           autoplay without interaction.
         </p>
 
@@ -41,7 +41,7 @@ const Description: React.FC = () => {
 
         <h4>What happens when I find the animal?</h4>
         <p>
-          You'll see a funny doodle pop up, hear a celebration sound, and get
+          You&apos;ll see a funny doodle pop up, hear a celebration sound, and get
           confetti!
         </p>
 
@@ -52,6 +52,12 @@ const Description: React.FC = () => {
         </p>
 
         <GoogleAd slot={"5420878871"} format="horizontal" />
+
+        <p>Can you find all the hidden animals? It&apos;s not as easy as it looks!</p>
+        
+        <p>Each level gets progressively harder, with more animals to find and less time to do it.</p>
+        
+        <p>Don&apos;t worry if you miss some - you can always try again!</p>
       </div>
 
       <div className="description-sidebar">

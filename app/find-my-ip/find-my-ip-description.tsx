@@ -10,7 +10,7 @@ export default function FindMyIpPageDescription() {
         <h2>🔍 What is an IP Address?</h2>
         <p>
           An IP (Internet Protocol) address is a unique identifier assigned to
-          every device connected to the internet. It's like your device's digital
+          every device connected to the internet. It&apos;s like your device&apos;s digital
           address, allowing it to communicate with other devices and access online
           services.
         </p>
@@ -21,7 +21,7 @@ export default function FindMyIpPageDescription() {
         <h4>What information does my IP address reveal?</h4>
         <p>
           Your IP address typically shows your general location (city/region) and
-          internet service provider. It doesn't reveal personal information like
+          internet service provider. It doesn&apos;t reveal personal information like
           your name or exact address.
         </p>
 
@@ -39,7 +39,7 @@ export default function FindMyIpPageDescription() {
           after a certain period.
         </p>
 
-        <h4>What's the difference between IPv4 and IPv6?</h4>
+        <h4>What&apos;s the difference between IPv4 and IPv6?</h4>
         <p>
           IPv4 uses 32-bit addresses (like 192.168.1.1) while IPv6 uses 128-bit
           addresses (like 2001:0db8:85a3:0000:0000:8a2e:0370:7334). IPv6 was

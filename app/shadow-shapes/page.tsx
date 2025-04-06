@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import './styles.css';
 import NavBarView from '../nav-bar/nav-bar.view';
 import GoogleAd from '../google-ads/google-ads.view';
@@ -74,14 +74,15 @@ export default function ShadowShapesGame() {
   const [multiplier, setMultiplier] = useState(1);
   const [difficulty, setDifficulty] = useState<Difficulty>('medium');
   const gameAreaRef = useRef<HTMLDivElement>(null);
+  const [gameStarted, setGameStarted] = useState(false);
 
-  const COLORS = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEEAD', '#FF9F1C', '#FF69B4'];
+  const COLORS = useMemo(() => ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEEAD', '#FF9F1C', '#FF69B4'], []);
   const SHAPES = [
-    { type: 'circle', points: 10, size: 40 },
-    { type: 'square', points: 15, size: 40 },
-    { type: 'triangle', points: 20, size: 40 },
-    { type: 'star', points: 30, size: 45 },
-    { type: 'hexagon', points: 25, size: 45 }
+    { type: 'circle' as const, points: 10, size: 40 },
+    { type: 'square' as const, points: 15, size: 40 },
+    { type: 'triangle' as const, points: 20, size: 40 },
+    { type: 'star' as const, points: 30, size: 45 },
+    { type: 'hexagon' as const, points: 25, size: 45 }
   ];
 
   useEffect(() => {
@@ -168,6 +169,26 @@ export default function ShadowShapesGame() {
     return () => clearInterval(timer);
   }, [gameOver, score, highScore, difficulty]);
 
+  useEffect(() => {
+    if (!gameStarted) return;
+
+    const interval = setInterval(() => {
+      setShapes(prevShapes => {
+        const newShapes = [...prevShapes];
+        const randomIndex = Math.floor(Math.random() * newShapes.length);
+        const randomShape = SHAPES[Math.floor(Math.random() * SHAPES.length)];
+        newShapes[randomIndex] = {
+          ...newShapes[randomIndex],
+          color: COLORS[Math.floor(Math.random() * COLORS.length)],
+          type: randomShape.type
+        };
+        return newShapes;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [gameStarted, COLORS, SHAPES]);
+
   const handleShapeClick = (shape: Shape) => {
     if (gameOver) return;
 
@@ -193,6 +214,7 @@ export default function ShadowShapesGame() {
   const startGame = () => {
     setShowInstructions(false);
     resetGame();
+    setGameStarted(true);
   };
 
   const handleDifficultyChange = (newDifficulty: Difficulty) => {
