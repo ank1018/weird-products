@@ -313,6 +313,8 @@ export default function JsonFormatterPage() {
           <div className="jsonformatter-card">
             <h1 className="jsonformatter-title">JSON Formatter & Converter</h1>
 
+            <GoogleAd slot={"2296640639"} className="ad-top" />
+
             {/* UPDATED LAYOUT BELOW */}
             <div className="editors-container">
               {/* Original JSON Input (Left) */}
@@ -435,12 +437,13 @@ export default function JsonFormatterPage() {
             </div>
             {/* END UPDATED LAYOUT */}
 
+            <GoogleAd slot={"5420878871"} className="ad-bottom" />
+
             {/* JSON Specification */}
             <JsonFormatterPageDescription />
           </div>
         </div>
       </div>
-      <GoogleAd slot={"4077644091"} className="ad-bottom" />
       <Footer />
     </div>
   );
