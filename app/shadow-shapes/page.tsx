@@ -151,7 +151,6 @@ export default function ShadowShapesGame() {
   useEffect(() => {
     if (gameOver) return;
 
-    const settings = DIFFICULTY_SETTINGS[difficulty];
     const timer = setInterval(() => {
       setTimeLeft(prev => {
         if (prev <= 1) {
