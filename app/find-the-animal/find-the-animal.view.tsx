@@ -3,6 +3,8 @@ import React, { useState, useRef, useEffect } from "react";
 import "./find-the-animal.css";
 import NavBarView from "../nav-bar/nav-bar.view";
 import Description from "./find-the-animal-description";
+import GoogleAd from "../google-ads/google-ads.view";
+import Footer from "../footer/footer.view";
 
 interface Animal {
   name: string;
@@ -270,6 +272,8 @@ const FindTheInvisibleAnimal: React.FC = () => {
         </div>
       </div>
       <Description />
+      <GoogleAd slot={"4077644091"} className="ad-bottom" />
+      <Footer />
     </>
   );
 };

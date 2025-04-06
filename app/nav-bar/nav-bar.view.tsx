@@ -46,6 +46,11 @@ export default function NavBarView() {
               </Link>
             </li>
             <li className="nav-item">
+              <Link href="/shadow-shapes" className="nav-link">
+                {"Catch The Shapes"}
+              </Link>
+            </li>
+            <li className="nav-item">
               <Link href="/portfolio" className="nav-link">
                 {"Me"}
               </Link>
@@ -106,6 +111,15 @@ export default function NavBarView() {
                 onClick={() => setMenuOpen(false)}
               >
                 {"Find The Animal"}
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link
+                href="/shadow-shapes"
+                className="nav-link"
+                onClick={() => setMenuOpen(false)}
+              >
+                {"Catch The Shapes"}
               </Link>
             </li>
             <li className="nav-item">
