@@ -1,0 +1,101 @@
+.bank-statement-analyzer {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.upload-section {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.upload-section h2 {
+    font-size: 24px;
+    margin-bottom: 16px;
+    text-align: center;
+}
+
+.upload-section .description {
+    text-align: center;
+    color: #666;
+    margin-bottom: 24px;
+}
+
+.upload-container {
+    background: #fff;
+    border-radius: 8px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.password-section {
+    border-top: 1px solid #f0f0f0;
+    padding-top: 16px;
+}
+
+.loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+    z-index: 10;
+}
+
+/* Dashboard Styling */
+.bank-statement-dashboard {
+    background: #fff;
+    border-radius: 8px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.actions-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .bank-statement-analyzer {
+        padding: 12px;
+    }
+
+    .upload-container {
+        padding: 16px;
+    }
+
+    .bank-statement-dashboard {
+        padding: 16px;
+    }
+}
+
+/* Make the charts responsive */
+.recharts-responsive-container {
+    min-height: 300px;
+}
+
+/* Enhance table styling */
+.ant-table-thead > tr > th {
+    background-color: #f0f8ff;
+}
+
+/* Card styling */
+.ant-card {
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+    border-radius: 6px;
+    margin-bottom: 16px;
+}
+
+.ant-card-head {
+    background-color: #fafafa;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+}
