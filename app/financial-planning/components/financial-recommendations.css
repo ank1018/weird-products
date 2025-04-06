@@ -1,0 +1,187 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+.recommendations-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    font-family: 'Inter', sans-serif;
+}
+
+.recommendations-container h2 {
+    color: #1a365d;
+    margin-bottom: 2rem;
+    font-size: 2rem;
+    text-align: center;
+    font-weight: 700;
+}
+
+.charts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.chart-container {
+    background: #f8fafc;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.chart-container h3 {
+    color: #2d3748;
+    margin-bottom: 1.5rem;
+    font-size: 1.3rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+.chart-wrapper {
+    background: white;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.recommendation-section {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: #f8fafc;
+    border-radius: 12px;
+    border-left: 4px solid #4299e1;
+}
+
+.recommendation-section h3 {
+    color: #2d3748;
+    margin-bottom: 1rem;
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.recommendation-section p {
+    color: #4a5568;
+    margin-bottom: 0.5rem;
+    line-height: 1.6;
+    font-size: 1rem;
+}
+
+.explanation {
+    font-size: 0.9rem;
+    color: #718096;
+    font-style: italic;
+}
+
+.allocation-chart {
+    margin-top: 1rem;
+}
+
+.allocation-item {
+    margin-bottom: 1rem;
+}
+
+.allocation-item .label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #4a5568;
+    font-weight: 500;
+}
+
+.bar {
+    height: 24px;
+    background: #e2e8f0;
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+}
+
+.fill {
+    height: 100%;
+    background: #4299e1;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: width 0.3s ease;
+}
+
+.advice-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.advice-list li {
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.5rem;
+    background: #edf2f7;
+    border-radius: 6px;
+    color: #2d3748;
+    position: relative;
+    padding-left: 2rem;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.advice-list li:before {
+    content: "•";
+    color: #4299e1;
+    position: absolute;
+    left: 1rem;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.ai-insights {
+    border-left-color: #48bb78;
+}
+
+.ai-insights h3 {
+    color: #48bb78;
+}
+
+.ai-insights .advice-list li {
+    background: #f0fff4;
+    border-left: 3px solid #48bb78;
+}
+
+/* Chart specific styles */
+.recharts-cartesian-grid line {
+    stroke: #e2e8f0;
+}
+
+.recharts-tooltip {
+    background: white !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 6px !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+    padding: 0.5rem !important;
+}
+
+.recharts-tooltip-label {
+    color: #4a5568 !important;
+    font-weight: 500 !important;
+}
+
+.recharts-legend-item-text {
+    color: #4a5568 !important;
+    font-size: 0.9rem !important;
+}
+
+@media (max-width: 768px) {
+    .charts-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .recommendations-container {
+        padding: 1rem;
+    }
+
+    .chart-container {
+        padding: 1rem;
+    }
+} 
