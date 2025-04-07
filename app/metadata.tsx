@@ -77,8 +77,14 @@ export const pageMetadata = {
   }
 };
 
+interface Product {
+  name: string;
+  description: string;
+  images?: string;
+}
+
 // Function to generate product-specific metadata
-export async function generateProductMetadata(product: any) {
+export async function generateProductMetadata(product: Product | null) {
   if (!product) return defaultMetadata;
 
   const imageUrls = product.images

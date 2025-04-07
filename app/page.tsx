@@ -5,7 +5,6 @@ import { Product } from "./product/products.types";
 import SeeAllProductsCtaView from "./see-all-products-cta/see-all-products-cta.view";
 import { cache } from "react";
 import NavBarView from "./nav-bar/nav-bar.view";
-import Link from "next/link";
 import { defaultMetadata, generateProductMetadata } from "./metadata";
 
 // Add caching to the fetch function
@@ -39,8 +38,8 @@ const fetchProducts = cache(async () => {
 });
 
 // Metadata generator function
-export async function generateMetadata({ searchParams }: { searchParams: { productName?: string } }) {
-  const { productName } = searchParams || {};
+export async function generateMetadata({ searchParams }: { searchParams: Promise<{ productName?: string }> }) {
+  const { productName } = await searchParams || {};
 
   if (!productName) {
     return defaultMetadata;
@@ -55,9 +54,9 @@ export async function generateMetadata({ searchParams }: { searchParams: { produ
 }
 
 // Main page component
-export default async function Page({ searchParams }: { searchParams: { productName?: string; page?: string } }) {
+export default async function Page({ searchParams }: { searchParams: Promise<{ productName?: string; page?: string }> }) {
   const products = await fetchProducts();
-  const { productName, page: currentPage } = searchParams;
+  const { productName, page: currentPage } = await searchParams;
 
   const filteredProducts = productName
     ? products.filter((product: Product) =>

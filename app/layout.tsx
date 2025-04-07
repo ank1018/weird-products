@@ -58,7 +58,7 @@ export const metadata: Metadata = {
 // Event tracking function
 declare global {
   interface Window {
-    gtag: (command: string, ...args: any[]) => void;
+    gtag: (command: 'config' | 'event' | 'js', ...args: unknown[]) => void;
   }
 }
 
