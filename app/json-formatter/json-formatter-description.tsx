@@ -4,13 +4,13 @@ import GoogleAd from '../google-ads/google-ads.view';
 
 export default function JsonFormatterPageDescription() {
   return (
-    <div className="description-container">
-      <div className="description-content">
+    <div className="jf-description-container">
+      <div className="jf-description-content">
         {/* JSON Specification */}
-        <div className="info-section">
+        <div className="jf-info-section">
           <h2>JSON Specification</h2>
-          <div className="ip-table-wrapper">
-            <table className="ip-table">
+          <div className="jf-table-wrapper">
+            <table className="jf-table">
               <thead>
                 <tr>
                   <th>Element</th>
@@ -57,7 +57,7 @@ export default function JsonFormatterPageDescription() {
               </tbody>
             </table>
           </div>
-          <div className="ip-note">
+          <div className="jf-note">
             <p>
               JSON (JavaScript Object Notation) is a lightweight data-interchange
               format that&apos;s easy for humans to read and write.
@@ -83,7 +83,7 @@ export default function JsonFormatterPageDescription() {
         <GoogleAd slot={"2296640639"} className="ad-horizontal" />
 
         {/* Additional Info & FAQs for SEO below */}
-        <div className="info-section">
+        <div className="jf-info-section">
           <h3>What is JSON?</h3>
           <p>
             JSON stands for <strong>JavaScript Object Notation</strong>. Despite
@@ -145,7 +145,7 @@ export default function JsonFormatterPageDescription() {
           <GoogleAd slot={"5420878871"} className="ad-horizontal" />
 
           <h3>Frequently Asked Questions (FAQ)</h3>
-          <div className="ip-note">
+          <div className="jf-note">
             <p>
               <strong>Q:</strong> How do I validate my JSON?
             </p>
@@ -230,7 +230,7 @@ export default function JsonFormatterPageDescription() {
           </p>
         </div>
       </div>
-      <div className="description-sidebar">
+      <div className="jf-description-sidebar">
         <GoogleAd slot={"1046729025"} className="ad-vertical" />
         <GoogleAd slot={"5092951097"} className="ad-vertical" />
       </div>

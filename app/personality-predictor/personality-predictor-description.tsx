@@ -6,12 +6,12 @@ import GoogleAd from "../google-ads/google-ads.view";
 
 const PersonalityDetectorExplanation = () => {
   return (
-    <div className="description-container">
-      <div className="description-card">
-        <div className="description-content">
+    <div className="pp-description-container">
+      <div className="pp-description-card">
+        <div className="pp-description-content">
           <h2>How Our AI Personality Detector Works</h2>
           
-          <div className="description-section">
+          <div className="pp-description-section">
             <h3>Understanding Personality Analysis</h3>
             <p>
               Our <strong>AI Personality Detector</strong> is an interactive tool
@@ -23,7 +23,7 @@ const PersonalityDetectorExplanation = () => {
             </p>
           </div>
 
-          <div className="description-section">
+          <div className="pp-description-section">
             <h3>The Big Five Personality Traits</h3>
             <p>
               This system draws inspiration from the{" "}
@@ -54,7 +54,7 @@ const PersonalityDetectorExplanation = () => {
             </ul>
           </div>
 
-          <div className="description-section">
+          <div className="pp-description-section">
             <h3>How the AI Makes Predictions</h3>
             <p>
               Using your selected answers and any free-form responses you provide, our
@@ -81,7 +81,7 @@ const PersonalityDetectorExplanation = () => {
             </ul>
           </div>
 
-          <div className="description-note">
+          <div className="pp-description-note">
             <p>
               *Disclaimer: This tool is not intended to replace professional
               psychological evaluations. Use it as a fun way to explore your
@@ -89,7 +89,7 @@ const PersonalityDetectorExplanation = () => {
             </p>
           </div>
 
-          <GoogleAd slot={"2296640639"} className="ad-top" />
+          <GoogleAd slot={"2296640639"} className="pp-ad-top" />
         </div>
       </div>
     </div>

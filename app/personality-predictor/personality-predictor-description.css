@@ -1,4 +1,4 @@
-.description-container {
+.pp-description-container {
   font-family: 'Comic Sans MS', 'Chalkboard SE', cursive;
   max-width: 800px;
   margin: 0 auto;
@@ -8,7 +8,7 @@
   justify-content: center;
 }
 
-.description-card {
+.pp-description-card {
   background: white;
   border-radius: 2rem;
   padding: 2rem;
@@ -18,20 +18,20 @@
   transform: rotate(-0.5deg);
 }
 
-.description-content {
+.pp-description-content {
   flex: 1;
   min-width: 0;
 }
 
-.description-content h2 {
+.pp-description-content h2 {
   color: #000000;
 }
 
-.description-section {
+.pp-description-section {
   margin-bottom: 2rem;
 }
 
-.description-section h3 {
+.pp-description-section h3 {
   font-family: 'Comic Sans MS', 'Chalkboard SE', cursive;
   font-size: 1.5rem;
   color: #8a2be2;
@@ -40,7 +40,7 @@
   position: relative;
 }
 
-.description-section h3::after {
+.pp-description-section h3::after {
   content: '';
   position: absolute;
   bottom: -5px;
@@ -51,20 +51,20 @@
   border-radius: 5px;
 }
 
-.description-section p {
+.pp-description-section p {
   font-family: 'Comic Sans MS', 'Chalkboard SE', cursive;
   line-height: 1.6;
   color: #333;
   margin-bottom: 1rem;
 }
 
-.description-section ul {
+.pp-description-section ul {
   list-style-type: none;
   padding-left: 0;
   margin-bottom: 1rem;
 }
 
-.description-section li {
+.pp-description-section li {
   margin-bottom: 0.5rem;
   padding-left: 1.5rem;
   position: relative;
@@ -72,25 +72,25 @@
   color: #333;
 }
 
-.description-section li:before {
+.pp-description-section li:before {
   content: '✨';
   position: absolute;
   left: 0;
   color: #ff69b4;
 }
 
-.description-section strong {
+.pp-description-section strong {
   color: #8a2be2;
   font-weight: bold;
 }
 
-.description-section em {
+.pp-description-section em {
   color: #ff69b4;
   font-style: italic;
 }
 
 /* Note styling */
-.description-note {
+.pp-description-note {
   background-color: rgba(243, 232, 255, 0.3);
   padding: 1rem;
   border-radius: 1rem;
@@ -98,7 +98,7 @@
   margin: 1rem 0;
 }
 
-.description-note p {
+.pp-description-note p {
   font-family: 'Comic Sans MS', 'Chalkboard SE', cursive;
   color: #666;
   margin: 0;
@@ -107,19 +107,19 @@
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-  .description-container {
+  .pp-description-container {
     padding: 2rem 1rem;
   }
   
-  .description-card {
+  .pp-description-card {
     padding: 1.5rem;
   }
   
-  .description-section h3 {
+  .pp-description-section h3 {
     font-size: 1.3rem;
   }
   
-  .description-section p {
+  .pp-description-section p {
     font-size: 0.95rem;
   }
 } 

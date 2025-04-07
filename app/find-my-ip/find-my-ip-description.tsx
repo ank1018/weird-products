@@ -4,11 +4,11 @@ import GoogleAd from '../google-ads/google-ads.view';
 
 const FindMyIpDescription: React.FC = () => {
   return (
-    <div className="description-container">
-      <div className="description-card">
+    <div className="ip-description-container">
+      <div className="ip-description-card">
         <h2>What is an IP Address?</h2>
         
-        <div className="description-section">
+        <div className="ip-description-section">
           <h3>Understanding IP Addresses</h3>
           <p>
             An IP (Internet Protocol) address is a unique identifier assigned to
@@ -18,7 +18,7 @@ const FindMyIpDescription: React.FC = () => {
           </p>
         </div>
 
-        <div className="description-section">
+        <div className="ip-description-section">
           <h3>How IP Addresses Work</h3>
           <p>
             Your IP address typically shows your general location (city/region) and
@@ -27,7 +27,7 @@ const FindMyIpDescription: React.FC = () => {
           </p>
         </div>
 
-        <div className="description-section">
+        <div className="ip-description-section">
           <h3>IPv4 vs IPv6</h3>
           <p>
             IPv4 uses 32-bit addresses (like 192.168.1.1) while IPv6 uses 128-bit
@@ -36,7 +36,7 @@ const FindMyIpDescription: React.FC = () => {
           </p>
         </div>
 
-        <div className="description-section">
+        <div className="ip-description-section">
           <h3>Privacy and Security</h3>
           <p>
             While your IP address doesn&apos;t directly reveal your identity, it can be
@@ -45,7 +45,7 @@ const FindMyIpDescription: React.FC = () => {
           </p>
         </div>
 
-        <div className="description-note">
+        <div className="ip-description-note">
           <p>
             Note: Your IP address is automatically detected by our tool. No personal
             information is stored or shared.
