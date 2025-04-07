@@ -1,59 +1,61 @@
-import "./find-my-ip.css";
-import GoogleAd from "../google-ads/google-ads.view";
+import React from 'react';
+import './find-my-ip-description.css';
+import GoogleAd from '../google-ads/google-ads.view';
 
-export default function FindMyIpPageDescription() {
+const FindMyIpDescription: React.FC = () => {
   return (
     <div className="description-container">
-      <div className="description-content">
-        <GoogleAd slot={"2296640639"} format="horizontal" />
+      <div className="description-card">
+        <h2>What is an IP Address?</h2>
         
-        <h2>🔍 What is an IP Address?</h2>
-        <p>
-          An IP (Internet Protocol) address is a unique identifier assigned to
-          every device connected to the internet. It&apos;s like your device&apos;s digital
-          address, allowing it to communicate with other devices and access online
-          services.
-        </p>
+        <div className="description-section">
+          <h3>Understanding IP Addresses</h3>
+          <p>
+            An IP (Internet Protocol) address is a unique identifier assigned to
+            every device connected to the internet. It&apos;s like your device&apos;s digital
+            address, allowing it to communicate with other devices and access online
+            services.
+          </p>
+        </div>
 
-        <GoogleAd slot={"8071302378"} format="in-article" />
+        <div className="description-section">
+          <h3>How IP Addresses Work</h3>
+          <p>
+            Your IP address typically shows your general location (city/region) and
+            internet service provider. It doesn&apos;t reveal personal information like
+            your name or exact address.
+          </p>
+        </div>
 
-        <h2>❓ FAQ</h2>
-        <h4>What information does my IP address reveal?</h4>
-        <p>
-          Your IP address typically shows your general location (city/region) and
-          internet service provider. It doesn&apos;t reveal personal information like
-          your name or exact address.
-        </p>
+        <div className="description-section">
+          <h3>IPv4 vs IPv6</h3>
+          <p>
+            IPv4 uses 32-bit addresses (like 192.168.1.1) while IPv6 uses 128-bit
+            addresses (like 2001:0db8:85a3:0000:0000:8a2e:0370:7334). IPv6 was
+            created to provide more addresses as IPv4 addresses were running out.
+          </p>
+        </div>
 
-        <h4>Why do I need to know my IP address?</h4>
-        <p>
-          Knowing your IP address is useful for troubleshooting network issues,
-          setting up remote access, configuring firewalls, or accessing
-          region-restricted content.
-        </p>
+        <div className="description-section">
+          <h3>Privacy and Security</h3>
+          <p>
+            While your IP address doesn&apos;t directly reveal your identity, it can be
+            used to track your online activity. Using a VPN or proxy can help mask
+            your IP address for increased privacy.
+          </p>
+        </div>
 
-        <h4>Is my IP address permanent?</h4>
-        <p>
-          No, most IP addresses are dynamic and can change periodically. Your ISP
-          may assign you a new IP address when you reconnect to the internet or
-          after a certain period.
-        </p>
+        <div className="description-note">
+          <p>
+            Note: Your IP address is automatically detected by our tool. No personal
+            information is stored or shared.
+          </p>
+        </div>
 
-        <h4>What&apos;s the difference between IPv4 and IPv6?</h4>
-        <p>
-          IPv4 uses 32-bit addresses (like 192.168.1.1) while IPv6 uses 128-bit
-          addresses (like 2001:0db8:85a3:0000:0000:8a2e:0370:7334). IPv6 was
-          created to provide more available addresses as IPv4 addresses are
-          running out.
-        </p>
-
-        <GoogleAd slot={"5420878871"} format="horizontal" />
-      </div>
-
-      <div className="description-sidebar">
-        <GoogleAd slot={"1046729025"} format="vertical" />
-        <GoogleAd slot={"5092951097"} format="vertical" />
+        <GoogleAd slot={"2296640639"} className="ad-top" />
       </div>
     </div>
   );
-}
+};
+
+export default FindMyIpDescription;

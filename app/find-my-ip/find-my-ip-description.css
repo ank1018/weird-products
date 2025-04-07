@@ -1,16 +1,19 @@
 .description-container {
-  max-width: 1400px;
-  margin: 2rem auto;
-  padding: 0 1rem;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 4rem 1rem;
   display: flex;
-  gap: 2rem;
-  background-color: #f1f8e9;
-  border-radius: 12px;
-  border: 2px dashed #aed581;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: #33691e;
-  line-height: 1.6;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  align-items: center;
+  justify-content: center;
+}
+
+.description-card {
+  background: white;
+  border-radius: 1.5rem;
+  padding: 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  position: relative;
+  padding-top: 50px;
 }
 
 .description-content {
@@ -18,24 +21,22 @@
   min-width: 0;
 }
 
-.description-sidebar {
-  width: 300px;
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
 .description-section {
   margin-bottom: 2rem;
 }
 
 .description-section h3 {
-  color: #2e7d32;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 1.5rem;
+  color: mediumpurple;
   margin-bottom: 1rem;
+  margin-top: 1rem;
+  border-bottom: 1px solid #eaeaea;
+  padding-bottom: 0.5rem;
 }
 
 .description-section p {
+  font-family: 'Fredoka', sans-serif;
   line-height: 1.6;
   color: #333;
 }
@@ -49,55 +50,63 @@
   margin-bottom: 0.5rem;
   padding-left: 1.5rem;
   position: relative;
+  font-family: 'Fredoka', sans-serif;
+  color: #333;
 }
 
 .description-section li:before {
   content: "•";
-  color: #2e7d32;
+  color: mediumpurple;
   position: absolute;
   left: 0;
 }
 
 .description-container h2 {
-  font-size: 1.75rem;
-  margin-bottom: 1rem;
-  color: #558b2f;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  color: mediumpurple;
+  text-align: center;
 }
 
 .description-container h4 {
+  font-family: 'Fredoka', sans-serif;
   font-size: 1.2rem;
   margin-top: 1rem;
-  color: #689f38;
+  color: mediumpurple;
+}
+
+/* Note styling */
+.description-note {
+  background-color: #f8f9fa;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  border-left: 4px solid mediumpurple;
+  margin: 1rem 0;
+}
+
+.description-note p {
+  font-family: 'Fredoka', sans-serif;
+  color: #666;
+  margin: 0;
+  line-height: 1.5;
 }
 
 /* Responsive adjustments */
-@media (max-width: 1200px) {
-  .description-container {
-    flex-direction: column;
-  }
-  
-  .description-sidebar {
-    width: 100%;
-    flex-direction: row;
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-}
-
 @media (max-width: 768px) {
   .description-container {
-    padding: 0;
+    padding: 2rem 1rem;
   }
   
-  .description-sidebar {
-    display: none;
+  .description-card {
+    padding: 1.5rem;
   }
   
   .description-container h2 {
-    font-size: 1.4rem;
+    font-size: 1.5rem;
   }
   
   .description-container h4 {
-    font-size: 1.05rem;
+    font-size: 1.1rem;
   }
 } 

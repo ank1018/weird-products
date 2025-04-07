@@ -50,11 +50,6 @@ export default function NavBarView() {
                 {"Catch The Shapes"}
               </Link>
             </li>
-            <li className="nav-item">
-              <Link href="/portfolio" className="nav-link">
-                {"Me"}
-              </Link>
-            </li>
           </ul>
         </div>
         {/* Mobile Navigation Toggle */}
@@ -120,15 +115,6 @@ export default function NavBarView() {
                 onClick={() => setMenuOpen(false)}
               >
                 {"Catch The Shapes"}
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link
-                href="/portfolio"
-                className="nav-link"
-                onClick={() => setMenuOpen(false)}
-              >
-                {"Me"}
               </Link>
             </li>
           </ul>
