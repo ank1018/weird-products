@@ -1,15 +1,28 @@
 import type { Metadata, Viewport } from "next";
 
 export const metadata: Metadata = {
-  title: "JSON Formatter & Validator | Beautify & Validate JSON Online",
-  description:
-    "Use our free online JSON Formatter and Validator to format, beautify, and validate your JSON data effortlessly. Supports indentation, error detection, and easy readability.",
-  keywords:
-    "JSON formatter, JSON beautifier, JSON validator, format JSON, beautify JSON, JSON lint, online JSON tool, JSON pretty print",
+  title: "JSON Formatter | Essential Tool for Developers & Tech Gifts",
+  description: "Format and validate JSON data with our easy-to-use tool. Perfect gift for developers, programmers, and tech enthusiasts. A must-have utility for anyone working with JSON data.",
+  keywords: [
+    "JSON formatter",
+    "JSON validator",
+    "developer tools",
+    "programming utilities",
+    "tech gifts",
+    "coding tools",
+    "JSON beautifier",
+    "web development",
+    "developer gifts",
+    "programming tools",
+    "gifts for programmers",
+    "tech enthusiast gifts",
+    "coding gifts",
+    "developer utilities",
+    "programmer tools"
+  ].join(", "),
   openGraph: {
-    title: "JSON Formatter & Validator | Beautify & Validate JSON Online",
-    description:
-      "Easily format, beautify, and validate JSON data with our free online JSON tool. Get error-free, well-structured JSON instantly.",
+    title: "JSON Formatter | Perfect Gift for Developers",
+    description: "A must-have tool for developers and programmers. Format and validate JSON data instantly. Great gift for tech enthusiasts!",
     images: [
       // {
       //   url: '/static/images/json-formatter-preview.png',
@@ -25,9 +38,9 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
-  authors: [{ name: "Your Website" }],
+  authors: [{ name: "Weird Products" }],
   alternates: {
-    canonical: "https://www.wackyorwise.com/json-formatter",
+    canonical: "https://weird-products.com/json-formatter",
   },
 };
 
