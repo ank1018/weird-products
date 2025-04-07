@@ -32,52 +32,6 @@ const CodeMirror = dynamic(() => import("@uiw/react-codemirror"), {
   ssr: false,
 });
 
-// JSON templates
-const JSON_TEMPLATES = {
-  user: `{
-  "user": {
-    "id": 1,
-    "name": "John Doe",
-    "email": "john@example.com",
-    "address": {
-      "street": "123 Main St",
-      "city": "Anytown",
-      "zip": "12345"
-    }
-  }
-}`,
-  product: `{
-  "product": {
-    "id": "P001",
-    "name": "Sample Product",
-    "price": 99.99,
-    "inStock": true,
-    "tags": ["electronics", "gadget"],
-    "specifications": {
-      "color": "black",
-      "weight": "1.2kg"
-    }
-  }
-}`,
-  apiResponse: `{
-  "status": "success",
-  "data": {
-    "items": [
-      {
-        "id": 1,
-        "name": "Item 1"
-      },
-      {
-        "id": 2,
-        "name": "Item 2"
-      }
-    ],
-    "total": 2
-  },
-  "message": "Operation successful"
-}`
-};
-
 export default function JsonFormatterPage() {
   const [input, setInput] = useState("");
   const [output, setOutput] = useState("");
@@ -85,15 +39,8 @@ export default function JsonFormatterPage() {
   const [copied, setCopied] = useState(false);
   const [loading, setLoading] = useState(false);
   const [outputFormat, setOutputFormat] = useState("json");
-  const [theme, setTheme] = useState<"dark" | "light">("dark");
-  const [showLineNumbers, setShowLineNumbers] = useState(true);
-  const [jsonPath, setJsonPath] = useState("");
-  const [jsonPathResult, setJsonPathResult] = useState("");
-  const [diffInput1, setDiffInput1] = useState("");
-  const [diffInput2, setDiffInput2] = useState("");
-  const [diffResult, setDiffResult] = useState("");
-  const [schema, setSchema] = useState("");
-  const [schemaValidationResult, setSchemaValidationResult] = useState("");
+  const [theme] = useState<"dark" | "light">("dark");
+  const [showLineNumbers] = useState(true);
 
   useEffect(() => {
     document.body.classList.add("jsonformatter-route-body");
@@ -206,13 +153,6 @@ export default function JsonFormatterPage() {
     setInput("");
     setOutput("");
     setError("");
-    setJsonPath("");
-    setJsonPathResult("");
-    setDiffInput1("");
-    setDiffInput2("");
-    setDiffResult("");
-    setSchema("");
-    setSchemaValidationResult("");
   };
 
   // --------------------------
@@ -301,109 +241,6 @@ export default function JsonFormatterPage() {
     });
 
     return csv;
-  };
-
-  // --------------------------
-  // Template & File Handling
-  // --------------------------
-  const loadTemplate = (templateKey: keyof typeof JSON_TEMPLATES) => {
-    setInput(JSON_TEMPLATES[templateKey]);
-  };
-
-  const findJsonPath = () => {
-    try {
-      const parsed = JSON.parse(input);
-      const result = jsonPath.split('.').reduce((obj, key) => obj?.[key], parsed);
-      setJsonPathResult(JSON.stringify(result, null, 2));
-    } catch (err) {
-      setJsonPathResult(`Error: ${(err as Error).message}`);
-    }
-  };
-
-  const compareJson = () => {
-    try {
-      const obj1 = JSON.parse(diffInput1);
-      const obj2 = JSON.parse(diffInput2);
-      const differences = findDifferences(obj1, obj2);
-      setDiffResult(JSON.stringify(differences, null, 2));
-    } catch (err) {
-      setDiffResult(`Error: ${(err as Error).message}`);
-    }
-  };
-
-  const validateSchema = () => {
-    try {
-      const data = JSON.parse(input);
-      const jsonSchema = JSON.parse(schema);
-      const result = validateAgainstSchema(data, jsonSchema);
-      setSchemaValidationResult(result);
-    } catch (err) {
-      setSchemaValidationResult(`Error: ${(err as Error).message}`);
-    }
-  };
-
-  // Helper functions
-  const findDifferences = (obj1: any, obj2: any, path = '') => {
-    const differences: any = {};
-    
-    const allKeys = new Set([...Object.keys(obj1), ...Object.keys(obj2)]);
-    
-    for (const key of allKeys) {
-      const currentPath = path ? `${path}.${key}` : key;
-      
-      if (!(key in obj1)) {
-        differences[currentPath] = { added: obj2[key] };
-      } else if (!(key in obj2)) {
-        differences[currentPath] = { removed: obj1[key] };
-      } else if (typeof obj1[key] === 'object' && typeof obj2[key] === 'object') {
-        const nestedDiff = findDifferences(obj1[key], obj2[key], currentPath);
-        if (Object.keys(nestedDiff).length > 0) {
-          differences[currentPath] = nestedDiff;
-        }
-      } else if (obj1[key] !== obj2[key]) {
-        differences[currentPath] = {
-          old: obj1[key],
-          new: obj2[key]
-        };
-      }
-    }
-    
-    return differences;
-  };
-
-  const validateAgainstSchema = (data: any, schema: any) => {
-    const errors: string[] = [];
-    
-    const validateType = (value: any, type: string) => {
-      switch (type) {
-        case 'string': return typeof value === 'string';
-        case 'number': return typeof value === 'number';
-        case 'boolean': return typeof value === 'boolean';
-        case 'object': return typeof value === 'object' && value !== null;
-        case 'array': return Array.isArray(value);
-        default: return true;
-      }
-    };
-    
-    const validate = (data: any, schema: any, path = '') => {
-      if (schema.type && !validateType(data, schema.type)) {
-        errors.push(`Type mismatch at ${path}: expected ${schema.type}`);
-      }
-      
-      if (schema.properties && typeof data === 'object') {
-        for (const [key, propSchema] of Object.entries(schema.properties)) {
-          const currentPath = path ? `${path}.${key}` : key;
-          if (key in data) {
-            validate(data[key], propSchema as any, currentPath);
-          } else if (schema.required?.includes(key)) {
-            errors.push(`Missing required field: ${currentPath}`);
-          }
-        }
-      }
-    };
-    
-    validate(data, schema);
-    return errors.length === 0 ? 'Valid according to schema' : errors.join('\n');
   };
 
   // --------------------------
