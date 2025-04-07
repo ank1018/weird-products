@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Head from "next/head";
 import {
   Copy,
@@ -9,6 +9,13 @@ import {
   Download,
   Upload,
   Zap,
+  // Search,
+  // Sun,
+  // Moon,
+  // FileText,
+  // Code2,
+  // Diff,
+  // Schema,
 } from "lucide-react";
 import NavBarView from "../nav-bar/nav-bar.view";
 import Footer from "../footer/footer.view";
@@ -16,6 +23,7 @@ import "./json-formatter.css";
 import dynamic from "next/dynamic";
 import { json } from "@codemirror/lang-json";
 import { oneDark } from "@codemirror/theme-one-dark";
+import { githubLight } from "@uiw/codemirror-theme-github";
 import GoogleAd from "../google-ads/google-ads.view";
 import JsonFormatterPageDescription from "./json-formatter-description";
 
@@ -24,6 +32,52 @@ const CodeMirror = dynamic(() => import("@uiw/react-codemirror"), {
   ssr: false,
 });
 
+// JSON templates
+const JSON_TEMPLATES = {
+  user: `{
+  "user": {
+    "id": 1,
+    "name": "John Doe",
+    "email": "john@example.com",
+    "address": {
+      "street": "123 Main St",
+      "city": "Anytown",
+      "zip": "12345"
+    }
+  }
+}`,
+  product: `{
+  "product": {
+    "id": "P001",
+    "name": "Sample Product",
+    "price": 99.99,
+    "inStock": true,
+    "tags": ["electronics", "gadget"],
+    "specifications": {
+      "color": "black",
+      "weight": "1.2kg"
+    }
+  }
+}`,
+  apiResponse: `{
+  "status": "success",
+  "data": {
+    "items": [
+      {
+        "id": 1,
+        "name": "Item 1"
+      },
+      {
+        "id": 2,
+        "name": "Item 2"
+      }
+    ],
+    "total": 2
+  },
+  "message": "Operation successful"
+}`
+};
+
 export default function JsonFormatterPage() {
   const [input, setInput] = useState("");
   const [output, setOutput] = useState("");
@@ -31,12 +85,59 @@ export default function JsonFormatterPage() {
   const [copied, setCopied] = useState(false);
   const [loading, setLoading] = useState(false);
   const [outputFormat, setOutputFormat] = useState("json");
+  const [theme, setTheme] = useState<"dark" | "light">("dark");
+  const [showLineNumbers, setShowLineNumbers] = useState(true);
+  const [jsonPath, setJsonPath] = useState("");
+  const [jsonPathResult, setJsonPathResult] = useState("");
+  const [diffInput1, setDiffInput1] = useState("");
+  const [diffInput2, setDiffInput2] = useState("");
+  const [diffResult, setDiffResult] = useState("");
+  const [schema, setSchema] = useState("");
+  const [schemaValidationResult, setSchemaValidationResult] = useState("");
 
   useEffect(() => {
     document.body.classList.add("jsonformatter-route-body");
     return () => {
       document.body.classList.remove("jsonformatter-route-body");
     };
+  }, []);
+
+  // Handle keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.ctrlKey || e.metaKey) {
+        switch (e.key) {
+          case 's':
+            e.preventDefault();
+            formatJSON();
+            break;
+          case 'd':
+            e.preventDefault();
+            clearAll();
+            break;
+          case 'c':
+            if (!e.shiftKey) return;
+            e.preventDefault();
+            copyToClipboard(output);
+            break;
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [output]);
+
+  // Auto-format on paste
+  const handlePaste = useCallback((e: React.ClipboardEvent) => {
+    const pastedText = e.clipboardData.getData('text');
+    try {
+      const parsed = JSON.parse(pastedText);
+      setInput(JSON.stringify(parsed, null, 2));
+      e.preventDefault();
+    } catch {
+      // If not valid JSON, let the default paste behavior occur
+    }
   }, []);
 
   // --------------------------
@@ -58,6 +159,9 @@ export default function JsonFormatterPage() {
         case "json":
           formatted = JSON.stringify(parsed, null, 2);
           break;
+        case "minified":
+          formatted = JSON.stringify(parsed);
+          break;
         case "xml":
           formatted = jsonToXml(parsed);
           break;
@@ -75,7 +179,7 @@ export default function JsonFormatterPage() {
       setError("");
       setLoading(false);
     } catch (err) {
-      setError(`Invalid JSON: ${err}`);
+      setError(`Invalid JSON: ${(err as Error).message}`);
       setLoading(false);
     }
   };
@@ -93,7 +197,7 @@ export default function JsonFormatterPage() {
       setError("");
       setLoading(false);
     } catch (err) {
-      setError(`Couldn't fix JSON: ${err}`);
+      setError(`Couldn't fix JSON: ${(err as Error).message}`);
       setLoading(false);
     }
   };
@@ -102,6 +206,13 @@ export default function JsonFormatterPage() {
     setInput("");
     setOutput("");
     setError("");
+    setJsonPath("");
+    setJsonPathResult("");
+    setDiffInput1("");
+    setDiffInput2("");
+    setDiffResult("");
+    setSchema("");
+    setSchemaValidationResult("");
   };
 
   // --------------------------
@@ -195,27 +306,104 @@ export default function JsonFormatterPage() {
   // --------------------------
   // Template & File Handling
   // --------------------------
-  //   const loadTemplate = (templateKey: string) => {
-  //     setTemplate((prev) => ({
-  //       ...prev,
-  //       selected: templateKey,
-  //     }));
-  //     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  //     // @ts-expect-error
-  //     setInput(template.options[templateKey]);
-  //   };
+  const loadTemplate = (templateKey: keyof typeof JSON_TEMPLATES) => {
+    setInput(JSON_TEMPLATES[templateKey]);
+  };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const uploadJSON = (e: any) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    reader.onload = (event: any) => {
-      setInput(event.target.result);
+  const findJsonPath = () => {
+    try {
+      const parsed = JSON.parse(input);
+      const result = jsonPath.split('.').reduce((obj, key) => obj?.[key], parsed);
+      setJsonPathResult(JSON.stringify(result, null, 2));
+    } catch (err) {
+      setJsonPathResult(`Error: ${(err as Error).message}`);
+    }
+  };
+
+  const compareJson = () => {
+    try {
+      const obj1 = JSON.parse(diffInput1);
+      const obj2 = JSON.parse(diffInput2);
+      const differences = findDifferences(obj1, obj2);
+      setDiffResult(JSON.stringify(differences, null, 2));
+    } catch (err) {
+      setDiffResult(`Error: ${(err as Error).message}`);
+    }
+  };
+
+  const validateSchema = () => {
+    try {
+      const data = JSON.parse(input);
+      const jsonSchema = JSON.parse(schema);
+      const result = validateAgainstSchema(data, jsonSchema);
+      setSchemaValidationResult(result);
+    } catch (err) {
+      setSchemaValidationResult(`Error: ${(err as Error).message}`);
+    }
+  };
+
+  // Helper functions
+  const findDifferences = (obj1: any, obj2: any, path = '') => {
+    const differences: any = {};
+    
+    const allKeys = new Set([...Object.keys(obj1), ...Object.keys(obj2)]);
+    
+    for (const key of allKeys) {
+      const currentPath = path ? `${path}.${key}` : key;
+      
+      if (!(key in obj1)) {
+        differences[currentPath] = { added: obj2[key] };
+      } else if (!(key in obj2)) {
+        differences[currentPath] = { removed: obj1[key] };
+      } else if (typeof obj1[key] === 'object' && typeof obj2[key] === 'object') {
+        const nestedDiff = findDifferences(obj1[key], obj2[key], currentPath);
+        if (Object.keys(nestedDiff).length > 0) {
+          differences[currentPath] = nestedDiff;
+        }
+      } else if (obj1[key] !== obj2[key]) {
+        differences[currentPath] = {
+          old: obj1[key],
+          new: obj2[key]
+        };
+      }
+    }
+    
+    return differences;
+  };
+
+  const validateAgainstSchema = (data: any, schema: any) => {
+    const errors: string[] = [];
+    
+    const validateType = (value: any, type: string) => {
+      switch (type) {
+        case 'string': return typeof value === 'string';
+        case 'number': return typeof value === 'number';
+        case 'boolean': return typeof value === 'boolean';
+        case 'object': return typeof value === 'object' && value !== null;
+        case 'array': return Array.isArray(value);
+        default: return true;
+      }
     };
-    reader.readAsText(file);
-    e.target.value = null; // reset
+    
+    const validate = (data: any, schema: any, path = '') => {
+      if (schema.type && !validateType(data, schema.type)) {
+        errors.push(`Type mismatch at ${path}: expected ${schema.type}`);
+      }
+      
+      if (schema.properties && typeof data === 'object') {
+        for (const [key, propSchema] of Object.entries(schema.properties)) {
+          const currentPath = path ? `${path}.${key}` : key;
+          if (key in data) {
+            validate(data[key], propSchema as any, currentPath);
+          } else if (schema.required?.includes(key)) {
+            errors.push(`Missing required field: ${currentPath}`);
+          }
+        }
+      }
+    };
+    
+    validate(data, schema);
+    return errors.length === 0 ? 'Valid according to schema' : errors.join('\n');
   };
 
   // --------------------------
@@ -274,22 +462,6 @@ export default function JsonFormatterPage() {
     }
   };
 
-  // Icon helper
-  //   const getFormatIcon = () => {
-  //     switch (outputFormat) {
-  //       case "json":
-  //         return <FileJson size={16} />;
-  //       case "xml":
-  //         return <FileCode size={16} />;
-  //       case "yaml":
-  //         return <FileText size={16} />;
-  //       case "csv":
-  //         return <FileSpreadsheet size={16} />;
-  //       default:
-  //         return <FileJson size={16} />;
-  //     }
-  //   };
-
   return (
     <div className="background">
       <Head>
@@ -328,7 +500,17 @@ export default function JsonFormatterPage() {
                         type="file"
                         accept=".json,application/json"
                         className="hidden-input"
-                        onChange={uploadJSON}
+                        onChange={(e) => {
+                          const files = e.target.files;
+                          if (files && files[0]) {
+                            const file = files[0];
+                            const reader = new FileReader();
+                            reader.onload = (event) => {
+                              setInput(event.target?.result as string);
+                            };
+                            reader.readAsText(file);
+                          }
+                        }}
                       />
                     </label>
                     <button className="action-btn clear-btn" onClick={clearAll}>
@@ -340,10 +522,16 @@ export default function JsonFormatterPage() {
                   value={input}
                   height="750px"
                   maxWidth="100%"
-                  theme={oneDark}
+                  theme={theme === 'dark' ? oneDark : githubLight}
                   extensions={[json()]}
                   onChange={(value) => setInput(value)}
+                  onPaste={handlePaste}
                   className="json-editor"
+                  basicSetup={{
+                    lineNumbers: showLineNumbers,
+                    highlightActiveLine: true,
+                    foldGutter: true,
+                  }}
                 />
               </div>
 
@@ -359,20 +547,17 @@ export default function JsonFormatterPage() {
                       onChange={(e) => setOutputFormat(e.target.value)}
                     >
                       <option value="json">JSON</option>
+                      <option value="minified">Minified JSON</option>
                       <option value="xml">XML</option>
                       <option value="yaml">YAML</option>
                       <option value="csv">CSV</option>
                     </select>
                   </div>
 
-                  {/* Format indicator button */}
-                  {/* <button className="action-btn format-info-btn">
-                    {getFormatIcon()} {outputFormat.toUpperCase()}
-                  </button> */}
-
                   <button
                     className="action-btn format-btn"
                     onClick={formatJSON}
+                    disabled={loading}
                   >
                     <RefreshCw size={16} /> Convert &amp; Format
                   </button>
@@ -427,10 +612,15 @@ export default function JsonFormatterPage() {
                     value={output}
                     height="750px"
                     maxWidth="100%"
-                    theme={oneDark}
+                    theme={theme === 'dark' ? oneDark : githubLight}
                     extensions={[json()]}
                     onChange={(value) => setInput(value)}
                     className="json-editor"
+                    basicSetup={{
+                      lineNumbers: showLineNumbers,
+                      highlightActiveLine: true,
+                      foldGutter: true,
+                    }}
                   />
                 </div>
               </div>

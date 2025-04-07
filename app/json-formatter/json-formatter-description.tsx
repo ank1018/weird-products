@@ -1,5 +1,6 @@
-import "./json-formatter.css";
-import GoogleAd from "../google-ads/google-ads.view";
+import React from 'react';
+import './json-formatter-description.css';
+import GoogleAd from '../google-ads/google-ads.view';
 
 export default function JsonFormatterPageDescription() {
   return (
@@ -7,7 +8,7 @@ export default function JsonFormatterPageDescription() {
       <div className="description-content">
         {/* JSON Specification */}
         <div className="info-section">
-          <h3>JSON Specification</h3>
+          <h2>JSON Specification</h2>
           <div className="ip-table-wrapper">
             <table className="ip-table">
               <thead>

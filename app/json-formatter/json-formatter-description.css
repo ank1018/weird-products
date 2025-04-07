@@ -1,0 +1,162 @@
+.description-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 2rem;
+}
+
+.description-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+}
+
+.description-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.description-content h2,
+.description-content h3 {
+  font-family: 'Fredoka', sans-serif;
+  color: #4a5568;
+  margin-bottom: 1.5rem;
+}
+
+.description-content h2 {
+  font-size: 1.8rem;
+  border-bottom: 2px solid #6b46c1;
+  padding-bottom: 0.5rem;
+}
+
+.description-content h3 {
+  font-size: 1.4rem;
+  color: #6b46c1;
+}
+
+.description-content p {
+  color: #4a5568;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.description-content ul {
+  list-style-type: none;
+  padding-left: 0;
+  margin: 1rem 0;
+}
+
+.description-content li {
+  color: #4a5568;
+  padding: 0.5rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.description-content li::before {
+  content: "•";
+  color: #6b46c1;
+  font-weight: bold;
+}
+
+.description-content code {
+  background: #f7fafc;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-family: monospace;
+  color: #6b46c1;
+}
+
+.ip-table-wrapper {
+  overflow-x: auto;
+  margin: 1.5rem 0;
+}
+
+.ip-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+
+.ip-table th,
+.ip-table td {
+  padding: 0.75rem;
+  border: 1px solid #e2e8f0;
+  text-align: left;
+}
+
+.ip-table th {
+  background: #f7fafc;
+  color: #4a5568;
+  font-weight: 600;
+}
+
+.ip-note {
+  background: #f7fafc;
+  border-left: 4px solid #6b46c1;
+  padding: 1rem;
+  margin: 1.5rem 0;
+  border-radius: 0 4px 4px 0;
+}
+
+.ip-note p {
+  margin: 0.5rem 0;
+}
+
+.ip-note p:first-child {
+  margin-top: 0;
+}
+
+.ip-note p:last-child {
+  margin-bottom: 0;
+}
+
+.info-section {
+  margin-bottom: 2rem;
+}
+
+.info-section:last-child {
+  margin-bottom: 0;
+}
+
+.ad-horizontal,
+.ad-vertical {
+  margin: 2rem 0;
+  text-align: center;
+}
+
+.ad-vertical {
+  min-height: 600px;
+}
+
+@media (max-width: 1024px) {
+  .description-container {
+    grid-template-columns: 1fr;
+  }
+
+  .description-sidebar {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .description-container {
+    padding: 1rem;
+  }
+
+  .description-content {
+    padding: 1.5rem;
+  }
+
+  .description-content h2 {
+    font-size: 1.5rem;
+  }
+
+  .description-content h3 {
+    font-size: 1.2rem;
+  }
+} 
