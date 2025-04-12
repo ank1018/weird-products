@@ -1,24 +1,7 @@
 "use client";
 import React, { useState } from 'react';
-
-interface FormData {
-    age: string;
-    gender: string;
-    maritalStatus: string;
-    dependents: string;
-    monthlySalary: string;
-    otherIncome: string;
-    monthlyExpenses: string;
-    loanEMIs: string;
-    insurancePremiums: string;
-    currentSavings: string;
-    investments: string;
-    propertyValue: string;
-    retirementAge: string;
-    financialGoals: string;
-    additionalExpenses: { category: string; amount: string }[];
-    additionalAssets: { type: string; value: string }[];
-}
+import SliderInput from './SliderInput';
+import type { FormData } from '../types';
 
 interface FinancialPlanningFormProps {
     onSubmit: (data: FormData) => void;
@@ -69,26 +52,22 @@ export default function FinancialPlanningForm({ onSubmit }: FinancialPlanningFor
         gender: '',
         maritalStatus: '',
         dependents: '',
-        monthlySalary: '',
-        otherIncome: '',
-        monthlyExpenses: '',
-        loanEMIs: '',
-        insurancePremiums: '',
-        currentSavings: '',
-        investments: '',
-        propertyValue: '',
-        retirementAge: '',
-        financialGoals: '',
+        monthlySalary: '50000',
+        otherIncome: '0',
+        monthlyExpenses: '30000',
+        loanEMIs: '0',
+        insurancePremiums: '0',
+        currentSavings: '100000',
+        investments: '0',
+        propertyValue: '0',
+        retirementAge: '60',
+        financialGoals: '10000000',
         additionalExpenses: [],
         additionalAssets: []
     });
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({
-            ...prev,
-            [name]: value
-        }));
+    const handleChange = (field: keyof FormData, value: string) => {
+        setFormData(prev => ({ ...prev, [field]: value }));
     };
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -136,7 +115,7 @@ export default function FinancialPlanningForm({ onSubmit }: FinancialPlanningFor
                         type="number"
                         name="age"
                         value={formData.age}
-                        onChange={handleChange}
+                        onChange={(e) => handleChange('age', e.target.value)}
                         required
                         min="18"
                         max="100"
@@ -145,7 +124,7 @@ export default function FinancialPlanningForm({ onSubmit }: FinancialPlanningFor
                 </div>
                 <div className="form-group">
                     <label>Gender</label>
-                    <select name="gender" value={formData.gender} onChange={handleChange} required>
+                    <select name="gender" value={formData.gender} onChange={(e) => handleChange('gender', e.target.value)} required>
                         <option value="">Select</option>
                         <option value="male">Male</option>
                         <option value="female">Female</option>
@@ -154,7 +133,7 @@ export default function FinancialPlanningForm({ onSubmit }: FinancialPlanningFor
                 </div>
                 <div className="form-group">
                     <label>Marital Status</label>
-                    <select name="maritalStatus" value={formData.maritalStatus} onChange={handleChange} required>
+                    <select name="maritalStatus" value={formData.maritalStatus} onChange={(e) => handleChange('maritalStatus', e.target.value)} required>
                         <option value="">Select</option>
                         <option value="single">Single</option>
                         <option value="married">Married</option>
@@ -167,7 +146,7 @@ export default function FinancialPlanningForm({ onSubmit }: FinancialPlanningFor
                         type="number"
                         name="dependents"
                         value={formData.dependents}
-                        onChange={handleChange}
+                        onChange={(e) => handleChange('dependents', e.target.value)}
                         required
                         min="0"
                         max="10"
@@ -177,73 +156,41 @@ export default function FinancialPlanningForm({ onSubmit }: FinancialPlanningFor
             </div>
 
             <div className="form-section">
-                <h2>Income</h2>
-                <div className="form-group">
-                    <label>Monthly Salary (₹)</label>
-                    <input
-                        type="number"
-                        name="monthlySalary"
-                        value={formData.monthlySalary}
-                        onChange={handleChange}
-                        required
-                        min="0"
-                        step="1000"
-                        placeholder="Enter your monthly salary"
-                    />
-                </div>
-                <div className="form-group">
-                    <label>Other Monthly Income (₹)</label>
-                    <input
-                        type="number"
-                        name="otherIncome"
-                        value={formData.otherIncome}
-                        onChange={handleChange}
-                        min="0"
-                        step="1000"
-                        placeholder="Enter other monthly income"
-                    />
-                </div>
-            </div>
-
-            <div className="form-section">
-                <h2>Expenses</h2>
-                <div className="form-group">
-                    <label>Monthly Living Expenses (₹)</label>
-                    <input
-                        type="number"
-                        name="monthlyExpenses"
-                        value={formData.monthlyExpenses}
-                        onChange={handleChange}
-                        required
-                        min="0"
-                        step="1000"
-                        placeholder="Enter monthly living expenses"
-                    />
-                </div>
-                <div className="form-group">
-                    <label>Loan EMIs (₹)</label>
-                    <input
-                        type="number"
-                        name="loanEMIs"
-                        value={formData.loanEMIs}
-                        onChange={handleChange}
-                        min="0"
-                        step="1000"
-                        placeholder="Enter total loan EMIs"
-                    />
-                </div>
-                <div className="form-group">
-                    <label>Insurance Premiums (₹)</label>
-                    <input
-                        type="number"
-                        name="insurancePremiums"
-                        value={formData.insurancePremiums}
-                        onChange={handleChange}
-                        min="0"
-                        step="1000"
-                        placeholder="Enter insurance premiums"
-                    />
-                </div>
+                <h3>Income & Expenses</h3>
+                <SliderInput
+                    label="Monthly Salary"
+                    value={formData.monthlySalary}
+                    onChange={(value) => handleChange('monthlySalary', value)}
+                    min={0}
+                    max={1000000}
+                    step={5000}
+                    ranges={salaryRanges}
+                />
+                <SliderInput
+                    label="Monthly Expenses"
+                    value={formData.monthlyExpenses}
+                    onChange={(value) => handleChange('monthlyExpenses', value)}
+                    min={0}
+                    max={500000}
+                    step={5000}
+                    ranges={expenseRanges}
+                />
+                <SliderInput
+                    label="Loan EMIs"
+                    value={formData.loanEMIs}
+                    onChange={(value) => handleChange('loanEMIs', value)}
+                    min={0}
+                    max={100000}
+                    step={1000}
+                />
+                <SliderInput
+                    label="Insurance Premiums"
+                    value={formData.insurancePremiums}
+                    onChange={(value) => handleChange('insurancePremiums', value)}
+                    min={0}
+                    max={500000}
+                    step={5000}
+                />
 
                 <div className="additional-items">
                     <h3>Additional Expenses</h3>
@@ -276,43 +223,30 @@ export default function FinancialPlanningForm({ onSubmit }: FinancialPlanningFor
 
             <div className="form-section">
                 <h2>Assets</h2>
-                <div className="form-group">
-                    <label>Current Savings (₹)</label>
-                    <input
-                        type="number"
-                        name="currentSavings"
-                        value={formData.currentSavings}
-                        onChange={handleChange}
-                        required
-                        min="0"
-                        step="1000"
-                        placeholder="Enter current savings"
-                    />
-                </div>
-                <div className="form-group">
-                    <label>Investments (₹)</label>
-                    <input
-                        type="number"
-                        name="investments"
-                        value={formData.investments}
-                        onChange={handleChange}
-                        min="0"
-                        step="1000"
-                        placeholder="Enter total investments"
-                    />
-                </div>
-                <div className="form-group">
-                    <label>Property Value (₹)</label>
-                    <input
-                        type="number"
-                        name="propertyValue"
-                        value={formData.propertyValue}
-                        onChange={handleChange}
-                        min="0"
-                        step="1000"
-                        placeholder="Enter property value"
-                    />
-                </div>
+                <SliderInput
+                    label="Current Savings"
+                    value={formData.currentSavings}
+                    onChange={(value) => handleChange('currentSavings', value)}
+                    min={0}
+                    max={10000000}
+                    step={10000}
+                />
+                <SliderInput
+                    label="Investments"
+                    value={formData.investments}
+                    onChange={(value) => handleChange('investments', value)}
+                    min={0}
+                    max={5000000}
+                    step={10000}
+                />
+                <SliderInput
+                    label="Property Value"
+                    value={formData.propertyValue}
+                    onChange={(value) => handleChange('propertyValue', value)}
+                    min={0}
+                    max={50000000}
+                    step={100000}
+                />
 
                 <div className="additional-items">
                     <h3>Additional Assets</h3>
@@ -345,31 +279,22 @@ export default function FinancialPlanningForm({ onSubmit }: FinancialPlanningFor
 
             <div className="form-section">
                 <h2>Goals</h2>
-                <div className="form-group">
-                    <label>Desired Retirement Age</label>
-                    <input
-                        type="number"
-                        name="retirementAge"
-                        value={formData.retirementAge}
-                        onChange={handleChange}
-                        required
-                        min="50"
-                        max="80"
-                        placeholder="Enter desired retirement age"
-                    />
-                </div>
-                <div className="form-group">
-                    <label>Financial Goals (₹)</label>
-                    <input
-                        type="number"
-                        name="financialGoals"
-                        value={formData.financialGoals}
-                        onChange={handleChange}
-                        min="0"
-                        step="1000"
-                        placeholder="Enter target amount for future goals"
-                    />
-                </div>
+                <SliderInput
+                    label="Desired Retirement Age"
+                    value={formData.retirementAge}
+                    onChange={(value) => handleChange('retirementAge', value)}
+                    min={40}
+                    max={75}
+                    step={1}
+                />
+                <SliderInput
+                    label="Financial Goals"
+                    value={formData.financialGoals}
+                    onChange={(value) => handleChange('financialGoals', value)}
+                    min={0}
+                    max={100000000}
+                    step={100000}
+                />
             </div>
 
             <button type="submit" className="submit-button">

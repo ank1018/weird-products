@@ -1,8 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
+.financial-planning-container {
+display: flex;
+margin: auto;
+max-width: 90%;
+gap: 2rem;
+}
+
 .financial-form {
     max-width: 800px;
-    margin: 0 auto;
     padding: 2rem;
     background: #ffffff;
     border-radius: 16px;
@@ -130,8 +136,6 @@
 }
 
 .recommendations-container {
-    max-width: 800px;
-    margin: 2rem auto;
     padding: 2rem;
     background: #fff;
     border-radius: 12px;

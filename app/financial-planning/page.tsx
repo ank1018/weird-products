@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import FinancialPlanningForm from './components/financial-planning-form';
 import FinancialRecommendations from './components/financial-recommendations';
-import './styles.css';
+import './styles/styles.css';
 import './components/financial-recommendations.css';
 
 interface FormData {
@@ -37,6 +37,8 @@ interface Recommendations {
     };
     advice: string[];
     aiInsights: string[];
+    monthlyIncome: number;
+    monthlyExpenses: number;
 }
 
 export default function FinancialPlanningPage() {
@@ -157,7 +159,9 @@ export default function FinancialPlanningPage() {
                 gold: goldPercentage
             },
             advice,
-            aiInsights
+            aiInsights,
+            monthlyIncome: totalMonthlyIncome,
+            monthlyExpenses: totalMonthlyExpenses
         };
     };
 
@@ -174,7 +178,12 @@ export default function FinancialPlanningPage() {
                 investments, and insurance to achieve your financial goals.
             </p>
             
-            <FinancialPlanningForm onSubmit={handleFormSubmit} />
+            <div className='financial-planning-container'>
+                <FinancialPlanningForm onSubmit={handleFormSubmit} />
+                {recommendations && (
+                <FinancialRecommendations recommendations={recommendations} />
+            )}
+            </div>
             
             {isLoading && (
                 <div className="loading-container">
@@ -183,9 +192,7 @@ export default function FinancialPlanningPage() {
                 </div>
             )}
             
-            {recommendations && (
-                <FinancialRecommendations recommendations={recommendations} />
-            )}
+            
         </div>
     );
 } 
