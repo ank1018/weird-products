@@ -37,6 +37,7 @@ import {
   PieChart as PieChartIcon,
   User,
   CheckCircle,
+  Brain,
 } from "lucide-react";
 import "../styles/financial-planning.css";
 import NavBarView from "../../nav-bar/nav-bar.view";
@@ -56,6 +57,14 @@ import {
   BarChart as RechartsBarChart,
   LineChart as RechartsLineChart,
 } from "recharts";
+import BudgetTab from "./budget-tab";
+import OverviewTab from "./overview-tab";
+import InvestmentsTab from "./investment-tab";
+import DebtTab from "./debt-tab";
+import GoalsTab from "./goals-tab";
+import ProjectionsTab from "./projection-tab";
+import PersonalTab from "./personal-tab";
+import AiInsightsTab from "./ai-insight-tab";
 
 interface FinancialData {
   income: {
@@ -92,12 +101,12 @@ interface FinancialData {
     total: number;
   };
   debt: {
-    mortgage: number;
-    car: number;
-    student: number;
-    creditCard: number;
-    personal: number;
-    other: number;
+    mortgage: { amount: number; interestRate: number };
+    car: { amount: number; interestRate: number };
+    student: { amount: number; interestRate: number };
+    creditCard: { amount: number; interestRate: number };
+    personal: { amount: number; interestRate: number };
+    other: { amount: number; interestRate: number };
     total: number;
   };
   goals: {
@@ -128,6 +137,14 @@ interface PersonalInfo {
   maritalStatus: "single" | "married" | "divorced" | "widowed";
   dependents: number;
   city: string;
+}
+
+// Add AI Insights state and types
+interface AIInsights {
+  loading: boolean;
+  error: string | null;
+  insights: string[];
+  source: 'cohere' | 'openrouter' | 'fallback';
 }
 
 const FinancialPlanning = () => {
@@ -176,12 +193,12 @@ const FinancialPlanning = () => {
         total: 0,
       },
       debt: {
-        mortgage: 0,
-        car: 0,
-        student: 0,
-        creditCard: 0,
-        personal: 0,
-        other: 0,
+        mortgage: { amount: 0, interestRate: 8.2 },
+        car: { amount: 0, interestRate: 8.9 },
+        student: { amount: 0, interestRate: 7.5 },
+        creditCard: { amount: 0, interestRate: 18.0 },
+        personal: { amount: 0, interestRate: 12.5 },
+        other: { amount: 0, interestRate: 10.0 },
         total: 0,
       },
       goals: {
@@ -231,6 +248,14 @@ const FinancialPlanning = () => {
       dependents: 0,
       city: ""
     };
+  });
+
+  // Add AI Insights state and types
+  const [aiInsights, setAIInsights] = useState<AIInsights>({
+    loading: false,
+    error: null,
+    insights: [],
+    source: 'fallback'
   });
 
   // Save to localStorage whenever financialData changes
@@ -288,7 +313,10 @@ const FinancialPlanning = () => {
       .reduce((sum, [_, value]) => sum + (value || 0), 0);
     const totalDebt = Object.entries(financialData.debt)
       .filter(([key]) => key !== 'total')
-      .reduce((sum, [_, value]) => sum + (value || 0), 0);
+      .reduce((sum, [_, value]) => {
+        const debtValue = value as { amount: number; interestRate: number };
+        return sum + (debtValue.amount || 0);
+      }, 0);
 
     setFinancialData(prev => ({
       ...prev,
@@ -320,12 +348,12 @@ const FinancialPlanning = () => {
     financialData.investments.mutualFunds,
     financialData.investments.crypto,
     financialData.investments.other,
-    financialData.debt.mortgage,
-    financialData.debt.car,
-    financialData.debt.student,
-    financialData.debt.creditCard,
-    financialData.debt.personal,
-    financialData.debt.other
+    financialData.debt.mortgage.amount,
+    financialData.debt.car.amount,
+    financialData.debt.student.amount,
+    financialData.debt.creditCard.amount,
+    financialData.debt.personal.amount,
+    financialData.debt.other.amount
   ]);
 
   // Second effect: Calculate metrics and generate recommendations
@@ -338,7 +366,7 @@ const FinancialPlanning = () => {
     const newMonthlyBudget = totalIncome - totalExpenses;
     const newSavingsRate = totalIncome > 0 ? (totalSavings / totalIncome) * 100 : 0;
     const newDebtToIncomeRatio = totalIncome > 0 ? (totalDebt / totalIncome) * 100 : 0;
-    
+
     const score = calculateFinancialHealthScore({
       savingsRate: newSavingsRate,
       debtToIncomeRatio: newDebtToIncomeRatio,
@@ -491,7 +519,7 @@ const FinancialPlanning = () => {
     currentInvestments: FinancialData["investments"];
   }) => {
     const { age, investmentExperience, financialGoals, currentInvestments } = data;
-    
+
     let score = 50; // Base score
 
     // Age factor
@@ -538,15 +566,6 @@ const FinancialPlanning = () => {
 
   const getInvestmentData = () => {
     return Object.entries(financialData.investments)
-      .filter(([key]) => key !== 'total')
-      .map(([name, value]) => ({
-        name: name.charAt(0).toUpperCase() + name.slice(1),
-        value,
-      }));
-  };
-
-  const getDebtData = () => {
-    return Object.entries(financialData.debt)
       .filter(([key]) => key !== 'total')
       .map(([name, value]) => ({
         name: name.charAt(0).toUpperCase() + name.slice(1),
@@ -626,10 +645,20 @@ const FinancialPlanning = () => {
             [subCategory]: value as number,
           };
         } else if (category === "debt") {
-          newData.debt = {
-            ...newData.debt,
-            [subCategory]: value as number,
-          };
+          // Handle debt updates with nested structure
+          const [debtType, field] = (subCategory as string).split(".");
+          if (debtType && field) {
+            const debtTypeKey = debtType as keyof FinancialData["debt"];
+            const debtValue = newData.debt[debtTypeKey] as { amount: number; interestRate: number };
+
+            newData.debt = {
+              ...newData.debt,
+              [debtTypeKey]: {
+                ...debtValue,
+                [field]: value as number,
+              },
+            };
+          }
         } else if (category === "savings") {
           newData.savings = {
             ...newData.savings,
@@ -639,19 +668,6 @@ const FinancialPlanning = () => {
       }
       return newData;
     });
-  };
-
-  const calculateRetirementSavings = () => {
-    const yearsToRetirement = retirementAge - new Date().getFullYear();
-    const annualSavings = financialData.savings.total * 12;
-    const investmentReturn = 0.07; // 7% average annual return
-    let total = 0;
-
-    for (let i = 0; i < yearsToRetirement; i++) {
-      total = (total + annualSavings) * (1 + investmentReturn);
-    }
-
-    setRetirementSavings(total);
   };
 
   const handleGoalDescriptionChange = (term: keyof FinancialData["goals"], description: string) => {
@@ -678,17 +694,6 @@ const FinancialPlanning = () => {
     })}`;
   };
 
-  // Update the formatNumber function to handle NaN values
-  const formatNumber = (value: number | undefined | null): string => {
-    if (value === undefined || value === null || isNaN(value)) {
-      return "0";
-    }
-    return value.toLocaleString("en-IN", {
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 2,
-    });
-  };
-
   // Update the formatPercentage function to handle NaN values
   const formatPercentage = (value: number | undefined | null): string => {
     if (value === undefined || value === null || isNaN(value)) {
@@ -710,103 +715,87 @@ const FinancialPlanning = () => {
     }
   }, [personalInfo]);
 
-  // Add debt strategy calculation function
-  const calculateDebtStrategy = () => {
-    const totalDebt = financialData.debt.total;
-    const totalIncome = financialData.income.total;
-    const monthlyExpenses = financialData.expenses.total;
-    const monthlySavings = financialData.savings.total;
-    const debtToIncomeRatio = totalIncome > 0 ? (totalDebt / totalIncome) * 100 : 0;
-    const disposableIncome = totalIncome - monthlyExpenses;
 
-    const strategies: string[] = [];
-    const actionItems: string[] = [];
 
-    // High debt-to-income ratio strategy
-    if (debtToIncomeRatio > 40) {
-      strategies.push("Your debt-to-income ratio is high. Focus on aggressive debt reduction.");
-      actionItems.push(
-        "Consider debt consolidation to lower interest rates",
-        "Create a strict budget to free up more money for debt payments",
-        "Look for ways to increase your income through side gigs or part-time work"
-      );
-    } else if (debtToIncomeRatio > 20) {
-      strategies.push("Your debt-to-income ratio is moderate. Maintain consistent payments while building savings.");
-      actionItems.push(
-        "Continue making regular payments on all debts",
-        "Build an emergency fund to prevent new debt",
-        "Consider making extra payments on high-interest debt"
-      );
-    } else {
-      strategies.push("Your debt-to-income ratio is healthy. Focus on maintaining good financial habits.");
-      actionItems.push(
-        "Continue making regular payments",
-        "Consider investing excess funds",
-        "Build a larger emergency fund"
-      );
+  // Add function to check if all required data is filled
+  const isDataComplete = (): boolean => {
+    return Boolean(
+      personalInfo.age > 0 &&
+      personalInfo.city &&
+      financialData.income.total > 0 &&
+      financialData.expenses.total > 0 &&
+      financialData.debt.total >= 0 &&
+      financialData.savings.total >= 0 &&
+      financialData.investments.total >= 0
+    );
+  };
+
+  // Add function to get AI insights
+  // financial-planning.tsx - Updated getAIInsights function
+  const getAIInsights = async () => {
+    if (!isDataComplete()) {
+      setAIInsights({
+        loading: false,
+        error: "Please complete all required information in other tabs to get AI insights",
+        insights: [],
+        source: 'fallback'
+      });
+      return;
     }
 
-    // High-interest debt strategy
-    const highInterestDebt = financialData.debt.creditCard + financialData.debt.personal;
-    if (highInterestDebt > totalDebt * 0.3) {
-      strategies.push("You have significant high-interest debt. Prioritize paying this off first.");
-      actionItems.push(
-        "Use the avalanche method: pay minimums on all debts, put extra toward highest interest debt",
-        "Consider balance transfer to lower interest rate cards",
-        "Look for personal loan options with lower interest rates"
-      );
-    }
+    setAIInsights(prev => ({ ...prev, loading: true, error: null }));
 
-    // Student loan strategy
-    if (financialData.debt.student > 0) {
-      strategies.push("You have student loans. Consider income-driven repayment plans or refinancing.");
-      actionItems.push(
-        "Research student loan forgiveness programs",
-        "Consider refinancing if you can get a lower interest rate",
-        "Look into employer student loan repayment assistance programs"
-      );
-    }
+    try {
+      // Prepare the data for AI analysis
+      const analysisData = {
+        personal: personalInfo,
+        financial: {
+          income: financialData.income,
+          expenses: financialData.expenses,
+          debt: financialData.debt,
+          savings: financialData.savings,
+          investments: financialData.investments,
+          goals: financialData.goals
+        },
+        metrics: {
+          savingsRate,
+          debtToIncomeRatio,
+          financialHealthScore
+        }
+      };
 
-    // Mortgage strategy
-    if (financialData.debt.mortgage > 0) {
-      if (debtToIncomeRatio < 30) {
-        strategies.push("Your mortgage is manageable. Consider making extra payments to build equity faster.");
-        actionItems.push(
-          "Make bi-weekly payments instead of monthly",
-          "Consider refinancing if rates have dropped",
-          "Make one extra payment per year to reduce loan term"
-        );
-      } else {
-        strategies.push("Your mortgage is a significant portion of your debt. Focus on maintaining regular payments.");
-        actionItems.push(
-          "Ensure you have adequate home insurance",
-          "Consider refinancing if it makes financial sense",
-          "Build an emergency fund for home repairs"
-        );
+      // Call our internal API route
+      const response = await fetch('/api/finance-ai-insight', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(analysisData)
+      });
+
+      if (!response.ok) {
+        throw new Error('API request failed');
       }
-    }
 
-    // Car loan strategy
-    if (financialData.debt.car > 0) {
-      strategies.push("You have a car loan. Consider ways to optimize this debt.");
-      actionItems.push(
-        "Consider refinancing if you can get a lower rate",
-        "Make extra payments to reduce the loan term",
-        "Keep up with regular maintenance to preserve car value"
-      );
-    }
+      const data = await response.json();
 
-    // General debt reduction strategies
-    if (disposableIncome > 0) {
-      strategies.push(`You have ₹${formatNumber(disposableIncome)} in disposable income each month. Use this wisely to reduce debt.`);
-      actionItems.push(
-        "Create a debt snowball plan: pay off smallest debts first for quick wins",
-        "Set up automatic payments to avoid missed payments",
-        "Consider using windfalls (bonuses, tax refunds) to pay down debt"
-      );
-    }
+      // Use the insights from the API response
+      setAIInsights({
+        loading: false,
+        error: null,
+        insights: data.insights,
+        source: data.source
+      });
 
-    return { strategies, actionItems };
+    } catch (error) {
+      console.error('Error getting AI insights:', error);
+      setAIInsights({
+        loading: false,
+        error: "Failed to generate insights. Please try again later.",
+        insights: [],
+        source: 'fallback'
+      });
+    }
   };
 
   return (
@@ -814,7 +803,7 @@ const FinancialPlanning = () => {
       <NavBarView />
       <div className="financial-planning-content">
         <h1 className="financial-planning-title">Financial Planning Dashboard</h1>
-        
+
         {/* Financial Health Score */}
         <div className="health-score-card">
           <div className="score-circle">
@@ -882,558 +871,115 @@ const FinancialPlanning = () => {
           >
             <LineChartIcon size={20} /> Projections
           </button>
+          <button
+            className={`tab ${activeTab === "ai-insights" ? "active" : ""}`}
+            onClick={() => {
+              setActiveTab("ai-insights");
+              getAIInsights();
+            }}
+          >
+            <Brain size={20} /> AI Insights
+          </button>
         </div>
 
         {/* Content Sections */}
         <div className="content-section">
           {activeTab === "overview" && (
-            <div className="overview-grid">
-              <div className="metric-card">
-                <h3>Monthly Income</h3>
-                <p className="metric-value">{formatCurrency(financialData.income.total)}</p>
-                <div className="metric-trend">
-                  <ArrowUpRight size={16} color="#10B981" />
-                  <span className="trend-positive">+5% from last month</span>
-                </div>
-              </div>
-              <div className="metric-card">
-                <h3>Monthly Expenses</h3>
-                <p className="metric-value">{formatCurrency(financialData.expenses.total)}</p>
-                <div className="metric-trend">
-                  <ArrowDownRight size={16} color="#EF4444" />
-                  <span className="trend-negative">+2% from last month</span>
-                </div>
-              </div>
-              <div className="metric-card">
-                <h3>Savings Rate</h3>
-                <p className="metric-value">{formatPercentage(savingsRate)}</p>
-                <div className="metric-trend">
-                  <ArrowUpRight size={16} color="#10B981" />
-                  <span className="trend-positive">+1.2% from last month</span>
-                </div>
-              </div>
-              <div className="metric-card">
-                <h3>Debt to Income</h3>
-                <p className="metric-value">{formatPercentage(debtToIncomeRatio)}</p>
-                <div className="metric-trend">
-                  <ArrowDownRight size={16} color="#EF4444" />
-                  <span className="trend-negative">-0.5% from last month</span>
-                </div>
-              </div>
-            </div>
+            <OverviewTab
+              financialData={financialData}
+              formatCurrency={formatCurrency}
+              formatPercentage={formatPercentage}
+              savingsRate={savingsRate}
+              debtToIncomeRatio={debtToIncomeRatio}
+              financialHealthScore={financialHealthScore}
+              recommendations={recommendations}
+              riskProfile={riskProfile}
+            />
           )}
 
           {activeTab === "budget" && (
-            <div className="budget-section">
-              <div className="expense-chart">
-                <h3>Expense Breakdown</h3>
-                <div className="chart-container">
-                  <ResponsiveContainer width="100%" height={300}>
-                    <PieChart>
-                      <Pie
-                        data={getExpenseData()}
-                        cx="50%"
-                        cy="50%"
-                        labelLine={false}
-                        outerRadius={80}
-                        fill="#8884d8"
-                        dataKey="value"
-                        label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                      >
-                        {getExpenseData().map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                        ))}
-                      </Pie>
-                      <Tooltip formatter={formatChartValue} />
-                      <Legend />
-                    </PieChart>
-                  </ResponsiveContainer>
-                </div>
-              </div>
-              <div className="budget-form">
-                <h3>Update Budget</h3>
-                <p className="form-instructions">Enter your monthly income and expenses in Indian Rupees (₹). All amounts should be in whole numbers.</p>
-                <div className="form-group">
-                  <label>Monthly Income</label>
-                  <div className="input-with-unit">
-                    <input
-                      type="number"
-                      value={getInputValue('income', 'salary', financialData.income.salary)}
-                      onChange={(e) => handleInputChange("income", Number(e.target.value), "salary")}
-                      onFocus={() => handleInputFocus('income', 'salary')}
-                      onBlur={() => handleInputBlur('income', 'salary')}
-                      placeholder="Enter monthly income"
-                    />
-                    <span className="unit">₹/month</span>
-                  </div>
-                </div>
-                {Object.entries(financialData.expenses)
-                  .filter(([key]) => key !== 'total')
-                  .map(([category, value]) => (
-                    <div key={category} className="form-group">
-                      <label>{category.charAt(0).toUpperCase() + category.slice(1)}</label>
-                      <div className="input-with-unit">
-                        <input
-                          type="number"
-                          value={getInputValue('expenses', category, value as number)}
-                          onChange={(e) => handleInputChange("expenses", Number(e.target.value), category as any)}
-                          onFocus={() => handleInputFocus('expenses', category)}
-                          onBlur={() => handleInputBlur('expenses', category)}
-                          placeholder={`Enter ${category} expenses`}
-                        />
-                        <span className="unit">₹/month</span>
-                      </div>
-                    </div>
-                  ))}
-              </div>
-            </div>
+            <BudgetTab
+              financialData={financialData}
+              getExpenseData={getExpenseData}
+              formatCurrency={formatCurrency}
+              formatChartValue={formatChartValue}
+              getInputValue={getInputValue}
+              handleInputChange={handleInputChange}
+              handleInputFocus={handleInputFocus}
+              handleInputBlur={handleInputBlur}
+            />
           )}
 
           {activeTab === "investments" && (
-            <div className="investments-section">
-              <div className="investment-chart">
-                <h3>Investment Allocation</h3>
-                <div className="chart-container">
-                  <ResponsiveContainer width="100%" height={300}>
-                    <PieChart>
-                      <Pie
-                        data={getInvestmentData()}
-                        cx="50%"
-                        cy="50%"
-                        labelLine={false}
-                        outerRadius={80}
-                        fill="#8884d8"
-                        dataKey="value"
-                        label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                      >
-                        {getInvestmentData().map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                        ))}
-                      </Pie>
-                      <Tooltip formatter={formatChartValue} />
-                      <Legend />
-                    </PieChart>
-                  </ResponsiveContainer>
-                </div>
-              </div>
-              <div className="investment-form">
-                <h3>Update Investments</h3>
-                <p className="form-instructions">Enter your current investment amounts in Indian Rupees (₹). Include all your investments across different categories.</p>
-                {Object.entries(financialData.investments)
-                  .filter(([key]) => key !== 'total')
-                  .map(([category, value]) => (
-                    <div key={category} className="form-group">
-                      <label>{category.charAt(0).toUpperCase() + category.slice(1)}</label>
-                      <div className="input-with-unit">
-                        <input
-                          type="number"
-                          value={getInputValue('investments', category, value as number)}
-                          onChange={(e) => handleInputChange("investments", Number(e.target.value), category as any)}
-                          onFocus={() => handleInputFocus('investments', category)}
-                          onBlur={() => handleInputBlur('investments', category)}
-                          placeholder={`Enter ${category} investment`}
-                        />
-                        <span className="unit">₹</span>
-                      </div>
-                    </div>
-                  ))}
-              </div>
-            </div>
+            <InvestmentsTab
+              financialData={financialData}
+              getInvestmentData={getInvestmentData}
+              formatCurrency={formatCurrency}
+              formatChartValue={formatChartValue}
+              getInputValue={getInputValue}
+              handleInputChange={handleInputChange}
+              handleInputFocus={handleInputFocus}
+              handleInputBlur={handleInputBlur}
+            />
           )}
 
           {activeTab === "debt" && (
-            <div className="debt-section">
-              <div className="debt-chart">
-                <h3>Debt Overview</h3>
-                <div className="chart-container">
-                  <ResponsiveContainer width="100%" height={300}>
-                    <RechartsBarChart data={getDebtData()}>
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="name" />
-                      <YAxis />
-                      <Tooltip formatter={formatChartValue} />
-                      <Bar dataKey="value" fill="#8884d8">
-                        {getDebtData().map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                        ))}
-                      </Bar>
-                    </RechartsBarChart>
-                  </ResponsiveContainer>
-                </div>
-              </div>
-              <div className="debt-form">
-                <h3>Debt Management</h3>
-                <p className="form-instructions">Enter your current outstanding debt amounts in Indian Rupees (₹). Include all your loans and credit card balances.</p>
-                {Object.entries(financialData.debt)
-                  .filter(([key]) => key !== 'total')
-                  .map(([category, value]) => (
-                    <div key={category} className="form-group">
-                      <label>{category.charAt(0).toUpperCase() + category.slice(1)}</label>
-                      <div className="input-with-unit">
-                        <input
-                          type="number"
-                          value={getInputValue('debt', category, value as number)}
-                          onChange={(e) => handleInputChange("debt", Number(e.target.value), category as any)}
-                          onFocus={() => handleInputFocus('debt', category)}
-                          onBlur={() => handleInputBlur('debt', category)}
-                          placeholder={`Enter ${category} debt`}
-                        />
-                        <span className="unit">₹</span>
-                      </div>
-                    </div>
-                  ))}
-                
-                <div className="debt-strategy">
-                  <h4>Personalized Debt Strategy</h4>
-                  {(() => {
-                    const { strategies, actionItems } = calculateDebtStrategy();
-                    return (
-                      <>
-                        <div className="strategy-summary">
-                          <h5>Key Strategies</h5>
-                          <ul>
-                            {strategies.map((strategy, index) => (
-                              <li key={index}>
-                                <Lightbulb size={16} />
-                                <span>{strategy}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                        <div className="action-items">
-                          <h5>Recommended Actions</h5>
-                          <ul>
-                            {actionItems.map((item, index) => (
-                              <li key={index}>
-                                <CheckCircle size={16} />
-                                <span>{item}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      </>
-                    );
-                  })()}
-                </div>
-              </div>
-            </div>
+            <DebtTab
+              financialData={financialData}
+              formatChartValue={formatChartValue}
+              getInputValue={getInputValue}
+              handleInputChange={handleInputChange}
+              handleInputFocus={handleInputFocus}
+              handleInputBlur={handleInputBlur}
+            />
           )}
 
           {activeTab === "goals" && (
-            <div className="goals-section">
-              <div className="goals-chart">
-                <h3>Goals Progress</h3>
-                <div className="chart-container">
-                  <ResponsiveContainer width="100%" height={300}>
-                    <RechartsBarChart data={[
-                      {
-                        name: "Short Term",
-                        target: financialData.goals.shortTerm.amount,
-                        current: financialData.savings.total * 0.3,
-                      },
-                      {
-                        name: "Medium Term",
-                        target: financialData.goals.mediumTerm.amount,
-                        current: financialData.savings.total * 0.4,
-                      },
-                      {
-                        name: "Long Term",
-                        target: financialData.goals.longTerm.amount,
-                        current: financialData.savings.total * 0.3,
-                      },
-                    ]}>
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="name" />
-                      <YAxis />
-                      <Tooltip formatter={formatChartValue} />
-                      <Legend />
-                      <Bar dataKey="target" fill="#8884d8" name="Target" />
-                      <Bar dataKey="current" fill="#82ca9d" name="Current" />
-                    </RechartsBarChart>
-                  </ResponsiveContainer>
-                </div>
-              </div>
-              <div className="goals-form">
-                <h3>Set Financial Goals</h3>
-                <p className="form-instructions">Set your financial goals by entering the target amount, timeline, and a brief description. Amounts should be in Indian Rupees (₹).</p>
-                {Object.entries(financialData.goals).map(([term, goal]) => (
-                  <div key={term} className="goal-group">
-                    <h4>{term.charAt(0).toUpperCase() + term.slice(1)} Term Goal</h4>
-                    <div className="form-group">
-                      <label>Target Amount</label>
-                      <div className="input-with-unit">
-                        <input
-                          type="number"
-                          value={getInputValue('goals', `${term}-amount`, goal.amount)}
-                          onChange={(e) => handleInputChange("goals", Number(e.target.value), `${term}.amount` as any)}
-                          onFocus={() => handleInputFocus('goals', `${term}-amount`)}
-                          onBlur={() => handleInputBlur('goals', `${term}-amount`)}
-                          placeholder="Enter target amount"
-                        />
-                        <span className="unit">₹</span>
-                      </div>
-                    </div>
-                    <div className="form-group">
-                      <label>Timeline</label>
-                      <div className="input-with-unit">
-                        <input
-                          type="number"
-                          value={getInputValue('goals', `${term}-timeline`, goal.timeline)}
-                          onChange={(e) => handleInputChange("goals", Number(e.target.value), `${term}.timeline` as any)}
-                          onFocus={() => handleInputFocus('goals', `${term}-timeline`)}
-                          onBlur={() => handleInputBlur('goals', `${term}-timeline`)}
-                          placeholder="Enter timeline"
-                        />
-                        <span className="unit">years</span>
-                      </div>
-                    </div>
-                    <div className="form-group">
-                      <label>Description</label>
-                      <input
-                        type="text"
-                        value={goal.description}
-                        onChange={(e) => handleGoalDescriptionChange(term as keyof FinancialData["goals"], e.target.value)}
-                        placeholder="Enter goal description (e.g., Down payment for house, Child's education)"
-                      />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
+            <GoalsTab
+              financialData={financialData}
+              formatChartValue={formatChartValue}
+              getInputValue={getInputValue}
+              handleInputChange={handleInputChange}
+              handleInputFocus={handleInputFocus}
+              handleInputBlur={handleInputBlur}
+              handleGoalDescriptionChange={handleGoalDescriptionChange}
+            />
           )}
 
           {activeTab === "projections" && (
-            <div className="projections-section">
-              <div className="savings-projection">
-                <h3>Savings Projection</h3>
-                <div className="chart-container">
-                  <ResponsiveContainer width="100%" height={300}>
-                    <RechartsLineChart data={getSavingsProjection()}>
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="month" />
-                      <YAxis />
-                      <Tooltip formatter={formatChartValue} />
-                      <Legend />
-                      <Line
-                        type="monotone"
-                        dataKey="savings"
-                        stroke="#8884d8"
-                        name="Current Savings"
-                      />
-                      <Line
-                        type="monotone"
-                        dataKey="projection"
-                        stroke="#82ca9d"
-                        name="Projected Growth"
-                      />
-                    </RechartsLineChart>
-                  </ResponsiveContainer>
-                </div>
-              </div>
-              <div className="retirement-projection">
-                <h3>Retirement Projection</h3>
-                <div className="projection-details">
-                  <div className="detail-item">
-                    <span className="label">Current Age: </span>
-                    <span className="value">{30}</span>
-                  </div>
-                  <div className="detail-item">
-                    <span className="label">Retirement Age: </span>
-                    <span className="value">{retirementAge}</span>
-                  </div>
-                  <div className="detail-item">
-                    <span className="label">Years to Retirement: </span>
-                    <span className="value">{retirementAge - 30}</span>
-                  </div>
-                  <div className="detail-item">
-                    <span className="label">Current Retirement Savings: </span>
-                    <span className="value">{formatCurrency(financialData.savings.retirement)}</span>
-                  </div>
-                  <div className="detail-item">
-                    <span className="label">Monthly Contribution Needed: </span>
-                    <span className="value">{formatCurrency(Math.round(monthlyBudget * 0.15))}</span>
-                  </div>
-                  <div className="detail-item">
-                    <span className="label">Projected Retirement Corpus: </span>
-                    <span className="value">{formatCurrency(retirementSavings)}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <ProjectionsTab
+              getSavingsProjection={getSavingsProjection}
+              formatChartValue={formatChartValue}
+              formatCurrency={formatCurrency}
+              retirementAge={retirementAge}
+              retirementSavings={retirementSavings}
+              financialData={financialData}
+            />
           )}
 
           {activeTab === "personal" && (
-            <div className="personal-section">
-              <div className="personal-form">
-                <h3>Personal Information</h3>
-                <p className="form-instructions">Please provide your personal details to help us create a more accurate financial plan.</p>
-                
-                <div className="form-group">
-                  <label>Age</label>
-                  <div className="input-with-unit">
-                    <input
-                      type="number"
-                      value={getInputValue('personal', 'age', personalInfo.age)}
-                      onChange={(e) => setPersonalInfo(prev => ({ ...prev, age: Number(e.target.value) }))}
-                      onFocus={() => handleInputFocus('personal', 'age')}
-                      onBlur={() => handleInputBlur('personal', 'age')}
-                      placeholder="Enter your age"
-                    />
-                    <span className="unit">years</span>
-                  </div>
-                </div>
+            <PersonalTab
+              personalInfo={personalInfo}
+              getInputValue={getInputValue}
+              handleInputFocus={handleInputFocus}
+              handleInputBlur={handleInputBlur}
+              setPersonalInfo={setPersonalInfo}
+            />
+          )}
 
-                <div className="form-group">
-                  <label>Employment Status</label>
-                  <select
-                    value={personalInfo.employmentStatus}
-                    onChange={(e) => setPersonalInfo(prev => ({ ...prev, employmentStatus: e.target.value as PersonalInfo["employmentStatus"] }))}
-                  >
-                    <option value="employed">Employed</option>
-                    <option value="self-employed">Self-employed</option>
-                    <option value="retired">Retired</option>
-                    <option value="student">Student</option>
-                    <option value="other">Other</option>
-                  </select>
-                </div>
-
-                <div className="form-group">
-                  <label>Marital Status</label>
-                  <select
-                    value={personalInfo.maritalStatus}
-                    onChange={(e) => setPersonalInfo(prev => ({ ...prev, maritalStatus: e.target.value as PersonalInfo["maritalStatus"] }))}
-                  >
-                    <option value="single">Single</option>
-                    <option value="married">Married</option>
-                    <option value="divorced">Divorced</option>
-                    <option value="widowed">Widowed</option>
-                  </select>
-                </div>
-
-                <div className="form-group">
-                  <label>Number of Dependents</label>
-                  <div className="input-with-unit">
-                    <input
-                      type="number"
-                      value={getInputValue('personal', 'dependents', personalInfo.dependents)}
-                      onChange={(e) => setPersonalInfo(prev => ({ ...prev, dependents: Number(e.target.value) }))}
-                      onFocus={() => handleInputFocus('personal', 'dependents')}
-                      onBlur={() => handleInputBlur('personal', 'dependents')}
-                      placeholder="Enter number of dependents"
-                    />
-                    <span className="unit">persons</span>
-                  </div>
-                </div>
-
-                <div className="form-group">
-                  <label>City of Residence</label>
-                  <input
-                    type="text"
-                    value={personalInfo.city}
-                    onChange={(e) => setPersonalInfo(prev => ({ ...prev, city: e.target.value }))}
-                    placeholder="Enter your city"
-                  />
-                </div>
-              </div>
-            </div>
+          {activeTab === "ai-insights" && (
+            <AiInsightsTab
+              isDataComplete={isDataComplete}
+              aiInsights={aiInsights}
+              getAIInsights={getAIInsights}
+            />
           )}
         </div>
       </div>
       <GoogleAd slot={"4077644091"} className="ad-bottom" />
       <Footer />
       <style jsx>{`
-        .form-instructions {
-          color: #666;
-          font-size: 0.9rem;
-          margin-bottom: 1.5rem;
-          line-height: 1.4;
-        }
-        .input-with-unit {
-          position: relative;
-          display: flex;
-          align-items: center;
-        }
-        .input-with-unit input {
-          padding-right: 2.5rem;
-        }
-        .unit {
-          position: absolute;
-          right: 0.75rem;
-          color: #666;
-          font-size: 0.9rem;
-          pointer-events: none;
-        }
-        .goal-group {
-          margin-bottom: 2rem;
-          padding: 1rem;
-          border: 1px solid #eee;
-          border-radius: 0.5rem;
-        }
-        .goal-group h4 {
-          margin-bottom: 1rem;
-          color: #333;
-        }
-        .personal-section {
-          padding: 2rem;
-          background: white;
-          border-radius: 0.5rem;
-          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-        .personal-form {
-          max-width: 600px;
-          margin: 0 auto;
-        }
-        .form-group select {
-          width: 100%;
-          padding: 0.75rem;
-          border: 1px solid #ddd;
-          border-radius: 0.25rem;
-          font-size: 1rem;
-          background-color: white;
-        }
-        .form-group select:focus {
-          outline: none;
-          border-color: #0070f3;
-        }
-        .debt-strategy {
-          margin-top: 2rem;
-          padding: 1.5rem;
-          background: #f8f9fa;
-          border-radius: 0.5rem;
-          border: 1px solid #e9ecef;
-        }
-        .debt-strategy h4 {
-          color: #333;
-          margin-bottom: 1rem;
-        }
-        .debt-strategy h5 {
-          color: #495057;
-          margin: 1rem 0;
-          font-size: 1.1rem;
-        }
-        .debt-strategy ul {
-          list-style: none;
-          padding: 0;
-          margin: 0;
-        }
-        .debt-strategy li {
-          display: flex;
-          align-items: flex-start;
-          margin-bottom: 0.75rem;
-          color: #495057;
-        }
-        .debt-strategy li svg {
-          margin-right: 0.5rem;
-          flex-shrink: 0;
-          color: #0070f3;
-        }
-        .strategy-summary {
-          margin-bottom: 1.5rem;
-        }
-        .action-items {
-          border-top: 1px solid #e9ecef;
-          padding-top: 1.5rem;
-        }
+        
       `}</style>
     </div>
   );
