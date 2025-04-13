@@ -3,6 +3,7 @@ import "./globals.css";
 import { Sigmar } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 import Script from "next/script";
+import { GoogleAnalytics } from '@next/third-parties/google'
 
 const sigmar = Sigmar({
   subsets: ["latin"],
@@ -11,45 +12,55 @@ const sigmar = Sigmar({
 });
 
 export const metadata: Metadata = {
-  title: "Wacky or Wise - Discover Weird, Confusing & Useful Products",
-  description:
-    "Explore the most bizarre, viral, and surprisingly useful products on WackyOrWise.com. Vote on whether they are genius or just plain weird!",
+  title: "Weird Products - Unique Gifts & Useful Tools",
+  description: "Discover unique gifts for men and women, useful products, and fun online tools. Find the perfect present with our personality predictor, IP finder, and more!",
   keywords: [
-    "weird products",
-    "unusual gadgets",
-    "confusing items",
-    "useful inventions",
-    "bizarre shopping",
-    "funny Amazon Flipkart finds",
+    "gifts for men",
+    "gifts for women",
+    "unique gifts",
+    "useful products",
+    "fun gifts",
+    "online tools",
+    "personality test",
+    "IP finder",
+    "JSON formatter",
+    "gift ideas",
+    "cool gadgets",
+    "unusual presents",
     "quirky gifts",
-    "strange but useful",
-    "viral products",
-    "TikTok, reels famous products",
+    "practical gifts",
+    "tech gifts"
   ].join(", "),
+  authors: [{ name: "Weird Products" }],
   openGraph: {
-    title: "Wacky or Wise - The Most Bizarre & Useful Products Online",
-    description:
-      "Find the weirdest yet useful products that will leave you questioning their genius. Vote 'Wacky' or 'Wise' now!",
-    url: "https://www.wackyorwise.com",
-    siteName: "WackyOrWise",
-    images: [
-      {
-        url: "https://www.wackyorwise.com/images/wow-logo.png",
-        width: 900,
-        height: 450,
-        alt: "Wacky or Wise - Bizarre & Useful Products",
-      },
-    ],
+    title: "Weird Products - Unique Gifts & Useful Tools",
+    description: "Find unique gifts and useful tools for everyone. Discover our collection of fun and practical products!",
     type: "website",
+    locale: "en_US",
+    siteName: "Weird Products",
   },
-  // twitter: {
-  //   card: "summary_large_image",
-  //   title: "Wacky or Wise - The Most Bizarre & Useful Products",
-  //   description: "Vote on weird and useful products at WackyOrWise.com. Find quirky gifts and viral gadgets!",
-  //   images: ["https://www.wackyorwise.com/images/wow-banner.png"],
-  //   site: "@wackyorwise",
-  // },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  verification: {
+    google: "your-google-site-verification",
+  },
 };
+
+// Event tracking function
+declare global {
+  interface Window {
+    gtag: (command: 'config' | 'event' | 'js', ...args: unknown[]) => void;
+  }
+}
 
 export default function RootLayout({
   children,
@@ -59,6 +70,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <link rel="icon" href="/favicon.ico" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <link rel="manifest" href="/site.webmanifest" />
+        <meta name="theme-color" content="#ffffff" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         {/* Google Analytics */}
         <Script
           strategy="afterInteractive"
@@ -72,7 +88,51 @@ export default function RootLayout({
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}
               gtag('js', new Date());
-              gtag('config', 'G-ER3W9VVXM5');
+              gtag('config', 'G-ER3W9VVXM5', {
+                page_path: window.location.pathname,
+              });
+              
+              // Enhanced event tracking
+              document.addEventListener('click', function(e) {
+                const target = e.target;
+                
+                // Track tool usage
+                if (target instanceof Element && target.closest('[data-tool]')) {
+                  const tool = target.closest('[data-tool]')?.getAttribute('data-tool');
+                  gtag('event', 'tool_usage', {
+                    'event_category': 'Tools',
+                    'event_label': tool,
+                    'value': 1
+                  });
+                }
+                
+                // Track button clicks
+                if (target instanceof Element && target.closest('button')) {
+                  const buttonText = target.closest('button')?.textContent?.trim();
+                  gtag('event', 'button_click', {
+                    'event_category': 'Interaction',
+                    'event_label': buttonText,
+                    'value': 1
+                  });
+                }
+                
+                // Track external links
+                if (target instanceof Element && target.closest('a[href^="http"]')) {
+                  const link = target.closest('a')?.getAttribute('href');
+                  gtag('event', 'external_link_click', {
+                    'event_category': 'Navigation',
+                    'event_label': link,
+                    'value': 1
+                  });
+                }
+              });
+              
+              // Track page views with custom dimensions
+              gtag('event', 'page_view', {
+                'page_title': document.title,
+                'page_location': window.location.href,
+                'page_path': window.location.pathname
+              });
             `,
           }}
         />
@@ -108,6 +168,7 @@ export default function RootLayout({
       <body className={sigmar.variable}>
         <Toaster position="top-right" reverseOrder={false} />
         {children}
+        <GoogleAnalytics gaId="G-ER3W9VVXM5" />
       </body>
     </html>
   );

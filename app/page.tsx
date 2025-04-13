@@ -3,9 +3,9 @@ import ContentView from "./content/content.view";
 import Footer from "./footer/footer.view";
 import { Product } from "./product/products.types";
 import SeeAllProductsCtaView from "./see-all-products-cta/see-all-products-cta.view";
-
 import { cache } from "react";
 import NavBarView from "./nav-bar/nav-bar.view";
+import { defaultMetadata, generateProductMetadata } from "./metadata";
 
 // Add caching to the fetch function
 const fetchProducts = cache(async () => {
@@ -19,9 +19,7 @@ const fetchProducts = cache(async () => {
 
     const data = await response.json();
     if (data.values) {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-expect-error
-      return data.values.slice(1).map((row) => ({
+      return data.values.slice(1).map((row: string[]) => ({
         name: row[0] || "No name",
         description: row[1] || "No description",
         partnerName: row[2] || "Unknown partner",
@@ -40,68 +38,26 @@ const fetchProducts = cache(async () => {
 });
 
 // Metadata generator function
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-expect-error
-export async function generateMetadata({ searchParams }) {
-  const { productName } = (await searchParams) || {};
+export async function generateMetadata({ searchParams }: { searchParams: Promise<{ productName?: string }> }) {
+  const { productName } = await searchParams || {};
 
-  // If no product name is specified, return default metadata
   if (!productName) {
-    return {}; // This will use the layout metadata as fallback
+    return defaultMetadata;
   }
 
-  // Use the cached fetch function
   const products = await fetchProducts();
-
-  // Find the product that matches the name
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-expect-error
-  const product = products.find((p) =>
+  const product = products.find((p: Product) =>
     p.name.toLowerCase().includes(productName.toLowerCase())
   );
 
-  if (product) {
-    // Parse image URLs
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    const imageUrls = product.images
-      ? product.images.split(",").map((url: string) => url.trim())
-      : [];
-    const firstImageUrl =
-      imageUrls.length > 0
-        ? imageUrls[0].replace(/^"|"$/g, "")
-        : "https://www.wackyorwise.com/images/wow-logo.png";
-
-    // Return product-specific metadata
-    return {
-      title: `${product.name} - Wacky or Wise`,
-      description: product.description,
-      openGraph: {
-        title: `${product.name} - Wacky or Wise`,
-        description: product.description,
-        images: [
-          {
-            url: firstImageUrl,
-            width: 800,
-            height: 600,
-            alt: product.name,
-          },
-        ],
-      },
-    };
-  }
-
-  return {}; // Fallback to layout metadata
+  return generateProductMetadata(product);
 }
 
 // Main page component
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-expect-error
-export default async function Page({ searchParams }) {
-  // Use the cached fetch function - will reuse the result from generateMetadata if already called
+export default async function Page({ searchParams }: { searchParams: Promise<{ productName?: string; page?: string }> }) {
   const products = await fetchProducts();
   const { productName, page: currentPage } = await searchParams;
 
-  // Filter products based on productName (case-insensitive)
   const filteredProducts = productName
     ? products.filter((product: Product) =>
         product.name.toLowerCase().includes(productName.toLowerCase())

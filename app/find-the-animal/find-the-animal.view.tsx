@@ -3,6 +3,9 @@ import React, { useState, useRef, useEffect } from "react";
 import "./find-the-animal.css";
 import NavBarView from "../nav-bar/nav-bar.view";
 import Description from "./find-the-animal-description";
+import GoogleAd from "../google-ads/google-ads.view";
+import Footer from "../footer/footer.view";
+import Image from "next/image";
 
 interface Animal {
   name: string;
@@ -184,6 +187,12 @@ const FindTheInvisibleAnimal: React.FC = () => {
     setGameStarted(false);
   };
 
+  useEffect(() => {
+    if (animalFound) {
+      setScore(prevScore => prevScore + 10);
+    }
+  }, [animalFound, setScore]);
+
   return (
     <>
       <NavBarView />
@@ -231,7 +240,7 @@ const FindTheInvisibleAnimal: React.FC = () => {
           {!gameStarted ? (
             <div className="center-text">Click Start Game to begin!</div>
           ) : animalFound && currentAnimal && foundPosition ? (
-            <img
+            <Image
               src={currentAnimal.image}
               alt={currentAnimal.name}
               className="doodle-animal animate-pop"
@@ -241,6 +250,8 @@ const FindTheInvisibleAnimal: React.FC = () => {
                 transform: "translate(-50%, -50%) scale(1)",
                 position: "absolute",
               }}
+              width={100}
+              height={100}
             />
           ) : guesses >= MAX_GUESSES && !animalFound ? (
             <div className="lost-message">
@@ -270,6 +281,8 @@ const FindTheInvisibleAnimal: React.FC = () => {
         </div>
       </div>
       <Description />
+      <GoogleAd slot={"4077644091"} className="ad-bottom" />
+      <Footer />
     </>
   );
 };

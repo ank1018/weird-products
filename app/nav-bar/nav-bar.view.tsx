@@ -46,8 +46,8 @@ export default function NavBarView() {
               </Link>
             </li>
             <li className="nav-item">
-              <Link href="/portfolio" className="nav-link">
-                {"Me"}
+              <Link href="/shadow-shapes" className="nav-link">
+                {"Catch The Shapes"}
               </Link>
             </li>
           </ul>
@@ -110,11 +110,11 @@ export default function NavBarView() {
             </li>
             <li className="nav-item">
               <Link
-                href="/portfolio"
+                href="/shadow-shapes"
                 className="nav-link"
                 onClick={() => setMenuOpen(false)}
               >
-                {"Me"}
+                {"Catch The Shapes"}
               </Link>
             </li>
           </ul>

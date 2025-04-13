@@ -84,6 +84,22 @@ export default function GoogleAd({
     }
   }, [slot, testMode]);
 
+  useEffect(() => {
+    if (!isLoaded) return;
+
+    const currentRef = adRef.current;
+    if (currentRef) {
+      // Initialize ad
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
+    }
+
+    return () => {
+      if (currentRef) {
+        // Cleanup if needed
+      }
+    };
+  }, [isLoaded, adRef, slot]);
+
   if (!isClient) {
     return <div className={`ad-container ${className}`} style={style}></div>;
   }

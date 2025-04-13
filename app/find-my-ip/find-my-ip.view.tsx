@@ -117,14 +117,18 @@ export default function FindMyIpPage() {
       <NavBarView />
 
       <div className="findmyip-layout">
-        {/* Left Ad */}
+        {/* Left Ads */}
         <div className="left-ad">
-          <GoogleAd slot={"4077644091"} />
+          <GoogleAd slot={"1046729025"} format="vertical" />
+          <GoogleAd slot={"3722598489"} format="vertical" />
+          <GoogleAd slot={"3169070306"} format="vertical" />
         </div>
 
         {/* Main Content */}
         <div className="ip-main-content">
           <div className="findmyip-card">
+            <GoogleAd slot={"2296640639"} format="horizontal" />
+            
             <h1 className="findmyip-title">Find My IP Address</h1>
 
             {loading ? (
@@ -219,6 +223,8 @@ export default function FindMyIpPage() {
                   </div>
                 </div>
 
+                <GoogleAd slot={"8071302378"} format="in-article" />
+
                 {/* Map Section */}
                 {ipInfo.latitude && ipInfo.longitude && (
                   <div className="info-section">
@@ -243,8 +249,14 @@ export default function FindMyIpPage() {
                         title="Location Map"
                       ></iframe>
                     </div>
+                    {/* <div className="map-ad-container">
+                      <GoogleAd slot={"4077644091"} format="square" />
+                      <GoogleAd slot={"6348761828"} format="square" />
+                    </div> */}
                   </div>
                 )}
+
+                <GoogleAd slot={"9708588185"} format="in-article" />
 
                 {/* Browser Information Section */}
                 <div className="info-section">
@@ -292,7 +304,13 @@ export default function FindMyIpPage() {
                       </tbody>
                     </table>
                   </div>
+                  {/* <div className="browser-ad-container">
+                    <GoogleAd slot={"1699070378"} format="square" />
+                    <GoogleAd slot={"5795233645"} format="square" />
+                  </div> */}
                 </div>
+
+                <GoogleAd slot={"3389821331"} format="in-article" />
 
                 {/* Network Information Section */}
                 <div className="info-section">
@@ -341,6 +359,9 @@ export default function FindMyIpPage() {
                   </div>
                 </div>
 
+                <GoogleAd slot={"5420878871"} format="horizontal" />
+                <GoogleAd slot={"4647833194"} format="horizontal" />
+
                 <div className="ip-note">
                   <p>
                     Your IP address is your unique identifier on the internet.
@@ -353,12 +374,15 @@ export default function FindMyIpPage() {
           </div>
         </div>
 
-        {/* Right Ad */}
+        {/* Right Ads */}
         <div className="right-ad">
-          <GoogleAd slot={"4077644091"} />
+          <GoogleAd slot={"5092951097"} format="vertical" />
+          <GoogleAd slot={"3722598489"} format="vertical" />
+          <GoogleAd slot={"3169070306"} format="vertical" />
         </div>
       </div>
-      <GoogleAd slot={"4077644091"} className="ad-bottom" />
+      <GoogleAd slot={"1699070378"} format="square" className="ad-bottom" />
+      <GoogleAd slot={"5795233645"} format="square" className="ad-bottom" />
       <Footer />
     </div>
   );

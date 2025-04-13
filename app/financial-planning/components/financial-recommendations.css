@@ -150,6 +150,10 @@
 }
 
 /* Chart specific styles */
+.recharts-surface {
+    border: 0.3rem solid transparent;
+}
+
 .recharts-cartesian-grid line {
     stroke: #e2e8f0;
 }

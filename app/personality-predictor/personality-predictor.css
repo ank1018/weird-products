@@ -45,7 +45,7 @@
     left: 0;
     width: 100%;
     height: 3px;
-    background: linear-gradient(90deg, #ff69b4, #8a2be2, #ff69b4);
+    /* background: linear-gradient(90deg, #ff69b4, #8a2be2, #ff69b4); */
     border-radius: 5px;
   }
 
@@ -1172,4 +1172,32 @@
 
 .loader-container {
   color: #7e22ce;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+  .description-container {
+    flex-direction: column;
+  }
+  
+  .description-sidebar {
+    width: 100%;
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 768px) {
+  .description-container {
+    padding: 0;
+  }
+  
+  .description-sidebar {
+    display: none;
+  }
+  
+  .pp-info-section h3 {
+    font-size: 1.3rem;
+  }
 }

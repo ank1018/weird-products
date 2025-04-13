@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Head from "next/head";
 import {
   Copy,
@@ -9,6 +9,13 @@ import {
   Download,
   Upload,
   Zap,
+  // Search,
+  // Sun,
+  // Moon,
+  // FileText,
+  // Code2,
+  // Diff,
+  // Schema,
 } from "lucide-react";
 import NavBarView from "../nav-bar/nav-bar.view";
 import Footer from "../footer/footer.view";
@@ -16,6 +23,7 @@ import "./json-formatter.css";
 import dynamic from "next/dynamic";
 import { json } from "@codemirror/lang-json";
 import { oneDark } from "@codemirror/theme-one-dark";
+import { githubLight } from "@uiw/codemirror-theme-github";
 import GoogleAd from "../google-ads/google-ads.view";
 import JsonFormatterPageDescription from "./json-formatter-description";
 
@@ -31,12 +39,52 @@ export default function JsonFormatterPage() {
   const [copied, setCopied] = useState(false);
   const [loading, setLoading] = useState(false);
   const [outputFormat, setOutputFormat] = useState("json");
+  const [theme] = useState<"dark" | "light">("dark");
+  const [showLineNumbers] = useState(true);
 
   useEffect(() => {
     document.body.classList.add("jsonformatter-route-body");
     return () => {
       document.body.classList.remove("jsonformatter-route-body");
     };
+  }, []);
+
+  // Handle keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.ctrlKey || e.metaKey) {
+        switch (e.key) {
+          case 's':
+            e.preventDefault();
+            formatJSON();
+            break;
+          case 'd':
+            e.preventDefault();
+            clearAll();
+            break;
+          case 'c':
+            if (!e.shiftKey) return;
+            e.preventDefault();
+            copyToClipboard(output);
+            break;
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [output]);
+
+  // Auto-format on paste
+  const handlePaste = useCallback((e: React.ClipboardEvent) => {
+    const pastedText = e.clipboardData.getData('text');
+    try {
+      const parsed = JSON.parse(pastedText);
+      setInput(JSON.stringify(parsed, null, 2));
+      e.preventDefault();
+    } catch {
+      // If not valid JSON, let the default paste behavior occur
+    }
   }, []);
 
   // --------------------------
@@ -58,6 +106,9 @@ export default function JsonFormatterPage() {
         case "json":
           formatted = JSON.stringify(parsed, null, 2);
           break;
+        case "minified":
+          formatted = JSON.stringify(parsed);
+          break;
         case "xml":
           formatted = jsonToXml(parsed);
           break;
@@ -75,7 +126,7 @@ export default function JsonFormatterPage() {
       setError("");
       setLoading(false);
     } catch (err) {
-      setError(`Invalid JSON: ${err}`);
+      setError(`Invalid JSON: ${(err as Error).message}`);
       setLoading(false);
     }
   };
@@ -93,7 +144,7 @@ export default function JsonFormatterPage() {
       setError("");
       setLoading(false);
     } catch (err) {
-      setError(`Couldn't fix JSON: ${err}`);
+      setError(`Couldn't fix JSON: ${(err as Error).message}`);
       setLoading(false);
     }
   };
@@ -193,32 +244,6 @@ export default function JsonFormatterPage() {
   };
 
   // --------------------------
-  // Template & File Handling
-  // --------------------------
-  //   const loadTemplate = (templateKey: string) => {
-  //     setTemplate((prev) => ({
-  //       ...prev,
-  //       selected: templateKey,
-  //     }));
-  //     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  //     // @ts-expect-error
-  //     setInput(template.options[templateKey]);
-  //   };
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const uploadJSON = (e: any) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    reader.onload = (event: any) => {
-      setInput(event.target.result);
-    };
-    reader.readAsText(file);
-    e.target.value = null; // reset
-  };
-
-  // --------------------------
   // Copy & Download
   // --------------------------
   const copyToClipboard = (text: string) => {
@@ -274,22 +299,6 @@ export default function JsonFormatterPage() {
     }
   };
 
-  // Icon helper
-  //   const getFormatIcon = () => {
-  //     switch (outputFormat) {
-  //       case "json":
-  //         return <FileJson size={16} />;
-  //       case "xml":
-  //         return <FileCode size={16} />;
-  //       case "yaml":
-  //         return <FileText size={16} />;
-  //       case "csv":
-  //         return <FileSpreadsheet size={16} />;
-  //       default:
-  //         return <FileJson size={16} />;
-  //     }
-  //   };
-
   return (
     <div className="background">
       <Head>
@@ -313,6 +322,8 @@ export default function JsonFormatterPage() {
           <div className="jsonformatter-card">
             <h1 className="jsonformatter-title">JSON Formatter & Converter</h1>
 
+            <GoogleAd slot={"2296640639"} className="ad-top" />
+
             {/* UPDATED LAYOUT BELOW */}
             <div className="editors-container">
               {/* Original JSON Input (Left) */}
@@ -326,7 +337,17 @@ export default function JsonFormatterPage() {
                         type="file"
                         accept=".json,application/json"
                         className="hidden-input"
-                        onChange={uploadJSON}
+                        onChange={(e) => {
+                          const files = e.target.files;
+                          if (files && files[0]) {
+                            const file = files[0];
+                            const reader = new FileReader();
+                            reader.onload = (event) => {
+                              setInput(event.target?.result as string);
+                            };
+                            reader.readAsText(file);
+                          }
+                        }}
                       />
                     </label>
                     <button className="action-btn clear-btn" onClick={clearAll}>
@@ -338,10 +359,16 @@ export default function JsonFormatterPage() {
                   value={input}
                   height="750px"
                   maxWidth="100%"
-                  theme={oneDark}
+                  theme={theme === 'dark' ? oneDark : githubLight}
                   extensions={[json()]}
                   onChange={(value) => setInput(value)}
+                  onPaste={handlePaste}
                   className="json-editor"
+                  basicSetup={{
+                    lineNumbers: showLineNumbers,
+                    highlightActiveLine: true,
+                    foldGutter: true,
+                  }}
                 />
               </div>
 
@@ -357,20 +384,17 @@ export default function JsonFormatterPage() {
                       onChange={(e) => setOutputFormat(e.target.value)}
                     >
                       <option value="json">JSON</option>
+                      <option value="minified">Minified JSON</option>
                       <option value="xml">XML</option>
                       <option value="yaml">YAML</option>
                       <option value="csv">CSV</option>
                     </select>
                   </div>
 
-                  {/* Format indicator button */}
-                  {/* <button className="action-btn format-info-btn">
-                    {getFormatIcon()} {outputFormat.toUpperCase()}
-                  </button> */}
-
                   <button
                     className="action-btn format-btn"
                     onClick={formatJSON}
+                    disabled={loading}
                   >
                     <RefreshCw size={16} /> Convert &amp; Format
                   </button>
@@ -425,22 +449,28 @@ export default function JsonFormatterPage() {
                     value={output}
                     height="750px"
                     maxWidth="100%"
-                    theme={oneDark}
+                    theme={theme === 'dark' ? oneDark : githubLight}
                     extensions={[json()]}
                     onChange={(value) => setInput(value)}
                     className="json-editor"
+                    basicSetup={{
+                      lineNumbers: showLineNumbers,
+                      highlightActiveLine: true,
+                      foldGutter: true,
+                    }}
                   />
                 </div>
               </div>
             </div>
             {/* END UPDATED LAYOUT */}
 
+            <GoogleAd slot={"5420878871"} className="ad-bottom" />
+
             {/* JSON Specification */}
             <JsonFormatterPageDescription />
           </div>
         </div>
       </div>
-      <GoogleAd slot={"4077644091"} className="ad-bottom" />
       <Footer />
     </div>
   );

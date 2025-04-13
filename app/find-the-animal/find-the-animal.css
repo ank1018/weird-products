@@ -1,11 +1,6 @@
 /* FindTheInvisibleAnimal.css */
 
-body {
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(to top right, #e0ffe0, #ffffff);
-  margin: 0;
-  padding: 0;
-}
+
 
 .container {
   width: 90vw;
