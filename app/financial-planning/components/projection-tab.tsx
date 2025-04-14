@@ -13,11 +13,13 @@ import {
 } from "recharts";
 
 interface ProjectionsTabProps {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   getSavingsProjection: () => any[];
   formatChartValue: (val: number) => string;
   formatCurrency: (val: number) => string;
   retirementAge: number;
   retirementSavings: number;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   financialData: any;
 }
 

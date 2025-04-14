@@ -12,11 +12,14 @@ import {
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d'];
 
 interface BudgetTabProps {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   financialData: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   getExpenseData: () => any[];
   formatCurrency: (val: number) => string;
   formatChartValue: (val: number) => string;
   getInputValue: (cat: string, sub: string, val: number) => string | number;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   handleInputChange: (cat: any, val: number, subCat: any) => void;
   handleInputFocus: (cat: string, subCat: string) => void;
   handleInputBlur: (cat: string, subCat: string) => void;
@@ -25,7 +28,6 @@ interface BudgetTabProps {
 const BudgetTab: React.FC<BudgetTabProps> = ({
   financialData,
   getExpenseData,
-  formatCurrency,
   formatChartValue,
   getInputValue,
   handleInputChange,
@@ -85,7 +87,7 @@ const BudgetTab: React.FC<BudgetTabProps> = ({
                 <input
                   type="number"
                   value={getInputValue('expenses', category, value as number)}
-                  onChange={(e) => handleInputChange("expenses", Number(e.target.value), category as any)}
+                  onChange={(e) => handleInputChange("expenses", Number(e.target.value), category)}
                   onFocus={() => handleInputFocus('expenses', category)}
                   onBlur={() => handleInputBlur('expenses', category)}
                   placeholder={`Enter ${category} expenses`}

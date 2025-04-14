@@ -10,16 +10,17 @@ import {
     YAxis,
     CartesianGrid,
     ResponsiveContainer,
-    Legend,
 } from "recharts";
 import { Lightbulb, CheckCircle } from "lucide-react";
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d'];
 
 interface DebtTabProps {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     financialData: any;
     formatChartValue: (val: number) => string;
     getInputValue: (cat: string, sub: string, val: number) => string | number;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     handleInputChange: (cat: any, val: number, subCat: any) => void;
     handleInputFocus: (cat: string, subCat: string) => void;
     handleInputBlur: (cat: string, subCat: string) => void;
@@ -39,7 +40,6 @@ const DebtTab: React.FC<DebtTabProps> = ({
         const totalDebt = financialData.debt.total;
         const totalIncome = financialData.income.total;
         const monthlyExpenses = financialData.expenses.total;
-        const monthlySavings = financialData.savings.total;
         const debtToIncomeRatio = totalIncome > 0 ? (totalDebt / totalIncome) * 100 : 0;
         const disposableIncome = totalIncome - monthlyExpenses;
 
@@ -189,6 +189,7 @@ const DebtTab: React.FC<DebtTabProps> = ({
                             <YAxis />
                             <Tooltip formatter={formatChartValue} />
                             <Bar dataKey="value" fill="#8884d8">
+                                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                                 {getDebtData().map((entry: any, index: number) => (
                                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                                 ))}
@@ -212,7 +213,7 @@ const DebtTab: React.FC<DebtTabProps> = ({
                                     <input
                                         type="number"
                                         value={getInputValue('debt', `${category}-amount`, typedValue.amount)}
-                                        onChange={(e) => handleInputChange("debt", Number(e.target.value), `${category}.amount` as any)}
+                                        onChange={(e) => handleInputChange("debt", Number(e.target.value), `${category}.amount`)}
                                         onFocus={() => handleInputFocus('debt', `${category}-amount`)}
                                         onBlur={() => handleInputBlur('debt', `${category}-amount`)}
                                         placeholder={`Enter ${category} debt`}
@@ -223,7 +224,7 @@ const DebtTab: React.FC<DebtTabProps> = ({
                                     <input
                                         type="number"
                                         value={getInputValue('debt', `${category}-interestRate`, typedValue.interestRate)}
-                                        onChange={(e) => handleInputChange("debt", Number(e.target.value), `${category}.interestRate` as any)}
+                                        onChange={(e) => handleInputChange("debt", Number(e.target.value), `${category}.interestRate`)}
                                         onFocus={() => handleInputFocus('debt', `${category}-interestRate`)}
                                         onBlur={() => handleInputBlur('debt', `${category}-interestRate`)}
                                         placeholder={`Enter interest rate`}

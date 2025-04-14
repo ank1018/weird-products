@@ -13,11 +13,14 @@ import {
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d'];
 
 interface InvestmentsTabProps {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     financialData: any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     getInvestmentData: () => any[];
     formatCurrency: (val: number) => string;
     formatChartValue: (val: number) => string;
     getInputValue: (cat: string, sub: string, val: number) => string | number;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     handleInputChange: (cat: any, val: number, subCat: any) => void;
     handleInputFocus: (cat: string, subCat: string) => void;
     handleInputBlur: (cat: string, subCat: string) => void;
@@ -26,7 +29,6 @@ interface InvestmentsTabProps {
 const InvestmentsTab: React.FC<InvestmentsTabProps> = ({
     financialData,
     getInvestmentData,
-    formatCurrency,
     formatChartValue,
     getInputValue,
     handleInputChange,
@@ -72,6 +74,7 @@ const InvestmentsTab: React.FC<InvestmentsTabProps> = ({
                                 <input
                                     type="number"
                                     value={getInputValue('investments', category, value as number)}
+                                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
                                     onChange={(e) => handleInputChange("investments", Number(e.target.value), category as any)}
                                     onFocus={() => handleInputFocus('investments', category)}
                                     onBlur={() => handleInputBlur('investments', category)}

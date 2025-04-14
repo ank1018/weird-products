@@ -1,62 +1,20 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import {
-  PieChart,
-  BarChart,
-  LineChart,
   DollarSign,
   TrendingUp,
   CreditCard,
-  PiggyBank,
   Target,
   Calculator,
-  Settings,
-  ArrowUpRight,
-  ArrowDownRight,
-  AlertCircle,
-  Info,
   Lightbulb,
-  Shield,
-  Clock,
-  Calendar,
-  Wallet,
-  Home,
-  Car,
-  GraduationCap,
-  CreditCard as CreditCardIcon,
-  Heart,
-  Plane,
-  Gift,
-  Building2,
-  Coins,
-  Gem,
-  Banknote,
-  Landmark,
   LineChart as LineChartIcon,
-  BarChart2,
-  PieChart as PieChartIcon,
   User,
-  CheckCircle,
   Brain,
 } from "lucide-react";
 import "../styles/financial-planning.css";
 import NavBarView from "../../nav-bar/nav-bar.view";
 import GoogleAd from "../../google-ads/google-ads.view";
 import Footer from "../../footer/footer.view";
-import {
-  ResponsiveContainer,
-  Pie,
-  Cell,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  Line,
-  BarChart as RechartsBarChart,
-  LineChart as RechartsLineChart,
-} from "recharts";
 import BudgetTab from "./budget-tab";
 import OverviewTab from "./overview-tab";
 import InvestmentsTab from "./investment-tab";
@@ -127,8 +85,6 @@ interface FinancialData {
     };
   };
 }
-
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d'];
 
 // Update the PersonalInfo interface
 interface PersonalInfo {
@@ -225,7 +181,7 @@ const FinancialPlanning = () => {
   const [savingsRate, setSavingsRate] = useState(0);
   const [debtToIncomeRatio, setDebtToIncomeRatio] = useState(0);
   const [retirementAge, setRetirementAge] = useState(65);
-  const [retirementSavings, setRetirementSavings] = useState(0);
+  const [retirementSavings] = useState(0);
   const [financialHealthScore, setFinancialHealthScore] = useState(0);
   const [recommendations, setRecommendations] = useState<string[]>([]);
   const [riskProfile, setRiskProfile] = useState<"Conservative" | "Moderate" | "Aggressive">("Moderate");
@@ -304,16 +260,16 @@ const FinancialPlanning = () => {
     const totalIncome = (financialData.income.salary || 0) + (financialData.income.other || 0);
     const totalExpenses = Object.entries(financialData.expenses)
       .filter(([key]) => key !== 'total')
-      .reduce((sum, [_, value]) => sum + (value || 0), 0);
+      .reduce((sum, [, value]) => sum + (value || 0), 0);
     const totalSavings = Object.entries(financialData.savings)
       .filter(([key]) => key !== 'total')
-      .reduce((sum, [_, value]) => sum + (value || 0), 0);
+      .reduce((sum, [, value]) => sum + (value || 0), 0);
     const totalInvestments = Object.entries(financialData.investments)
       .filter(([key]) => key !== 'total')
-      .reduce((sum, [_, value]) => sum + (value || 0), 0);
+      .reduce((sum, [, value]) => sum + (value || 0), 0);
     const totalDebt = Object.entries(financialData.debt)
       .filter(([key]) => key !== 'total')
-      .reduce((sum, [_, value]) => {
+      .reduce((sum, [, value]) => {
         const debtValue = value as { amount: number; interestRate: number };
         return sum + (debtValue.amount || 0);
       }, 0);
@@ -449,7 +405,7 @@ const FinancialPlanning = () => {
 
     const values = Object.entries(investments)
       .filter(([key]) => key !== 'total')
-      .map(([_, value]) => value / total);
+      .map(([, value]) => value / total);
 
     // Calculate diversity using Herfindahl-Hirschman Index (HHI)
     const hhi = values.reduce((sum, value) => sum + value * value, 0);
@@ -457,7 +413,6 @@ const FinancialPlanning = () => {
   };
 
   const calculateRetirementScore = (age: number, retirementSavings: number, monthlyExpenses: number) => {
-    const yearsToRetirement = 65 - age;
     const targetRetirementSavings = monthlyExpenses * 12 * 25; // 25x annual expenses
     const currentProgress = retirementSavings / targetRetirementSavings;
     return Math.min(100, currentProgress * 100);
@@ -615,13 +570,13 @@ const FinancialPlanning = () => {
   const handleInputChange = (
     category: keyof FinancialData,
     value: number | string,
-    subCategory?: keyof FinancialData["expenses"] | keyof FinancialData["goals"] | keyof FinancialData["income"]
+    subCategory?: string
   ) => {
     setFinancialData((prev) => {
       const newData = { ...prev };
       if (subCategory) {
         if (category === "goals") {
-          const [term, field] = (subCategory as string).split(".");
+          const [term, field] = subCategory.split(".");
           newData.goals = {
             ...newData.goals,
             [term]: {
@@ -646,7 +601,7 @@ const FinancialPlanning = () => {
           };
         } else if (category === "debt") {
           // Handle debt updates with nested structure
-          const [debtType, field] = (subCategory as string).split(".");
+          const [debtType, field] = subCategory.split(".");
           if (debtType && field) {
             const debtTypeKey = debtType as keyof FinancialData["debt"];
             const debtValue = newData.debt[debtTypeKey] as { amount: number; interestRate: number };
@@ -703,6 +658,7 @@ const FinancialPlanning = () => {
   };
 
   // Add type-safe formatter for chart tooltips
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const formatChartValue = (value: any): string => {
     const numValue = typeof value === 'number' ? value : 0;
     return formatCurrency(numValue);

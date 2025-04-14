@@ -13,9 +13,11 @@ import {
 } from "recharts";
 
 interface GoalsTabProps {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     financialData: any;
     formatChartValue: (val: number) => string;
     getInputValue: (cat: string, sub: string, val: number) => string | number;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     handleInputChange: (cat: any, val: number, subCat: any) => void;
     handleInputFocus: (cat: string, subCat: string) => void;
     handleInputBlur: (cat: string, subCat: string) => void;
@@ -79,6 +81,7 @@ const GoalsTab: React.FC<GoalsTabProps> = ({
                                     <input
                                         type="number"
                                         value={getInputValue('goals', `${term}-amount`, typedGoal.amount)}
+                                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
                                         onChange={(e) => handleInputChange("goals", Number(e.target.value), `${term}.amount` as any)}
                                         onFocus={() => handleInputFocus('goals', `${term}-amount`)}
                                         onBlur={() => handleInputBlur('goals', `${term}-amount`)}
@@ -93,6 +96,7 @@ const GoalsTab: React.FC<GoalsTabProps> = ({
                                     <input
                                         type="number"
                                         value={getInputValue('goals', `${term}-timeline`, typedGoal.timeline)}
+                                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
                                         onChange={(e) => handleInputChange("goals", Number(e.target.value), `${term}.timeline` as any)}
                                         onFocus={() => handleInputFocus('goals', `${term}-timeline`)}
                                         onBlur={() => handleInputBlur('goals', `${term}-timeline`)}

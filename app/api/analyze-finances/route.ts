@@ -1,9 +1,7 @@
 import { NextResponse } from 'next/server';
-import type { FormData } from '../../financial-planning/types';
 
-export async function POST(request: Request) {
+export async function POST() {
     try {
-        const formData: FormData = await request.json();
         
         // Basic AI analysis logic (can be enhanced with more sophisticated analysis)
         const insights = [

@@ -1,9 +1,10 @@
 // components/FinancialPlanning/OverviewTab.tsx
 "use client";
 import React from "react";
-import { DollarSign, ArrowUpRight, ArrowDownRight, Lightbulb } from "lucide-react";
+import {  ArrowUpRight, ArrowDownRight } from "lucide-react";
 
 interface OverviewTabProps {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     financialData: any;
     formatCurrency: (value: number) => string;
     formatPercentage: (value: number) => string;
@@ -20,9 +21,6 @@ const OverviewTab: React.FC<OverviewTabProps> = ({
     formatPercentage,
     savingsRate,
     debtToIncomeRatio,
-    financialHealthScore,
-    recommendations,
-    riskProfile,
 }) => {
     return (
         <div className="overview-section">

@@ -6,6 +6,7 @@ const COHERE_API_KEY = process.env.COHERE_API_KEY;
 const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
 
 // Moved fallback insights generator to the server side
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const generateFallbackInsights = (data: any) => {
   const insights: string[] = [];
   
