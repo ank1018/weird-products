@@ -105,76 +105,66 @@ interface AIInsights {
 
 const FinancialPlanning = () => {
   const [activeTab, setActiveTab] = useState("overview");
-  const [financialData, setFinancialData] = useState<FinancialData>(() => {
-    // Load initial state from localStorage
-    if (typeof window !== 'undefined') {
-      const savedData = localStorage.getItem('financialData');
-      if (savedData) {
-        return JSON.parse(savedData);
-      }
-    }
-    // Default state if no saved data
-    return {
-      income: {
-        salary: 0,
-        other: 0,
-        total: 0,
+  const [financialData, setFinancialData] = useState<FinancialData>({
+    income: {
+      salary: 0,
+      other: 0,
+      total: 0,
+    },
+    expenses: {
+      housing: 0,
+      transportation: 0,
+      food: 0,
+      utilities: 0,
+      entertainment: 0,
+      healthcare: 0,
+      education: 0,
+      debt: 0,
+      other: 0,
+      total: 0,
+    },
+    savings: {
+      emergency: 0,
+      retirement: 0,
+      investment: 0,
+      other: 0,
+      total: 0,
+    },
+    investments: {
+      stocks: 0,
+      bonds: 0,
+      realEstate: 0,
+      mutualFunds: 0,
+      crypto: 0,
+      other: 0,
+      total: 0,
+    },
+    debt: {
+      mortgage: { amount: 0, interestRate: 8.2 },
+      car: { amount: 0, interestRate: 8.9 },
+      student: { amount: 0, interestRate: 7.5 },
+      creditCard: { amount: 0, interestRate: 18.0 },
+      personal: { amount: 0, interestRate: 12.5 },
+      other: { amount: 0, interestRate: 10.0 },
+      total: 0,
+    },
+    goals: {
+      shortTerm: {
+        amount: 0,
+        timeline: 1,
+        description: "",
       },
-      expenses: {
-        housing: 0,
-        transportation: 0,
-        food: 0,
-        utilities: 0,
-        entertainment: 0,
-        healthcare: 0,
-        education: 0,
-        debt: 0,
-        other: 0,
-        total: 0,
+      mediumTerm: {
+        amount: 0,
+        timeline: 5,
+        description: "",
       },
-      savings: {
-        emergency: 0,
-        retirement: 0,
-        investment: 0,
-        other: 0,
-        total: 0,
+      longTerm: {
+        amount: 0,
+        timeline: 10,
+        description: "",
       },
-      investments: {
-        stocks: 0,
-        bonds: 0,
-        realEstate: 0,
-        mutualFunds: 0,
-        crypto: 0,
-        other: 0,
-        total: 0,
-      },
-      debt: {
-        mortgage: { amount: 0, interestRate: 8.2 },
-        car: { amount: 0, interestRate: 8.9 },
-        student: { amount: 0, interestRate: 7.5 },
-        creditCard: { amount: 0, interestRate: 18.0 },
-        personal: { amount: 0, interestRate: 12.5 },
-        other: { amount: 0, interestRate: 10.0 },
-        total: 0,
-      },
-      goals: {
-        shortTerm: {
-          amount: 0,
-          timeline: 1,
-          description: "",
-        },
-        mediumTerm: {
-          amount: 0,
-          timeline: 5,
-          description: "",
-        },
-        longTerm: {
-          amount: 0,
-          timeline: 10,
-          description: "",
-        },
-      },
-    };
+    },
   });
 
   const [monthlyBudget, setMonthlyBudget] = useState(0);
@@ -214,11 +204,17 @@ const FinancialPlanning = () => {
     source: 'fallback'
   });
 
+  // Load saved data from localStorage after initial render
+  useEffect(() => {
+    const savedData = localStorage.getItem('financialData');
+    if (savedData) {
+      setFinancialData(JSON.parse(savedData));
+    }
+  }, []);
+
   // Save to localStorage whenever financialData changes
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('financialData', JSON.stringify(financialData));
-    }
+    localStorage.setItem('financialData', JSON.stringify(financialData));
   }, [financialData]);
 
   // Load activeTab from localStorage
@@ -763,7 +759,7 @@ const FinancialPlanning = () => {
         {/* Financial Health Score */}
         <div className="health-score-card">
           <div className="score-circle">
-            <span className="score-value">{financialHealthScore}</span>
+            <span className="score-value">{isNaN(financialHealthScore) ? 'N/A' : financialHealthScore}</span>
             <span className="score-label">Financial Health Score</span>
           </div>
           <div className="risk-profile">
@@ -904,6 +900,7 @@ const FinancialPlanning = () => {
 
           {activeTab === "projections" && (
             <ProjectionsTab
+              personalInfo={personalInfo}
               getSavingsProjection={getSavingsProjection}
               formatChartValue={formatChartValue}
               formatCurrency={formatCurrency}

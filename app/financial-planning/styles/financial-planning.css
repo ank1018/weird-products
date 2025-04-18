@@ -65,8 +65,6 @@
 /* Tabs */
 .tabs-container {
   display: flex;
-  align-items: center;
-  justify-content: center;
   gap: 1rem;
   margin-bottom: 2rem;
   padding-bottom: 0.5rem;
@@ -283,6 +281,13 @@
 
   .tab {
     white-space: nowrap;
+  }
+}
+
+@media (min-width: 768px) {
+  .tabs-container {
+      align-items: center;
+    justify-content: center;
   }
 }
 

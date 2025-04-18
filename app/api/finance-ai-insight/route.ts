@@ -1,5 +1,6 @@
 // api/finance-ai-insight/route.ts
 import { NextRequest, NextResponse } from 'next/server';
+import { generateFallbackInsights } from './generate-fallback-insights';
 
 // Access environment variables securely on the server
 const COHERE_API_KEY = process.env.COHERE_API_KEY;
@@ -7,48 +8,48 @@ const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
 
 // Moved fallback insights generator to the server side
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const generateFallbackInsights = (data: any) => {
-  const insights: string[] = [];
+// const generateFallbackInsights = (data: any) => {
+//   const insights: string[] = [];
   
-  // Analyze savings rate
-  if (data.metrics.savingsRate < 20) {
-    insights.push("Your savings rate is below the recommended 20%. Consider increasing your monthly savings.");
-  } else if (data.metrics.savingsRate > 30) {
-    insights.push("Great job on maintaining a high savings rate! Consider investing more of your savings.");
-  }
+//   // Analyze savings rate
+//   if (data.metrics.savingsRate < 20) {
+//     insights.push("Your savings rate is below the recommended 20%. Consider increasing your monthly savings.");
+//   } else if (data.metrics.savingsRate > 30) {
+//     insights.push("Great job on maintaining a high savings rate! Consider investing more of your savings.");
+//   }
 
-  // Analyze debt situation
-  if (data.metrics.debtToIncomeRatio > 40) {
-    insights.push("Your debt-to-income ratio is high. Focus on paying down high-interest debt first.");
-  } else if (data.metrics.debtToIncomeRatio < 20) {
-    insights.push("Your debt-to-income ratio is healthy. Consider investing more aggressively.");
-  }
+//   // Analyze debt situation
+//   if (data.metrics.debtToIncomeRatio > 40) {
+//     insights.push("Your debt-to-income ratio is high. Focus on paying down high-interest debt first.");
+//   } else if (data.metrics.debtToIncomeRatio < 20) {
+//     insights.push("Your debt-to-income ratio is healthy. Consider investing more aggressively.");
+//   }
 
-  // Analyze emergency fund
-  const monthlyExpenses = data.financial.expenses.total;
-  const emergencyFund = data.financial.savings.emergency;
-  if (emergencyFund < monthlyExpenses * 3) {
-    insights.push("Build your emergency fund to cover at least 3 months of expenses.");
-  }
+//   // Analyze emergency fund
+//   const monthlyExpenses = data.financial.expenses.total;
+//   const emergencyFund = data.financial.savings.emergency;
+//   if (emergencyFund < monthlyExpenses * 3) {
+//     insights.push("Build your emergency fund to cover at least 3 months of expenses.");
+//   }
 
-  // Analyze investment diversity
-  const totalInvestments = data.financial.investments.total;
-  if (totalInvestments > 0) {
-    const investmentTypes = Object.keys(data.financial.investments).filter(k => k !== 'total');
-    if (investmentTypes.length < 3) {
-      insights.push("Consider diversifying your investments across more asset classes.");
-    }
-  }
+//   // Analyze investment diversity
+//   const totalInvestments = data.financial.investments.total;
+//   if (totalInvestments > 0) {
+//     const investmentTypes = Object.keys(data.financial.investments).filter(k => k !== 'total');
+//     if (investmentTypes.length < 3) {
+//       insights.push("Consider diversifying your investments across more asset classes.");
+//     }
+//   }
 
-  // Analyze goals
-  const goals = data.financial.goals as Record<string, { amount: number }>;
-  const hasGoals = Object.values(goals).some(goal => goal.amount > 0);
-  if (!hasGoals) {
-    insights.push("Set specific financial goals to help guide your saving and investment decisions.");
-  }
+//   // Analyze goals
+//   const goals = data.financial.goals as Record<string, { amount: number }>;
+//   const hasGoals = Object.values(goals).some(goal => goal.amount > 0);
+//   if (!hasGoals) {
+//     insights.push("Set specific financial goals to help guide your saving and investment decisions.");
+//   }
 
-  return insights;
-};
+//   return insights;
+// };
 
 export async function POST(request: NextRequest) {
   try {

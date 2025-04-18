@@ -15,6 +15,8 @@ import {
 interface ProjectionsTabProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   getSavingsProjection: () => any[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  personalInfo: any;
   formatChartValue: (val: number) => string;
   formatCurrency: (val: number) => string;
   retirementAge: number;
@@ -24,6 +26,7 @@ interface ProjectionsTabProps {
 }
 
 const ProjectionsTab: React.FC<ProjectionsTabProps> = ({
+  personalInfo,
   getSavingsProjection,
   formatChartValue,
   formatCurrency,
@@ -54,7 +57,7 @@ const ProjectionsTab: React.FC<ProjectionsTabProps> = ({
         <div className="projection-details">
           <div className="detail-item">
             <span className="label">Current Age: </span>
-            <span className="value">{30}</span>
+            <span className="value">{personalInfo?.age}</span>
           </div>
           <div className="detail-item">
             <span className="label">Retirement Age: </span>
@@ -62,7 +65,7 @@ const ProjectionsTab: React.FC<ProjectionsTabProps> = ({
           </div>
           <div className="detail-item">
             <span className="label">Years to Retirement: </span>
-            <span className="value">{retirementAge - 30}</span>
+            <span className="value">{retirementAge - personalInfo?.age}</span>
           </div>
           <div className="detail-item">
             <span className="label">Current Retirement Savings: </span>
