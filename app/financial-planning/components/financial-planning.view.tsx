@@ -23,6 +23,7 @@ import GoalsTab from "./goals-tab";
 import ProjectionsTab from "./projection-tab";
 import PersonalTab from "./personal-tab";
 import AiInsightsTab from "./ai-insight-tab";
+import FinanceDescription from "./finance-description";
 
 interface FinancialData {
   income: {
@@ -930,10 +931,8 @@ const FinancialPlanning = () => {
         </div>
       </div>
       <GoogleAd slot={"4077644091"} className="ad-bottom" />
+      <FinanceDescription />
       <Footer />
-      <style jsx>{`
-        
-      `}</style>
     </div>
   );
 };

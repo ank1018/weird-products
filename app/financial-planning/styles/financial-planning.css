@@ -6,6 +6,9 @@
 }
 
 .financial-planning-content {
+  font-family: monospace;
+  font-size: 1rem;
+  font-weight: 600;
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem;
@@ -33,8 +36,8 @@
 }
 
 .score-circle {
-  width: 150px;
-  height: 150px;
+  width: 170px;
+  height: 170px;
   border-radius: 50%;
   background: linear-gradient(135deg, #3b82f6, #10b981);
   display: flex;
@@ -161,12 +164,50 @@
   align-items: center;
 }
 
+.bt-chart-container {
+  width: 100%;
+  height: 500px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ia-chart-container {
+  width: 100%;
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .chart-container {
   width: 100%;
   height: 300px;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.recharts-surface {
+  border: 0.5rem solid transparent;
+}
+
+.ia-customized-legend {
+  display: flex;
+      justify-content: center;
+      gap: 1rem;
+}
+
+.ia-investment-form {
+  margin-top: 2rem;
+}
+
+.ai-section h4 {
+  margin: 1rem 0;
+}
+
+.ai-subsection h5 {
+  margin: 0.5rem 0;
 }
 
 /* Forms */

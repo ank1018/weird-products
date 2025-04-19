@@ -8,8 +8,18 @@ import {
   Legend,
   ResponsiveContainer
 } from "recharts";
+import '../styles/financial-planning.css';
 
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d'];
+const COLORS = [
+  "#0088FE",
+  "#00C49F",
+  "#FFBB28",
+  "#FF8042",
+  "#8884d8",
+  "#82ca9d",
+  "#FF6699",
+  "#CC33FF",
+];
 
 interface BudgetTabProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -34,12 +44,35 @@ const BudgetTab: React.FC<BudgetTabProps> = ({
   handleInputFocus,
   handleInputBlur,
 }) => {
+  // Custom legend to display the category name and its percentage share.
+  const renderCustomizedLegend = (props: any) => {
+    const { payload } = props;
+    const expenseData = getExpenseData();
+    const totalValue = expenseData.reduce((acc, item) => acc + item.value, 0);
+    return (
+      <ul className="customized-legend">
+        {payload.map((entry: any, index: number) => {
+          const item = expenseData[index];
+          const percent =
+            totalValue > 0 ? ((item.value / totalValue) * 100).toFixed(0) : "0";
+          return (
+            <li
+              key={`item-${index}`}
+              style={{ color: entry.color, marginBottom: "4px" }}
+            >
+              {entry.value} ({percent}%)
+            </li>
+          );
+        })}
+      </ul>
+    );
+  };
   return (
     <div className="budget-section">
       <div className="expense-chart">
         <h3>Expense Breakdown</h3>
-        <div className="chart-container">
-          <ResponsiveContainer width="100%" height={300}>
+        <div className="bt-chart-container">
+          <ResponsiveContainer width="100%" height={500}>
             <PieChart>
               <Pie
                 data={getExpenseData()}
@@ -56,7 +89,7 @@ const BudgetTab: React.FC<BudgetTabProps> = ({
                 ))}
               </Pie>
               <Tooltip formatter={formatChartValue} />
-              <Legend />
+              <Legend content={renderCustomizedLegend} />
             </PieChart>
           </ResponsiveContainer>
         </div>
