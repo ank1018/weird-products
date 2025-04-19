@@ -41,6 +41,11 @@ export default function NavBarView() {
               </Link>
             </li>
             <li className="nav-item">
+              <Link href="/financial-planning" className="nav-link">
+                {"Financial Planning"}
+              </Link>
+            </li>
+            <li className="nav-item">
               <Link href="/find-the-animal" className="nav-link">
                 {"Find The Animal"}
               </Link>
@@ -97,6 +102,15 @@ export default function NavBarView() {
                 onClick={() => setMenuOpen(false)}
               >
                 {"Check Your Personality"}
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link
+                href="/financial-planning"
+                className="nav-link"
+                onClick={() => setMenuOpen(false)}
+              >
+                {"Financial Planning"}
               </Link>
             </li>
             <li className="nav-item">
