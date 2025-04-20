@@ -36,12 +36,14 @@ const InvestmentsTab: React.FC<InvestmentsTabProps> = ({
     handleInputFocus,
     handleInputBlur,
 }) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const renderCustomizedLegend = (props: any) => {
         const { payload } = props;
         const investmentData = getInvestmentData();
         const totalValue = investmentData.reduce((acc, item) => acc + item.value, 0);
         return (
             <ul className="ia-customized-legend">
+                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                 {payload.map((entry: any, index: number) => {
                     const item = investmentData[index];
                     const percent =

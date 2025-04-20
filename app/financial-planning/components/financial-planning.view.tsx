@@ -10,6 +10,7 @@ import {
   LineChart as LineChartIcon,
   User,
   Brain,
+  PiggyBank,
 } from "lucide-react";
 import "../styles/financial-planning.css";
 import NavBarView from "../../nav-bar/nav-bar.view";
@@ -24,6 +25,7 @@ import ProjectionsTab from "./projection-tab";
 import PersonalTab from "./personal-tab";
 import AiInsightsTab from "./ai-insight-tab";
 import FinanceDescription from "./finance-description";
+import SavingsTab from "./savings-tab";
 
 interface FinancialData {
   income: {
@@ -167,6 +169,7 @@ const FinancialPlanning = () => {
       },
     },
   });
+
 
   const [monthlyBudget, setMonthlyBudget] = useState(0);
   const [savingsRate, setSavingsRate] = useState(0);
@@ -344,7 +347,6 @@ const FinancialPlanning = () => {
       financialGoals: financialData.goals,
       currentInvestments: financialData.investments,
     });
-
     setMonthlyBudget(newMonthlyBudget);
     setSavingsRate(newSavingsRate);
     setDebtToIncomeRatio(newDebtToIncomeRatio);
@@ -395,7 +397,6 @@ const FinancialPlanning = () => {
       (retirementScore * 0.2)
     );
   };
-
   const calculateInvestmentDiversity = (investments: FinancialData["investments"]) => {
     const total = investments.total;
     if (total === 0) return 0;
@@ -668,8 +669,6 @@ const FinancialPlanning = () => {
     }
   }, [personalInfo]);
 
-
-
   // Add function to check if all required data is filled
   const isDataComplete = (): boolean => {
     return Boolean(
@@ -751,6 +750,13 @@ const FinancialPlanning = () => {
     }
   };
 
+  const handleFinancialDataUpdate = (updates: Partial<FinancialData>) => {
+    setFinancialData(prev => ({
+      ...prev,
+      ...updates
+    }));
+  };
+
   return (
     <div className="financial-planning-container">
       <NavBarView />
@@ -799,6 +805,12 @@ const FinancialPlanning = () => {
             onClick={() => setActiveTab("budget")}
           >
             <Calculator size={20} /> Budget
+          </button>
+          <button
+            className={`tab ${activeTab === "savings" ? "active" : ""}`}
+            onClick={() => setActiveTab("savings")}
+          >
+            <PiggyBank size={20} /> Savings
           </button>
           <button
             className={`tab ${activeTab === "investments" ? "active" : ""}`}
@@ -860,6 +872,13 @@ const FinancialPlanning = () => {
               handleInputChange={handleInputChange}
               handleInputFocus={handleInputFocus}
               handleInputBlur={handleInputBlur}
+            />
+          )}
+
+          {activeTab === "savings" && (
+            <SavingsTab
+              financialData={financialData}
+              onUpdate={handleFinancialDataUpdate}
             />
           )}
 

@@ -176,7 +176,6 @@ const DebtTab: React.FC<DebtTabProps> = ({
                 };
             });
     };
-    console.log('financialData.debt...............', financialData.debt, getDebtData())
     return (
         <div className="debt-section">
             <div className="debt-chart">

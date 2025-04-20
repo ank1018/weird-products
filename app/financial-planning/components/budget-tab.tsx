@@ -45,12 +45,14 @@ const BudgetTab: React.FC<BudgetTabProps> = ({
   handleInputBlur,
 }) => {
   // Custom legend to display the category name and its percentage share.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const renderCustomizedLegend = (props: any) => {
     const { payload } = props;
     const expenseData = getExpenseData();
     const totalValue = expenseData.reduce((acc, item) => acc + item.value, 0);
     return (
       <ul className="customized-legend">
+        {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
         {payload.map((entry: any, index: number) => {
           const item = expenseData[index];
           const percent =
