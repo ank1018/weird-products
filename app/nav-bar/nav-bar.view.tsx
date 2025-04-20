@@ -1,62 +1,77 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
-import { Menu, X } from "lucide-react";
-import "./nav-bar.css";
+import { Menu, X, ChevronDown } from "lucide-react";
+import './nav-bar.css'
 
 export default function NavBarView() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+
   const toggleMenu = () => setMenuOpen(!menuOpen);
+
+  const toggleDropdown = (category: string | null) => {
+    setActiveDropdown(activeDropdown === category ? null : category);
+  };
+
+  // Organized navigation items by category
+  const navItems = {
+    utilities: [
+      { name: "JSON Formatter", path: "/json-formatter" },
+      { name: "What's My IP & Network?", path: "/find-my-ip" },
+      { name: "Financial Planning", path: "/financial-planning" },
+    ],
+    games: [
+      { name: "Find The Animal", path: "/find-the-animal" },
+      { name: "Catch The Shapes", path: "/shadow-shapes" },
+    ],
+    tools: [
+      { name: "Check Your Personality", path: "/personality-predictor" },
+    ]
+  };
 
   return (
     <div className="navigation-container">
       <nav className="navbar">
-        {/* Brand / Logo */}
-        {/* <div className="nav-brand">
+        {/* Brand / Logo - always visible */}
+        <div className="nav-brand">
           <Link href="/" className="nav-link brand-link" onClick={() => setMenuOpen(false)}>
             Wacky Products
           </Link>
-        </div> */}
-        {/* Desktop Navigation */}
+        </div>
+
+        {/* Desktop Navigation with Dropdowns */}
         <div className="nav-desktop">
           <ul className="nav-links">
-            <li className="nav-item">
-              <Link href="/" className="nav-link">
-                Wacky Products
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link href="/json-formatter" className="nav-link">
-                JSON Formatter
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link href="/find-my-ip" className="nav-link">
-                {"What's My IP & Network?"}
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link href="/personality-predictor" className="nav-link">
-                {"Check Your Personality"}
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link href="/financial-planning" className="nav-link">
-                {"Financial Planning"}
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link href="/find-the-animal" className="nav-link">
-                {"Find The Animal"}
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link href="/shadow-shapes" className="nav-link">
-                {"Catch The Shapes"}
-              </Link>
-            </li>
+            {Object.entries(navItems).map(([category, items]) => (
+              <li key={category} className="nav-item dropdown">
+                <button
+                  className="nav-link dropdown-toggle"
+                  onClick={() => toggleDropdown(category)}
+                >
+                  {category.charAt(0).toUpperCase() + category.slice(1)}
+                  <ChevronDown className={`dropdown-icon ${activeDropdown === category ? 'rotated' : ''}`} size={16} />
+                </button>
+                {activeDropdown === category && (
+                  <ul className="dropdown-menu">
+                    {items.map((item) => (
+                      <li key={item.path} className="dropdown-item">
+                        <Link
+                          href={item.path}
+                          className="dropdown-link"
+                          onClick={() => setActiveDropdown(null)}
+                        >
+                          {item.name}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </li>
+            ))}
           </ul>
         </div>
+
         {/* Mobile Navigation Toggle */}
         <div className="nav-mobile">
           <button className="menu-toggle" onClick={toggleMenu}>
@@ -64,7 +79,8 @@ export default function NavBarView() {
           </button>
         </div>
       </nav>
-      {/* Mobile Menu */}
+
+      {/* Mobile Menu with Accordion-style Dropdowns */}
       {menuOpen && (
         <div className="mobile-menu">
           <ul className="mobile-nav-links">
@@ -74,63 +90,37 @@ export default function NavBarView() {
                 className="nav-link"
                 onClick={() => setMenuOpen(false)}
               >
-                Wacky Products
+                Home
               </Link>
             </li>
-            <li className="nav-item">
-              <Link
-                href="/json-formatter"
-                className="nav-link"
-                onClick={() => setMenuOpen(false)}
-              >
-                JSON Formatter
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link
-                href="/find-my-ip"
-                className="nav-link"
-                onClick={() => setMenuOpen(false)}
-              >
-                {"What's My IP & Network?"}
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link
-                href="/personality-predictor"
-                className="nav-link"
-                onClick={() => setMenuOpen(false)}
-              >
-                {"Check Your Personality"}
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link
-                href="/financial-planning"
-                className="nav-link"
-                onClick={() => setMenuOpen(false)}
-              >
-                {"Financial Planning"}
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link
-                href="/find-the-animal"
-                className="nav-link"
-                onClick={() => setMenuOpen(false)}
-              >
-                {"Find The Animal"}
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link
-                href="/shadow-shapes"
-                className="nav-link"
-                onClick={() => setMenuOpen(false)}
-              >
-                {"Catch The Shapes"}
-              </Link>
-            </li>
+
+            {Object.entries(navItems).map(([category, items]) => (
+              <li key={category} className="mobile-dropdown">
+                <button
+                  className="mobile-dropdown-toggle"
+                  onClick={() => toggleDropdown(category)}
+                >
+                  {category.charAt(0).toUpperCase() + category.slice(1)}
+                  <ChevronDown className={`dropdown-icon ${activeDropdown === category ? 'rotated' : ''}`} size={16} />
+                </button>
+
+                {activeDropdown === category && (
+                  <ul className="mobile-dropdown-menu">
+                    {items.map((item) => (
+                      <li key={item.path} className="mobile-dropdown-item">
+                        <Link
+                          href={item.path}
+                          className="mobile-dropdown-link"
+                          onClick={() => setMenuOpen(false)}
+                        >
+                          {item.name}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </li>
+            ))}
           </ul>
         </div>
       )}
