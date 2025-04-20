@@ -11,6 +11,8 @@ import {
   User,
   Brain,
   PiggyBank,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import "../styles/financial-planning.css";
 import NavBarView from "../../nav-bar/nav-bar.view";
@@ -788,63 +790,71 @@ const FinancialPlanning = () => {
 
         {/* Navigation Tabs */}
         <div className="tabs-container">
-          <button
-            className={`tab ${activeTab === "overview" ? "active" : ""}`}
-            onClick={() => setActiveTab("overview")}
-          >
-            <DollarSign size={20} /> Overview
-          </button>
-          <button
-            className={`tab ${activeTab === "personal" ? "active" : ""}`}
-            onClick={() => setActiveTab("personal")}
-          >
-            <User size={20} /> Personal
-          </button>
-          <button
-            className={`tab ${activeTab === "budget" ? "active" : ""}`}
-            onClick={() => setActiveTab("budget")}
-          >
-            <Calculator size={20} /> Budget
-          </button>
-          <button
-            className={`tab ${activeTab === "savings" ? "active" : ""}`}
-            onClick={() => setActiveTab("savings")}
-          >
-            <PiggyBank size={20} /> Savings
-          </button>
-          <button
-            className={`tab ${activeTab === "investments" ? "active" : ""}`}
-            onClick={() => setActiveTab("investments")}
-          >
-            <TrendingUp size={20} /> Investments
-          </button>
-          <button
-            className={`tab ${activeTab === "debt" ? "active" : ""}`}
-            onClick={() => setActiveTab("debt")}
-          >
-            <CreditCard size={20} /> Debt
-          </button>
-          <button
-            className={`tab ${activeTab === "goals" ? "active" : ""}`}
-            onClick={() => setActiveTab("goals")}
-          >
-            <Target size={20} /> Goals
-          </button>
-          <button
-            className={`tab ${activeTab === "projections" ? "active" : ""}`}
-            onClick={() => setActiveTab("projections")}
-          >
-            <LineChartIcon size={20} /> Projections
-          </button>
-          <button
-            className={`tab ${activeTab === "ai-insights" ? "active" : ""}`}
-            onClick={() => {
-              setActiveTab("ai-insights");
-              getAIInsights();
-            }}
-          >
-            <Brain size={20} /> AI Insights
-          </button>
+          <div className="scroll-indicator left">
+            <ChevronLeft className="rotate-90" size={20} />
+          </div>
+          <div className="tabs-scroll">
+            <button
+              className={`tab ${activeTab === "overview" ? "active" : ""}`}
+              onClick={() => setActiveTab("overview")}
+            >
+              <DollarSign size={20} /> Overview
+            </button>
+            <button
+              className={`tab ${activeTab === "personal" ? "active" : ""}`}
+              onClick={() => setActiveTab("personal")}
+            >
+              <User size={20} /> Personal
+            </button>
+            <button
+              className={`tab ${activeTab === "budget" ? "active" : ""}`}
+              onClick={() => setActiveTab("budget")}
+            >
+              <Calculator size={20} /> Budget
+            </button>
+            <button
+              className={`tab ${activeTab === "savings" ? "active" : ""}`}
+              onClick={() => setActiveTab("savings")}
+            >
+              <PiggyBank size={20} /> Savings
+            </button>
+            <button
+              className={`tab ${activeTab === "investments" ? "active" : ""}`}
+              onClick={() => setActiveTab("investments")}
+            >
+              <TrendingUp size={20} /> Investments
+            </button>
+            <button
+              className={`tab ${activeTab === "debt" ? "active" : ""}`}
+              onClick={() => setActiveTab("debt")}
+            >
+              <CreditCard size={20} /> Debt
+            </button>
+            <button
+              className={`tab ${activeTab === "goals" ? "active" : ""}`}
+              onClick={() => setActiveTab("goals")}
+            >
+              <Target size={20} /> Goals
+            </button>
+            <button
+              className={`tab ${activeTab === "projections" ? "active" : ""}`}
+              onClick={() => setActiveTab("projections")}
+            >
+              <LineChartIcon size={20} /> Projections
+            </button>
+            <button
+              className={`tab ${activeTab === "ai-insights" ? "active" : ""}`}
+              onClick={() => {
+                setActiveTab("ai-insights");
+                getAIInsights();
+              }}
+            >
+              <Brain size={20} /> AI Insights
+            </button>
+          </div>
+          <div className="scroll-indicator right">
+            <ChevronRight className="-rotate-90" size={20} />
+          </div>
         </div>
 
         {/* Content Sections */}

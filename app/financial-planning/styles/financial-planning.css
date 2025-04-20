@@ -67,10 +67,50 @@
 
 /* Tabs */
 .tabs-container {
+  position: relative;
   display: flex;
-  gap: 1rem;
-  margin-bottom: 2rem;
-  padding-bottom: 0.5rem;
+  align-items: center;
+  margin: 1rem 0;
+  padding: 0 2rem;
+}
+
+.tabs-scroll {
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  gap: 0.5rem;
+  padding: 0.5rem 0;
+}
+
+.tabs-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.scroll-indicator {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 100%;
+  background: linear-gradient(to right, var(--background-color), transparent);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.scroll-indicator.left {
+  left: 0;
+}
+
+.scroll-indicator.right {
+  right: 0;
+  background: linear-gradient(to left, var(--background-color), transparent);
+}
+
+.scroll-indicator svg {
+  color: var(--text-color);
+  opacity: 0.5;
 }
 
 .tab {
@@ -327,8 +367,8 @@
 
 @media (min-width: 768px) {
   .tabs-container {
-      align-items: center;
-    justify-content: center;
+      /* align-items: center; */
+    /* justify-content: center; */
   }
 }
 
