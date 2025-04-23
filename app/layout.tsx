@@ -1,9 +1,9 @@
-import type { Metadata } from "next";
 import "./globals.css";
 import { Sigmar } from "next/font/google";
-import { Toaster } from "react-hot-toast";
 import Script from "next/script";
 import { GoogleAnalytics } from '@next/third-parties/google'
+import LayoutContent from './layout-content';
+import { metadata } from './metadata';
 
 const sigmar = Sigmar({
   subsets: ["latin"],
@@ -11,49 +11,7 @@ const sigmar = Sigmar({
   variable: "--font-sigmar",
 });
 
-export const metadata: Metadata = {
-  title: "Weird Products - Unique Gifts & Useful Tools",
-  description: "Discover unique gifts for men and women, useful products, and fun online tools. Find the perfect present with our personality predictor, IP finder, and more!",
-  keywords: [
-    "gifts for men",
-    "gifts for women",
-    "unique gifts",
-    "useful products",
-    "fun gifts",
-    "online tools",
-    "personality test",
-    "IP finder",
-    "JSON formatter",
-    "gift ideas",
-    "cool gadgets",
-    "unusual presents",
-    "quirky gifts",
-    "practical gifts",
-    "tech gifts"
-  ].join(", "),
-  authors: [{ name: "Weird Products" }],
-  openGraph: {
-    title: "Weird Products - Unique Gifts & Useful Tools",
-    description: "Find unique gifts and useful tools for everyone. Discover our collection of fun and practical products!",
-    type: "website",
-    locale: "en_US",
-    siteName: "Weird Products",
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
-  },
-  verification: {
-    google: "your-google-site-verification",
-  },
-};
+export { metadata };
 
 // Event tracking function
 declare global {
@@ -64,9 +22,9 @@ declare global {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en">
       <head>
@@ -166,8 +124,9 @@ export default function RootLayout({
         />
       </head>
       <body className={sigmar.variable}>
-        <Toaster position="top-right" reverseOrder={false} />
-        {children}
+        <LayoutContent>
+          {children}
+        </LayoutContent>
         <GoogleAnalytics gaId="G-ER3W9VVXM5" />
       </body>
     </html>

@@ -1,12 +1,14 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
-import { Menu, X, ChevronDown } from "lucide-react";
+import { Menu, X, ChevronDown, LogIn } from "lucide-react";
+import SignInDialog from '../sign-in/sign-in-dialog';
 import './nav-bar.css'
 
 export default function NavBarView() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [showSignInDialog, setShowSignInDialog] = useState(false);
 
   const toggleMenu = () => setMenuOpen(!menuOpen);
 
@@ -78,6 +80,17 @@ export default function NavBarView() {
             {menuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
+
+        <div className="navbar-actions">
+          <button
+            className="sign-in-button"
+            onClick={() => setShowSignInDialog(true)}
+            aria-label="Sign in"
+          >
+            <LogIn size={20} />
+            <span>Sign in</span>
+          </button>
+        </div>
       </nav>
 
       {/* Mobile Menu with Accordion-style Dropdowns */}
@@ -124,6 +137,11 @@ export default function NavBarView() {
           </ul>
         </div>
       )}
+
+      <SignInDialog
+        isOpen={showSignInDialog}
+        onClose={() => setShowSignInDialog(false)}
+      />
     </div>
   );
 }

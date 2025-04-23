@@ -1,7 +1,7 @@
-import { Metadata, Viewport } from "next";
+import type { Metadata } from "next";
 
 // Default metadata for the site
-export const defaultMetadata: Metadata = {
+export const metadata: Metadata = {
   title: "Weird Products - Unique Gifts & Useful Tools",
   description: "Discover unique gifts for men and women, useful products, and fun online tools. Find the perfect present with our personality predictor, IP finder, and more!",
   keywords: [
@@ -85,7 +85,7 @@ interface Product {
 
 // Function to generate product-specific metadata
 export async function generateProductMetadata(product: Product | null) {
-  if (!product) return defaultMetadata;
+  if (!product) return metadata;
 
   const imageUrls = product.images
     ? product.images.split(",").map((url: string) => url.trim())
@@ -114,7 +114,7 @@ export async function generateProductMetadata(product: Product | null) {
 }
 
 // Common viewport settings
-export const viewport: Viewport = {
+export const viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
