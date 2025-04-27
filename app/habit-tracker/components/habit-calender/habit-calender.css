@@ -1,138 +1,252 @@
 /* Calendar View */
 .calendar-view {
-    background: white;
-    border-radius: 1rem;
-  }
-  
-  .calendar-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
-  }
-  
-  .month-navigation {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
-  
-  .month-navigation h2 {
-    margin: 0;
-    font-size: 1.25rem;
-    font-weight: 600;
-  }
-  
-  .month-nav-btn {
-    padding: 0.5rem 1rem;
-    border: 1px solid #e2e8f0;
-    border-radius: 0.375rem;
-    background: white;
-    color: #64748b;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  
-  .month-nav-btn:hover {
-    background: #f1f5f9;
-    color: #0f172a;
-  }
-  
-  .today-btn {
-    padding: 0.5rem 1rem;
-    border: 1px solid #3b82f6;
-    border-radius: 0.375rem;
-    background: #eff6ff;
-    color: #3b82f6;
-    cursor: pointer;
-    font-weight: 500;
-    transition: all 0.2s;
-  }
-  
-  .today-btn:hover {
-    background: #dbeafe;
-  }
-  
-  .calendar-grid {
-    margin-top: 1rem;
-  }
-  
-  .calendar-weekdays {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 0.5rem;
-    margin-bottom: 0.5rem;
-    text-align: center;
-    font-weight: 500;
-    color: #64748b;
-  }
-  
+  background: white;
+  border-radius: 1rem;
+  padding: 1rem;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.month-navigation {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.month-navigation h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.month-nav-btn {
+  padding: 0.5rem 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.375rem;
+  background: white;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.month-nav-btn:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+.today-btn {
+  padding: 0.5rem 1rem;
+  border: 1px solid #3b82f6;
+  border-radius: 0.375rem;
+  background: #eff6ff;
+  color: #3b82f6;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.today-btn:hover {
+  background: #dbeafe;
+}
+
+.calendar-grid {
+  margin-top: 1rem;
+  overflow-x: auto;
+}
+
+/* Ensure weekdays and days have the exact same grid settings */
+.calendar-weekdays,
+.calendar-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.5rem;
+}
+
+.calendar-weekdays {
+  margin-bottom: 0.5rem;
+  text-align: center;
+  font-weight: 500;
+  color: #64748b;
+}
+
+.calendar-weekdays div {
+  padding: 0.5rem 0;
+}
+
+.calendar-days {
+  grid-auto-rows: minmax(100px, auto);
+}
+
+.calendar-cell {
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  background: white;
+  min-height: 100px;
+}
+
+.calendar-cell.empty {
+  background: #f8fafc;
+  border-color: #f1f5f9;
+}
+
+.calendar-date {
+  font-weight: 500;
+  color: #64748b;
+  text-align: right;
+  margin-bottom: 0.5rem;
+}
+
+.calendar-habits {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.calendar-habit-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.calendar-habit-indicator:hover {
+  background: #f1f5f9;
+}
+
+.calendar-habit-indicator.completed {
+  background: #dbeafe;
+}
+
+.habit-indicator-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: #64748b;
+  flex-shrink: 0;
+}
+
+.calendar-habit-indicator.completed .habit-indicator-dot {
+  background: #3b82f6;
+}
+
+.habit-indicator-name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100px;
+}
+
+/* Responsive styles for tablets */
+@media screen and (max-width: 768px) {
   .calendar-days {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 0.5rem;
-    grid-auto-rows: minmax(100px, auto);
+    grid-auto-rows: minmax(80px, auto);
   }
-  
+
   .calendar-cell {
-    border: 1px solid #e2e8f0;
-    border-radius: 0.5rem;
-    padding: 0.5rem;
-    background: white;
-    min-height: 100px;
+    min-height: 80px;
+    padding: 0.25rem;
   }
-  
-  .calendar-cell.empty {
-    background: #f8fafc;
-    border-color: #f1f5f9;
+
+  .month-navigation h2 {
+    font-size: 1.1rem;
   }
-  
-  .calendar-date {
-    font-weight: 500;
-    color: #64748b;
-    text-align: right;
-    margin-bottom: 0.5rem;
+
+  .habit-indicator-name {
+    max-width: 80px;
   }
-  
-  .calendar-habits {
-    display: flex;
+
+  .month-nav-btn,
+  .today-btn {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* Responsive styles for mobile */
+@media screen and (max-width: 480px) {
+  .calendar-header {
     flex-direction: column;
+    align-items: center;
+  }
+
+  .month-navigation {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .today-btn {
+    margin-top: 0.5rem;
+  }
+
+  .calendar-weekdays div {
+    font-size: 0.75rem;
+    padding: 0.25rem 0;
+    width: 5.7rem;
+  }
+
+  .calendar-weekdays,
+  .calendar-days {
     gap: 0.25rem;
   }
-  
-  .calendar-habit-indicator {
-    display: flex;
-    align-items: center;
-    gap: 0.375rem;
-    padding: 0.25rem 0.5rem;
-    border-radius: 0.25rem;
+
+  .calendar-days {
+    grid-auto-rows: minmax(60px, auto);
+  }
+
+  .calendar-cell {
+    min-height: 60px;
+    padding: 0.25rem;
+  }
+
+  .calendar-date {
     font-size: 0.75rem;
-    cursor: pointer;
-    transition: all 0.2s;
+    margin-bottom: 0.25rem;
   }
-  
-  .calendar-habit-indicator:hover {
-    background: #f1f5f9;
+
+  .calendar-habit-indicator {
+    padding: 0.125rem 0.25rem;
+    font-size: 0.7rem;
   }
-  
-  .calendar-habit-indicator.completed {
-    background: #dbeafe;
-  }
-  
-  .habit-indicator-dot {
-    width: 0.5rem;
-    height: 0.5rem;
-    border-radius: 50%;
-    background: #64748b;
-  }
-  
-  .calendar-habit-indicator.completed .habit-indicator-dot {
-    background: #3b82f6;
-  }
-  
+
   .habit-indicator-name {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 100px;
+    max-width: 60px;
   }
+
+  .habit-indicator-dot {
+    width: 0.4rem;
+    height: 0.4rem;
+  }
+}
+
+/* For very small mobile screens */
+@media screen and (max-width: 360px) {
+  .calendar-weekdays div {
+    font-size: 0.7rem;
+  }
+
+  .calendar-days {
+    grid-auto-rows: minmax(50px, auto);
+  }
+
+  .calendar-cell {
+    min-height: 50px;
+  }
+
+  .habit-indicator-name {
+    max-width: 40px;
+  }
+}

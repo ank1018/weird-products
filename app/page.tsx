@@ -5,7 +5,7 @@ import { Product } from "./product/products.types";
 import SeeAllProductsCtaView from "./see-all-products-cta/see-all-products-cta.view";
 import { cache } from "react";
 import NavBarView from "./nav-bar/nav-bar.view";
-import { defaultMetadata, generateProductMetadata } from "./metadata";
+import {generateProductMetadata, metadata} from "./metadata";
 
 // Add caching to the fetch function
 const fetchProducts = cache(async () => {
@@ -42,7 +42,7 @@ export async function generateMetadata({ searchParams }: { searchParams: Promise
   const { productName } = await searchParams || {};
 
   if (!productName) {
-    return defaultMetadata;
+    return metadata;
   }
 
   const products = await fetchProducts();

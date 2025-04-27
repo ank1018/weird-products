@@ -68,7 +68,7 @@
 .nav-item,
 .mobile-dropdown-item {
   position: relative;
-  margin: 0.5rem 0;
+  padding: 0.5rem 0;
 }
 
 /* Nav Buttons */
@@ -144,6 +144,11 @@
   padding: 0.5rem;
 }
 
+.left-section {
+  display: flex;
+  align-items: center;
+}
+
 /* Mobile Menu */
 .mobile-menu {
   background: rgba(255, 255, 255, 0.95);
@@ -153,8 +158,8 @@
   width: 100%;
   max-height: calc(100vh - 3.7rem);
   overflow-y: auto;
-  padding: 1rem 0;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  padding: 1rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   z-index: 999;
 }
 
@@ -191,12 +196,15 @@
     justify-content: flex-end;
     flex: 1;
   }
+
   .nav-mobile {
     display: none;
   }
+
   .mobile-menu {
     display: none;
   }
+
   .nav-links {
     gap: 1.5rem;
   }
@@ -261,4 +269,10 @@
 
 .sign-out-button {
   color: var(--hover-color);
+}
+
+@media (max-width: 768px) {
+  .navbar-actions {
+    margin-left: 0.5rem;
+  }
 }

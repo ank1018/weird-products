@@ -20,6 +20,7 @@ export default function NavBarView() {
   // Organized navigation items by category
   const navItems = {
     utilities: [
+      { name: "Habit Tracker", path: "/habit-tracker" },
       { name: "JSON Formatter", path: "/json-formatter" },
       { name: "What's My IP & Network?", path: "/find-my-ip" },
       { name: "Financial Planning", path: "/financial-planning" },
@@ -43,75 +44,78 @@ export default function NavBarView() {
           </Link>
         </div>
 
-        {/* Desktop Navigation with Dropdowns */}
-        <div className="nav-desktop">
-          <ul className="nav-links">
-            {Object.entries(navItems).map(([category, items]) => (
-              <li key={category} className="nav-item dropdown">
-                <button
-                  className="nav-link dropdown-toggle"
-                  onClick={() => toggleDropdown(category)}
-                >
-                  {category.charAt(0).toUpperCase() + category.slice(1)}
-                  <ChevronDown className={`dropdown-icon ${activeDropdown === category ? 'rotated' : ''}`} size={16} />
-                </button>
-                {activeDropdown === category && (
-                  <ul className="dropdown-menu">
-                    {items.map((item) => (
-                      <li key={item.path} className="dropdown-item">
-                        <Link
-                          href={item.path}
-                          className="dropdown-link"
-                          onClick={() => setActiveDropdown(null)}
-                        >
-                          {item.name}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </li>
-            ))}
-          </ul>
-        </div>
 
-        {/* Mobile Navigation Toggle */}
-        <div className="nav-mobile">
-          <button className="menu-toggle" onClick={toggleMenu}>
-            {menuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
-        </div>
 
-        <div className="navbar-actions">
-          {!session ? (
-            <button
-              className="sign-in"
-              onClick={() => setShowSignInDialog(true)}
-              aria-label="Sign in"
-            >
-              <LogIn size={20} />
-              <span>Sign in</span>
-            </button>
-          ) : (
-            <div className="user-dropdown">
-              <button className="dropdown-toggle" aria-haspopup="true" aria-expanded="false" onClick={() => toggleDropdown('profile')}>
-                <User size={20} />
-                <span>{session.user?.name || 'User'}</span>
-                <ChevronDown size={16} className="dropdown-icon" />
-              </button>
-              {activeDropdown === 'profile' && (
-                <div className="dropdown-menu">
-                  <div className="dropdown-header">
-                    Welcome, {session.user?.name}
-                  </div>
-                  <button onClick={() => signOut()} className="dropdown-item sign-out-button">
-                    <LogOut size={16} />
-                    <span>Sign out</span>
+        <div className="left-section">
+          {/* Desktop Navigation with Dropdowns */}
+          <div className="nav-desktop">
+            <ul className="nav-links">
+              {Object.entries(navItems).map(([category, items]) => (
+                <li key={category} className="nav-item dropdown">
+                  <button
+                    className="nav-link dropdown-toggle"
+                    onClick={() => toggleDropdown(category)}
+                  >
+                    {category.charAt(0).toUpperCase() + category.slice(1)}
+                    <ChevronDown className={`dropdown-icon ${activeDropdown === category ? 'rotated' : ''}`} size={16} />
                   </button>
-                </div>
-              )}
-            </div>
-          )}
+                  {activeDropdown === category && (
+                    <ul className="dropdown-menu">
+                      {items.map((item) => (
+                        <li key={item.path} className="dropdown-item">
+                          <Link
+                            href={item.path}
+                            className="dropdown-link"
+                            onClick={() => setActiveDropdown(null)}
+                          >
+                            {item.name}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+          {/* Mobile Navigation Toggle */}
+          <div className="nav-mobile">
+            <button className="menu-toggle" onClick={toggleMenu}>
+              {menuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
+
+          <div className="navbar-actions">
+            {!session ? (
+              <button
+                className="sign-in"
+                onClick={() => setShowSignInDialog(true)}
+                aria-label="Sign in"
+              >
+                <LogIn size={20} />
+                <span className="nav-desktop">Sign in</span>
+              </button>
+            ) : (
+              <div className="user-dropdown">
+                <button className="dropdown-toggle" aria-haspopup="true" aria-expanded="false" onClick={() => toggleDropdown('profile')}>
+                  <User size={20} />
+                  <span className="nav-desktop">{session.user?.name || 'User'}</span>
+                  <ChevronDown size={16} className="dropdown-icon nav-desktop" />
+                </button>
+                {activeDropdown === 'profile' && (
+                  <div className="dropdown-menu">
+                    <div className="dropdown-header">
+                      Welcome, {session.user?.name}
+                    </div>
+                    <button onClick={() => signOut()} className="dropdown-item sign-out-button">
+                      <LogOut size={16} />
+                      <span>Sign out</span>
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </nav>
 

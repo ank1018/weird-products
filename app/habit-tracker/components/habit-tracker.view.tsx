@@ -403,9 +403,8 @@ const HabitTracker: React.FC = () => {
                     setShowSignInDialog={setShowSignInDialog}
                 />
 
-
                 <div className="habits-section">
-                    <div className="category-filters">
+                    <div className="category-filters desktop">
                         <button
                             className={`category-pill ${filter === 'all' ? 'active' : ''}`}
                             onClick={() => setFilter('all')}
