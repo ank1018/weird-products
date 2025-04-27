@@ -6,24 +6,21 @@ import {
     Check,
     X,
     Calendar,
-    BarChart2,
-    Settings,
     Edit2,
-    List,
-    Grid,
     Award,
-    TrendingUp,
-    AlertCircle
+    AlertCircle,
+    ThumbsUp,
+    ThumbsDown, Grid, List
 } from 'lucide-react';
 import NavBarView from '../../nav-bar/nav-bar.view';
 import GoogleAd from '../../google-ads/google-ads.view';
 import Footer from '../../footer/footer.view';
 import '../styles/habit-tracker.css';
 import { Habit, HabitFrequency, HabitCategory } from './habit-tracker.types';
-import { useSession, signIn, signOut } from 'next-auth/react';
-import SignIn from '../../sign-in/sign-in.view';
+import { useSession, signOut } from 'next-auth/react';
 import Header from './header/header';
 import SignInDialog from '../../sign-in/sign-in-dialog';
+import {isDateCompleted} from "../helper/utils";
 
 interface HabitData {
     habits: Habit[];
@@ -76,12 +73,12 @@ const HabitTracker: React.FC = () => {
 
             if (habit.frequency === 'daily') {
                 // For daily habits: check if consecutive days are completed
-                let currentDate = new Date(today);
+                const currentDate = new Date(today);
 
                 // Start from today and go backwards
                 while (true) {
                     const dateStr = currentDate.toISOString().split('T')[0];
-                    if (habit.completedDates.includes(dateStr)) {
+                    if (isDateCompleted(habit.completedDates, dateStr)) {
                         streak++;
                         // Move to previous day
                         currentDate.setDate(currentDate.getDate() - 1);
@@ -113,7 +110,7 @@ const HabitTracker: React.FC = () => {
                 currentWeekStart.setDate(currentDate.getDate() - currentDate.getDay());
 
                 // Count consecutive weeks
-                let checkDate = new Date(currentWeekStart);
+                const checkDate = new Date(currentWeekStart);
 
                 while (true) {
                     const weekKey = `${checkDate.getFullYear()}-${Math.floor((checkDate.getTime()) / (7 * 24 * 60 * 60 * 1000))}`;
@@ -195,16 +192,18 @@ const HabitTracker: React.FC = () => {
         }
     };
 
-    const [newHabit, setNewHabit] = useState<{
+    const [, setNewHabit] = useState<{
         name: string;
         description: string;
         frequency: HabitFrequency;
         category: string;
+        type: 'follow' | 'leave';
     }>({
         name: '',
         description: '',
         frequency: 'daily',
-        category: 'personal'
+        category: 'personal',
+        type: 'follow'
     });
 
     const [filter, setFilter] = useState<string>('all');
@@ -232,7 +231,8 @@ const HabitTracker: React.FC = () => {
             category: newHabit.category as HabitCategory,
             completedDates: [],
             createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
+            updatedAt: new Date().toISOString(),
+            type: newHabit.type
         };
 
         const updatedHabits = [...habitData.habits, habit];
@@ -244,7 +244,8 @@ const HabitTracker: React.FC = () => {
             name: '',
             description: '',
             frequency: 'daily',
-            category: 'personal'
+            category: 'personal',
+            type: 'follow'
         });
 
         setShowAddForm(false);
@@ -271,9 +272,18 @@ const HabitTracker: React.FC = () => {
         const habit = habitData.habits.find(h => h.id === habitId);
         if (!habit) return;
 
-        const updatedCompletedDates = habit.completedDates.includes(date)
-            ? habit.completedDates.filter(d => d !== date)
-            : [...habit.completedDates, date];
+        // Standardize the date format to YYYY-MM-DD for consistent comparison
+        const standardizedDate = new Date(date).toISOString().split('T')[0];
+
+        // Check if the date already exists in the array using the standardized format
+        const dateExists = habit.completedDates.some(d =>
+            new Date(d).toISOString().split('T')[0] === standardizedDate
+        );
+
+        // Toggle the date - remove if exists, add if not
+        const updatedCompletedDates = dateExists
+            ? habit.completedDates.filter(d => new Date(d).toISOString().split('T')[0] !== standardizedDate)
+            : [...habit.completedDates, standardizedDate]; // Store in consistent format
 
         const updatedHabit = {
             ...habit,
@@ -403,8 +413,6 @@ const HabitTracker: React.FC = () => {
             <NavBarView />
             <div className="habit-tracker-content">
                 <Header
-                    viewMode={viewMode}
-                    setViewMode={setViewMode}
                     showAddForm={showAddForm}
                     setShowAddForm={setShowAddForm}
                     filter={filter}
@@ -436,30 +444,61 @@ const HabitTracker: React.FC = () => {
                             </button>
                         ))}
                     </div>
-                    {viewMode === 'cards' && (
-                        <div>
-                            {filteredHabits.length === 0 ? (
-                                <div className="empty-state">
-                                    <AlertCircle size={48} />
-                                    <h3>No habits found</h3>
-                                    <p>Add a new habit to get started or change your filter settings.</p>
-                                    <button
-                                        onClick={() => !session ? setShowSignInDialog(true) : setShowAddForm(true)}
-                                        className="add-habit-btn"
-                                    >
-                                        <Plus size={16} />
-                                        Add Your First Habit
-                                    </button>
-                                </div>
-                            ) : (
-                                <div className="habits-grid">
-                                    {filteredHabits.map(habit => (
-                                        <div key={habit.id} className="habit-card">
-                                            {editingHabit?.id === habit.id ? (
-                                                <div className="habit-edit-form">
-                                                    <input
-                                                        type="text"
-                                                        value={editingHabit.name}
+
+                    <div className="view-selector">
+                        <div className="view-tabs">
+                            <button
+                                className={`view-tab ${viewMode === 'cards' ? 'active' : ''}`}
+                                onClick={() => setViewMode('cards')}
+                                aria-label="Cards view"
+                            >
+                                <Grid size={18}/>
+                                <span>Cards</span>
+                            </button>
+                            <button
+                                className={`view-tab ${viewMode === 'calendar' ? 'active' : ''}`}
+                                onClick={() => setViewMode('calendar')}
+                                aria-label="Calendar view"
+                            >
+                                <Calendar size={18}/>
+                                <span>Calendar</span>
+                            </button>
+                            <button
+                                className={`view-tab ${viewMode === 'table' ? 'active' : ''}`}
+                                onClick={() => setViewMode('table')}
+                                aria-label="Table view"
+                            >
+                                <List size={18}/>
+                                <span>Table</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                {viewMode === 'cards' && (
+                    <div>
+                        {filteredHabits.length === 0 ? (
+                            <div className="empty-state">
+                                <AlertCircle size={48}/>
+                                <h3>No habits found</h3>
+                                <p>Add a new habit to get started or change your filter settings.</p>
+                                <button
+                                    onClick={() => !session ? setShowSignInDialog(true) : setShowAddForm(true)}
+                                    className="add-habit-btn"
+                                >
+                                    <Plus size={16}/>
+                                    Add Your First Habit
+                                </button>
+                            </div>
+                        ) : (
+                            <div className="habits-grid">
+                                {filteredHabits.map(habit => (
+                                    <div key={habit.id} className="habit-card">
+                                        {editingHabit?.id === habit.id ? (
+                                            <div className="habit-edit-form">
+                                                <input
+                                                    type="text"
+                                                    value={editingHabit.name}
                                                         onChange={e => setEditingHabit({ ...editingHabit, name: e.target.value })}
                                                     />
                                                     <textarea
@@ -484,6 +523,34 @@ const HabitTracker: React.FC = () => {
                                                         <option value="weekly">Weekly</option>
                                                         <option value="monthly">Monthly</option>
                                                     </select>
+                                                    <div className="edit-habit-type">
+                                                        <label>Habit Type:</label>
+                                                        <div className="edit-type-options">
+                                                            <label>
+                                                                <input
+                                                                    type="radio"
+                                                                    name="editHabitType"
+                                                                    value="follow"
+                                                                    checked={editingHabit.type === 'follow'}
+                                                                    onChange={() => setEditingHabit({ ...editingHabit, type: 'follow' })}
+                                                                />
+                                                                <ThumbsUp size={16} style={{ minWidth: 16, minHeight: 16 }} />
+                                                                Follow
+                                                            </label>
+                                                            <label>
+                                                                <input
+                                                                    type="radio"
+                                                                    name="editHabitType"
+                                                                    value="leave"
+                                                                    checked={editingHabit.type === 'leave'}
+                                                                    onChange={() => setEditingHabit({ ...editingHabit, type: 'leave' })}
+                                                                />
+                                                                <ThumbsDown size={16} style={{ minWidth: 16, minHeight: 16 }} />
+                                                                Leave
+                                                            </label>
+                                                        </div>
+                                                    </div>
+
                                                     <div className="edit-actions">
                                                         <button onClick={() => handleUpdateHabit(editingHabit)} className="save-btn">
                                                             <Check size={16} />
@@ -526,6 +593,7 @@ const HabitTracker: React.FC = () => {
                                                             <span>Streak: {habit.streak} {habit.frequency === 'daily' ? 'days' :
                                                                 habit.frequency === 'weekly' ? 'weeks' : 'months'}</span>
                                                         </div>
+                                                        <div className={`habit-type-label ${habit.type}`}>{habit.type === 'follow' ? '👍 Follow' : '👎 Leave'}</div>
                                                     </div>
 
                                                     <div className="habit-progress">
@@ -549,7 +617,7 @@ const HabitTracker: React.FC = () => {
                                                                 <button
                                                                     key={date}
                                                                     className={`calendar-day 
-                                  ${habit.completedDates.includes(date) ? 'completed' : ''} 
+                                  ${isDateCompleted(habit.completedDates, date) ? 'completed' : ''} 
                                   ${isToday ? 'today' : ''}`}
                                                                     onClick={() => handleToggleCompletion(habit.id, date)}
                                                                 >
@@ -566,7 +634,6 @@ const HabitTracker: React.FC = () => {
                             )}
                         </div>
                     )}
-                </div>
 
                 {viewMode === 'calendar' && (
                     <div className="calendar-view">
@@ -608,7 +675,7 @@ const HabitTracker: React.FC = () => {
                                                     {filteredHabits.map(habit => (
                                                         <div
                                                             key={habit.id}
-                                                            className={`calendar-habit-indicator ${habit.completedDates.includes(date) ? 'completed' : ''}`}
+                                                            className={`calendar-habit-indicator ${isDateCompleted(habit.completedDates, date) ? 'completed' : ''}`}
                                                             onClick={() => date && handleToggleCompletion(habit.id, date)}
                                                         >
                                                             <span className="habit-indicator-dot"></span>
@@ -655,10 +722,10 @@ const HabitTracker: React.FC = () => {
                                             {weekRange.map(date => (
                                                 <td key={date} className="completion-cell">
                                                     <button
-                                                        className={`completion-toggle ${habit.completedDates.includes(date) ? 'completed' : ''}`}
+                                                        className={`completion-toggle ${isDateCompleted(habit.completedDates, date) ? 'completed' : ''}`}
                                                         onClick={() => handleToggleCompletion(habit.id, date)}
                                                     >
-                                                        {habit.completedDates.includes(date) ? <Check size={16} /> : ''}
+                                                        {isDateCompleted(habit.completedDates, date) ? <Check size={16} /> : ''}
                                                     </button>
                                                 </td>
                                             ))}

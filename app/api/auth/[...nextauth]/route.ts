@@ -11,13 +11,13 @@ const handler = NextAuth({
     }),
   ],
   callbacks: {
-    async signIn({ user, account, profile }) {
+    async signIn({ user, account }) {
       if (account?.provider === 'google') {
         try {
           await connectDB();
-          
+
           const existingUser = await User.findOne({ email: user.email });
-          
+
           if (!existingUser) {
             await User.create({
               email: user.email,
@@ -28,38 +28,41 @@ const handler = NextAuth({
                   name: 'Morning Exercise',
                   description: '30 minutes of exercise every morning',
                   frequency: 'daily',
-                  streak: 5,
+                  streak: 0,
                   category: 'health',
                   completedDates: [],
+                  type: 'follow',
                   createdAt: '2024-01-01T00:00:00.000Z',
                   updatedAt: '2024-01-01T00:00:00.000Z'
-              },
-              {
+                },
+                {
                   id: 'habit-2',
                   name: 'Read Books',
                   description: 'Read for 30 minutes before bed',
                   frequency: 'daily',
-                  streak: 3,
+                  streak: 0,
                   category: 'personal',
                   completedDates: [],
+                  type: 'follow',
                   createdAt: '2024-01-01T00:00:00.000Z',
                   updatedAt: '2024-01-01T00:00:00.000Z'
-              },
-              {
+                },
+                {
                   id: 'habit-3',
                   name: 'Track Expenses',
                   description: 'Record daily expenses in the app',
                   frequency: 'daily',
-                  streak: 7,
+                  streak: 0,
                   category: 'finance',
                   completedDates: [],
+                  type: 'follow',
                   createdAt: '2024-01-01T00:00:00.000Z',
                   updatedAt: '2024-01-01T00:00:00.000Z'
-              }
+                }
               ],
             });
           }
-          
+
           return true;
         } catch (error) {
           console.error('Error in signIn callback:', error);

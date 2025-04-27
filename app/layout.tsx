@@ -16,6 +16,7 @@ export { metadata };
 // Event tracking function
 declare global {
   interface Window {
+    mongoose: { conn: null; promise: null };
     gtag: (command: 'config' | 'event' | 'js', ...args: unknown[]) => void;
   }
 }

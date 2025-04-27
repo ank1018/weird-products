@@ -14,6 +14,7 @@ export async function GET() {
     const user = await User.findOne({ email: session.user.email });
     return NextResponse.json({ habits: user?.habits || [] });
   } catch (error) {
+    console.error('Error fetching habits:', error);
     return NextResponse.json({ error: 'Failed to fetch habits' }, { status: 500 });
   }
 }

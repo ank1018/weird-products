@@ -38,7 +38,7 @@ export default function NavBarView() {
         {/* Brand / Logo - always visible */}
         <div className="nav-brand">
           <Link href="/" className="nav-link brand-link" onClick={() => setMenuOpen(false)}>
-            Wacky Products
+            WoW
           </Link>
         </div>
 

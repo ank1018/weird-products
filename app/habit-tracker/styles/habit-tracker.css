@@ -6,6 +6,43 @@
 .header-section {
   margin-top: 5rem;
   color: black;
+
+}
+
+.habits-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.habit-type-option {
+  display: flex;
+    border-radius: .375rem;
+    color: #6b7280;
+    background: #fff;
+    color: #111827;
+    gap: 1rem;
+}
+
+.edit-habit-type {
+  display: flex;
+  gap: 1rem;
+}
+
+.edit-type-options {
+  display: flex;
+  gap: 2rem;
+}
+
+.edit-type-options label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.habit-type-selector {
+  margin-bottom: 1rem;
 }
 
 .habit-tracker-title {
@@ -101,6 +138,7 @@
   font-weight: 500;
   color: white;
   margin-bottom: 0.5rem;
+  width: fit-content;
 }
 
 .habit-category-badge.health {
@@ -614,37 +652,37 @@
   .habit-tracker-content {
     padding: 1rem;
   }
-  
+
   .habit-tracker-title {
     font-size: 2rem;
   }
-  
+
   .view-controls {
     flex-direction: column;
     gap: 1rem;
     align-items: stretch;
   }
-  
+
   .filter-controls {
     padding-bottom: 0.75rem;
   }
-  
+
   .habits-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .form-row {
     grid-template-columns: 1fr;
   }
-  
+
   .calendar-cell {
     min-height: 80px;
   }
-  
+
   .habit-indicator-name {
     max-width: 60px;
   }
-  
+
   .habit-name-container {
     gap: 0.5rem;
   }
@@ -654,32 +692,32 @@
   .month-navigation h2 {
     font-size: 1rem;
   }
-  
+
   .month-nav-btn {
     padding: 0.375rem 0.75rem;
     font-size: 0.875rem;
   }
-  
+
   .today-btn {
     padding: 0.375rem 0.75rem;
     font-size: 0.875rem;
   }
-  
+
   .calendar-weekdays div,
   .calendar-date {
     font-size: 0.75rem;
   }
-  
+
   .calendar-cell {
     min-height: 60px;
     padding: 0.25rem;
   }
-  
+
   .calendar-habit-indicator {
     padding: 0.125rem 0.25rem;
     font-size: 0.625rem;
   }
-  
+
   .habit-indicator-name {
     max-width: 40px;
   }

@@ -1,5 +1,18 @@
 import mongoose from 'mongoose';
 
+const habitSchema = new mongoose.Schema({
+  id: String,
+  name: String,
+  description: String,
+  frequency: String,
+  streak: Number,
+  category: String,
+  completedDates: [Date], // or [String] depending on your original schema
+  type: String, // Add this line
+  createdAt: Date,
+  updatedAt: Date
+});
+
 const userSchema = new mongoose.Schema({
   email: {
     type: String,
@@ -10,17 +23,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  habits: [{
-    id: String,
-    name: String,
-    description: String,
-    frequency: String,
-    streak: Number,
-    category: String,
-    completedDates: [String],
-    createdAt: String,
-    updatedAt: String
-  }],
+  habits: [habitSchema],
   createdAt: {
     type: Date,
     default: Date.now,

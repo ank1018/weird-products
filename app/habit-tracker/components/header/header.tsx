@@ -1,14 +1,12 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Grid, Calendar, List, Plus, X, Check } from 'lucide-react';
+import { Plus, X, Check, ThumbsUp, ThumbsDown } from 'lucide-react';
 import { HabitFrequency, HabitCategory, Habit } from '../habit-tracker.types';
 import './header.css';
 import { Session } from 'next-auth';
 
 interface HeaderProps {
-    viewMode: 'cards' | 'calendar' | 'table';
-    setViewMode: (mode: 'cards' | 'calendar' | 'table') => void;
     filter: string;
     setFilter: (filter: string) => void;
     categories: readonly string[];
@@ -20,10 +18,6 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({
-    viewMode,
-    setViewMode,
-    filter,
-    setFilter,
     categories,
     showAddForm,
     setShowAddForm,
@@ -35,17 +29,24 @@ const Header: React.FC<HeaderProps> = ({
         name: '',
         description: '',
         frequency: 'daily' as HabitFrequency,
-        category: 'personal' as HabitCategory
+        category: 'personal' as HabitCategory,
+        type: 'follow' as 'follow' | 'leave' // New habit type field
     });
 
     const handleAddHabit = () => {
         if (!newHabit.name) return;
-        onAddHabit(newHabit as Habit);
+        onAddHabit({
+            ...newHabit,
+            // Add the type field to the habit
+            type: newHabit.type
+        } as Habit);
+
         setNewHabit({
             name: '',
             description: '',
             frequency: 'daily',
-            category: 'personal'
+            category: 'personal',
+            type: 'follow'
         });
         setShowAddForm(false);
     };
@@ -56,34 +57,6 @@ const Header: React.FC<HeaderProps> = ({
                 <h1 className="app-title">Habit Tracker</h1>
 
                 <div className="header-controls">
-                    <div className="view-selector">
-                        <div className="view-tabs">
-                            <button
-                                className={`view-tab ${viewMode === 'cards' ? 'active' : ''}`}
-                                onClick={() => setViewMode('cards')}
-                                aria-label="Cards view"
-                            >
-                                <Grid size={18} />
-                                <span>Cards</span>
-                            </button>
-                            <button
-                                className={`view-tab ${viewMode === 'calendar' ? 'active' : ''}`}
-                                onClick={() => setViewMode('calendar')}
-                                aria-label="Calendar view"
-                            >
-                                <Calendar size={18} />
-                                <span>Calendar</span>
-                            </button>
-                            <button
-                                className={`view-tab ${viewMode === 'table' ? 'active' : ''}`}
-                                onClick={() => setViewMode('table')}
-                                aria-label="Table view"
-                            >
-                                <List size={18} />
-                                <span>Table</span>
-                            </button>
-                        </div>
-                    </div>
 
                     <button
                         className={`add-habit-button ${showAddForm ? 'cancel' : ''}`}
@@ -120,6 +93,38 @@ const Header: React.FC<HeaderProps> = ({
                                         </option>
                                     ))}
                                 </select>
+                            </div>
+                        </div>
+
+                        {/* New habit type selection */}
+                        <div className="form-group habit-type-selector">
+                            <label>Habit Type</label>
+                            <div className="habit-type-options">
+                                <label className={`habit-type-option ${newHabit.type === 'follow' ? 'selected' : ''}`}>
+                                    <input
+                                        type="radio"
+                                        name="habitType"
+                                        value="follow"
+                                        checked={newHabit.type === 'follow'}
+                                        onChange={() => setNewHabit({ ...newHabit, type: 'follow' })}
+                                    />
+                                    <ThumbsUp size={16} />
+                                    <span>Habit to Follow</span>
+                                    <p className="habit-type-description">Track habits you want to build and maintain</p>
+                                </label>
+
+                                <label className={`habit-type-option ${newHabit.type === 'leave' ? 'selected' : ''}`}>
+                                    <input
+                                        type="radio"
+                                        name="habitType"
+                                        value="leave"
+                                        checked={newHabit.type === 'leave'}
+                                        onChange={() => setNewHabit({ ...newHabit, type: 'leave' })}
+                                    />
+                                    <ThumbsDown size={16} />
+                                    <span>Habit to Leave</span>
+                                    <p className="habit-type-description">Track habits you want to quit or avoid</p>
+                                </label>
                             </div>
                         </div>
 

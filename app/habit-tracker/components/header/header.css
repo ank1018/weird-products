@@ -11,20 +11,21 @@
 .header-container {
     max-width: 1200px;
     margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .app-title {
     font-size: 1.5rem;
     font-weight: 600;
     color: #111827;
-    margin-bottom: 1rem;
 }
 
 .header-controls {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1rem;
 }
 
 .view-selector {
@@ -203,20 +204,20 @@
         align-items: stretch;
         gap: 1rem;
     }
-    
+
     .view-selector {
         width: 100%;
     }
-    
+
     .view-tabs {
         width: 100%;
     }
-    
+
     .view-tab {
         flex: 1;
         justify-content: center;
     }
-    
+
     .add-habit-button {
         justify-content: center;
     }
@@ -226,19 +227,19 @@
     .view-tab span {
         display: none;
     }
-    
+
     .view-tab {
         justify-content: center;
         padding: 0.5rem;
     }
-    
+
     .category-filters {
         overflow-x: auto;
         padding-bottom: 0.5rem;
         -webkit-overflow-scrolling: touch;
         scrollbar-width: none; /* Firefox */
     }
-    
+
     .category-filters::-webkit-scrollbar {
         display: none; /* Chrome, Safari, Edge */
     }
