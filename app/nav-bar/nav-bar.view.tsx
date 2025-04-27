@@ -1,15 +1,16 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
-import { Menu, X, ChevronDown, LogIn } from "lucide-react";
+import { Menu, X, ChevronDown, LogIn, LogOut, User } from "lucide-react";
 import SignInDialog from '../sign-in/sign-in-dialog';
 import './nav-bar.css'
+import { useSession, signOut } from "next-auth/react";
 
 export default function NavBarView() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [showSignInDialog, setShowSignInDialog] = useState(false);
-
+  const { data: session } = useSession();
   const toggleMenu = () => setMenuOpen(!menuOpen);
 
   const toggleDropdown = (category: string | null) => {
@@ -82,14 +83,35 @@ export default function NavBarView() {
         </div>
 
         <div className="navbar-actions">
-          <button
-            className="sign-in-button"
-            onClick={() => setShowSignInDialog(true)}
-            aria-label="Sign in"
-          >
-            <LogIn size={20} />
-            <span>Sign in</span>
-          </button>
+          {!session ? (
+            <button
+              className="sign-in"
+              onClick={() => setShowSignInDialog(true)}
+              aria-label="Sign in"
+            >
+              <LogIn size={20} />
+              <span>Sign in</span>
+            </button>
+          ) : (
+            <div className="user-dropdown">
+              <button className="dropdown-toggle" aria-haspopup="true" aria-expanded="false" onClick={() => toggleDropdown('profile')}>
+                <User size={20} />
+                <span>{session.user?.name || 'User'}</span>
+                <ChevronDown size={16} className="dropdown-icon" />
+              </button>
+              {activeDropdown === 'profile' && (
+                <div className="dropdown-menu">
+                  <div className="dropdown-header">
+                    Welcome, {session.user?.name}
+                  </div>
+                  <button onClick={() => signOut()} className="dropdown-item sign-out-button">
+                    <LogOut size={16} />
+                    <span>Sign out</span>
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </nav>
 

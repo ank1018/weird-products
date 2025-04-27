@@ -1,0 +1,138 @@
+/* Calendar View */
+.calendar-view {
+    background: white;
+    border-radius: 1rem;
+  }
+  
+  .calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+  }
+  
+  .month-navigation {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  .month-navigation h2 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+  
+  .month-nav-btn {
+    padding: 0.5rem 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.375rem;
+    background: white;
+    color: #64748b;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  
+  .month-nav-btn:hover {
+    background: #f1f5f9;
+    color: #0f172a;
+  }
+  
+  .today-btn {
+    padding: 0.5rem 1rem;
+    border: 1px solid #3b82f6;
+    border-radius: 0.375rem;
+    background: #eff6ff;
+    color: #3b82f6;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s;
+  }
+  
+  .today-btn:hover {
+    background: #dbeafe;
+  }
+  
+  .calendar-grid {
+    margin-top: 1rem;
+  }
+  
+  .calendar-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    text-align: center;
+    font-weight: 500;
+    color: #64748b;
+  }
+  
+  .calendar-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.5rem;
+    grid-auto-rows: minmax(100px, auto);
+  }
+  
+  .calendar-cell {
+    border: 1px solid #e2e8f0;
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    background: white;
+    min-height: 100px;
+  }
+  
+  .calendar-cell.empty {
+    background: #f8fafc;
+    border-color: #f1f5f9;
+  }
+  
+  .calendar-date {
+    font-weight: 500;
+    color: #64748b;
+    text-align: right;
+    margin-bottom: 0.5rem;
+  }
+  
+  .calendar-habits {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  
+  .calendar-habit-indicator {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  
+  .calendar-habit-indicator:hover {
+    background: #f1f5f9;
+  }
+  
+  .calendar-habit-indicator.completed {
+    background: #dbeafe;
+  }
+  
+  .habit-indicator-dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: #64748b;
+  }
+  
+  .calendar-habit-indicator.completed .habit-indicator-dot {
+    background: #3b82f6;
+  }
+  
+  .habit-indicator-name {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100px;
+  }

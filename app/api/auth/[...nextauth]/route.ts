@@ -34,30 +34,6 @@ const handler = NextAuth({
                   type: 'follow',
                   createdAt: '2024-01-01T00:00:00.000Z',
                   updatedAt: '2024-01-01T00:00:00.000Z'
-                },
-                {
-                  id: 'habit-2',
-                  name: 'Read Books',
-                  description: 'Read for 30 minutes before bed',
-                  frequency: 'daily',
-                  streak: 0,
-                  category: 'personal',
-                  completedDates: [],
-                  type: 'follow',
-                  createdAt: '2024-01-01T00:00:00.000Z',
-                  updatedAt: '2024-01-01T00:00:00.000Z'
-                },
-                {
-                  id: 'habit-3',
-                  name: 'Track Expenses',
-                  description: 'Record daily expenses in the app',
-                  frequency: 'daily',
-                  streak: 0,
-                  category: 'finance',
-                  completedDates: [],
-                  type: 'follow',
-                  createdAt: '2024-01-01T00:00:00.000Z',
-                  updatedAt: '2024-01-01T00:00:00.000Z'
                 }
               ],
             });

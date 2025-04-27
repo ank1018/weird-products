@@ -58,14 +58,14 @@ const Header: React.FC<HeaderProps> = ({
 
                 <div className="header-controls">
 
-                    <button
+                    {showAddForm ? null : <button
                         className={`add-habit-button ${showAddForm ? 'cancel' : ''}`}
                         onClick={() => !session ? setShowSignInDialog(true) : setShowAddForm(!showAddForm)}
                         aria-label={showAddForm ? "Cancel adding habit" : "Add new habit"}
                     >
-                        {showAddForm ? <X size={16} /> : <Plus size={16} />}
-                        <span>{showAddForm ? 'Cancel' : 'Add Habit'}</span>
-                    </button>
+                        <Plus size={16}/>
+                        <span>Add Habit</span>
+                    </button>}
                 </div>
 
                 {showAddForm && (

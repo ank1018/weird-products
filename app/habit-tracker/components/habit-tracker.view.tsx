@@ -1,26 +1,21 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import {
-    Plus,
-    Trash2,
-    Check,
-    X,
     Calendar,
-    Edit2,
-    Award,
-    AlertCircle,
-    ThumbsUp,
-    ThumbsDown, Grid, List
+    Grid, List
 } from 'lucide-react';
 import NavBarView from '../../nav-bar/nav-bar.view';
 import GoogleAd from '../../google-ads/google-ads.view';
 import Footer from '../../footer/footer.view';
 import '../styles/habit-tracker.css';
 import { Habit, HabitFrequency, HabitCategory } from './habit-tracker.types';
-import { useSession, signOut } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 import Header from './header/header';
 import SignInDialog from '../../sign-in/sign-in-dialog';
-import {isDateCompleted} from "../helper/utils";
+import HabitCardView from "./habit-card/habit-card.view";
+import HabitCalenderView from './habit-calender/habit-calender.view';
+import HabitTableView from './habit-table/habit-table.view';
+import { isDateCompleted } from '../helper/utils';
 
 interface HabitData {
     habits: Habit[];
@@ -393,23 +388,8 @@ const HabitTracker: React.FC = () => {
         return <div className="loading">Loading...</div>;
     }
 
-    // if (!session) {
-    //     return (
-    //         <SignInDialog
-    //             isOpen={showSignInDialog}
-    //             onClose={() => setShowSignInDialog(false)}
-    //         />
-    //     );
-    // }
-
     return (
         <div className="habit-tracker-container">
-            <div className="user-info">
-                <span>Welcome, {session?.user?.name}</span>
-                <button onClick={() => signOut()} className="sign-out-button">
-                    Sign out
-                </button>
-            </div>
             <NavBarView />
             <div className="habit-tracker-content">
                 <Header
@@ -452,7 +432,7 @@ const HabitTracker: React.FC = () => {
                                 onClick={() => setViewMode('cards')}
                                 aria-label="Cards view"
                             >
-                                <Grid size={18}/>
+                                <Grid size={18} />
                                 <span>Cards</span>
                             </button>
                             <button
@@ -460,7 +440,7 @@ const HabitTracker: React.FC = () => {
                                 onClick={() => setViewMode('calendar')}
                                 aria-label="Calendar view"
                             >
-                                <Calendar size={18}/>
+                                <Calendar size={18} />
                                 <span>Calendar</span>
                             </button>
                             <button
@@ -468,7 +448,7 @@ const HabitTracker: React.FC = () => {
                                 onClick={() => setViewMode('table')}
                                 aria-label="Table view"
                             >
-                                <List size={18}/>
+                                <List size={18} />
                                 <span>Table</span>
                             </button>
                         </div>
@@ -476,277 +456,15 @@ const HabitTracker: React.FC = () => {
                 </div>
 
                 {viewMode === 'cards' && (
-                    <div>
-                        {filteredHabits.length === 0 ? (
-                            <div className="empty-state">
-                                <AlertCircle size={48}/>
-                                <h3>No habits found</h3>
-                                <p>Add a new habit to get started or change your filter settings.</p>
-                                <button
-                                    onClick={() => !session ? setShowSignInDialog(true) : setShowAddForm(true)}
-                                    className="add-habit-btn"
-                                >
-                                    <Plus size={16}/>
-                                    Add Your First Habit
-                                </button>
-                            </div>
-                        ) : (
-                            <div className="habits-grid">
-                                {filteredHabits.map(habit => (
-                                    <div key={habit.id} className="habit-card">
-                                        {editingHabit?.id === habit.id ? (
-                                            <div className="habit-edit-form">
-                                                <input
-                                                    type="text"
-                                                    value={editingHabit.name}
-                                                        onChange={e => setEditingHabit({ ...editingHabit, name: e.target.value })}
-                                                    />
-                                                    <textarea
-                                                        value={editingHabit.description}
-                                                        onChange={e => setEditingHabit({ ...editingHabit, description: e.target.value })}
-                                                    />
-                                                    <select
-                                                        value={editingHabit.category}
-                                                        onChange={e => setEditingHabit({ ...editingHabit, category: e.target.value as HabitCategory })}
-                                                    >
-                                                        {categories.map(category => (
-                                                            <option key={category} value={category}>
-                                                                {category}
-                                                            </option>
-                                                        ))}
-                                                    </select>
-                                                    <select
-                                                        value={editingHabit.frequency}
-                                                        onChange={e => setEditingHabit({ ...editingHabit, frequency: e.target.value as HabitFrequency })}
-                                                    >
-                                                        <option value="daily">Daily</option>
-                                                        <option value="weekly">Weekly</option>
-                                                        <option value="monthly">Monthly</option>
-                                                    </select>
-                                                    <div className="edit-habit-type">
-                                                        <label>Habit Type:</label>
-                                                        <div className="edit-type-options">
-                                                            <label>
-                                                                <input
-                                                                    type="radio"
-                                                                    name="editHabitType"
-                                                                    value="follow"
-                                                                    checked={editingHabit.type === 'follow'}
-                                                                    onChange={() => setEditingHabit({ ...editingHabit, type: 'follow' })}
-                                                                />
-                                                                <ThumbsUp size={16} style={{ minWidth: 16, minHeight: 16 }} />
-                                                                Follow
-                                                            </label>
-                                                            <label>
-                                                                <input
-                                                                    type="radio"
-                                                                    name="editHabitType"
-                                                                    value="leave"
-                                                                    checked={editingHabit.type === 'leave'}
-                                                                    onChange={() => setEditingHabit({ ...editingHabit, type: 'leave' })}
-                                                                />
-                                                                <ThumbsDown size={16} style={{ minWidth: 16, minHeight: 16 }} />
-                                                                Leave
-                                                            </label>
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="edit-actions">
-                                                        <button onClick={() => handleUpdateHabit(editingHabit)} className="save-btn">
-                                                            <Check size={16} />
-                                                            Save
-                                                        </button>
-                                                        <button onClick={() => setEditingHabit(null)} className="cancel-btn">
-                                                            <X size={16} />
-                                                            Cancel
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            ) : (
-                                                <>
-                                                    <div className="habit-header">
-                                                        <div className="habit-title-area">
-                                                            <span className={`habit-category-badge ${habit.category || 'uncategorized'}`}>
-                                                                {habit.category || 'uncategorized'}
-                                                            </span>
-                                                            <h3>{habit.name}</h3>
-                                                        </div>
-                                                        <div className="habit-actions">
-                                                            <button onClick={() => setEditingHabit(habit)} className="edit-btn">
-                                                                <Edit2 size={16} />
-                                                            </button>
-                                                            <button onClick={() => handleDeleteHabit(habit.id)} className="delete-btn">
-                                                                <Trash2 size={16} />
-                                                            </button>
-                                                        </div>
-                                                    </div>
-
-                                                    <p className="habit-description">{habit.description}</p>
-
-                                                    <div className="habit-meta">
-                                                        <div className="habit-frequency">
-                                                            <Calendar size={16} />
-                                                            <span>{habit.frequency}</span>
-                                                        </div>
-                                                        <div className="habit-streak">
-                                                            <Award size={16} />
-                                                            <span>Streak: {habit.streak} {habit.frequency === 'daily' ? 'days' :
-                                                                habit.frequency === 'weekly' ? 'weeks' : 'months'}</span>
-                                                        </div>
-                                                        <div className={`habit-type-label ${habit.type}`}>{habit.type === 'follow' ? '👍 Follow' : '👎 Leave'}</div>
-                                                    </div>
-
-                                                    <div className="habit-progress">
-                                                        <div className="progress-text">
-                                                            <span>Progress</span>
-                                                            <span>{getCompletionPercentage(habit)}%</span>
-                                                        </div>
-                                                        <div className="progress-bar">
-                                                            <div
-                                                                className="progress-fill"
-                                                                style={{ width: `${getCompletionPercentage(habit)}%` }}
-                                                            ></div>
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="habit-calendar">
-                                                        {weekRange.map(date => {
-                                                            const day = new Date(date).getDate();
-                                                            const isToday = date === new Date().toISOString().split('T')[0];
-                                                            return (
-                                                                <button
-                                                                    key={date}
-                                                                    className={`calendar-day 
-                                  ${isDateCompleted(habit.completedDates, date) ? 'completed' : ''} 
-                                  ${isToday ? 'today' : ''}`}
-                                                                    onClick={() => handleToggleCompletion(habit.id, date)}
-                                                                >
-                                                                    {day}
-                                                                </button>
-                                                            );
-                                                        })}
-                                                    </div>
-                                                </>
-                                            )}
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
-                    )}
+                    <HabitCardView filteredHabits={filteredHabits} session={session} setShowSignInDialog={setShowSignInDialog} setShowAddForm={setShowAddForm} editingHabit={editingHabit} setEditingHabit={setEditingHabit} categories={categories} handleUpdateHabit={handleUpdateHabit} handleDeleteHabit={handleDeleteHabit} getCompletionPercentage={getCompletionPercentage} weekRange={weekRange} handleToggleCompletion={handleToggleCompletion} />
+                )}
 
                 {viewMode === 'calendar' && (
-                    <div className="calendar-view">
-                        <div className="calendar-header">
-                            <div className="month-navigation">
-                                <button onClick={handlePrevMonth} className="month-nav-btn">
-                                    &lt; Prev
-                                </button>
-                                <h2>{monthName}</h2>
-                                <button onClick={handleNextMonth} className="month-nav-btn">
-                                    Next &gt;
-                                </button>
-                            </div>
-                            <button onClick={handleResetMonth} className="today-btn">
-                                Today
-                            </button>
-                        </div>
-
-                        <div className="calendar-grid">
-                            <div className="calendar-weekdays">
-                                <div>Sun</div>
-                                <div>Mon</div>
-                                <div>Tue</div>
-                                <div>Wed</div>
-                                <div>Thu</div>
-                                <div>Fri</div>
-                                <div>Sat</div>
-                            </div>
-
-                            <div className="calendar-days">
-                                {calendarDays.map((date, index) => (
-                                    <div key={index} className={`calendar-cell ${!date ? 'empty' : ''}`}>
-                                        {date && (
-                                            <>
-                                                <div className="calendar-date">
-                                                    {date ? new Date(date).getDate() : ''}
-                                                </div>
-                                                <div className="calendar-habits">
-                                                    {filteredHabits.map(habit => (
-                                                        <div
-                                                            key={habit.id}
-                                                            className={`calendar-habit-indicator ${isDateCompleted(habit.completedDates, date) ? 'completed' : ''}`}
-                                                            onClick={() => date && handleToggleCompletion(habit.id, date)}
-                                                        >
-                                                            <span className="habit-indicator-dot"></span>
-                                                            <span className="habit-indicator-name">{habit.name}</span>
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                            </>
-                                        )}
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
+                    <HabitCalenderView handlePrevMonth={handlePrevMonth} handleNextMonth={handleNextMonth} handleResetMonth={handleResetMonth} monthName={monthName} calendarDays={calendarDays} filteredHabits={filteredHabits} handleToggleCompletion={handleToggleCompletion} />
                 )}
 
                 {viewMode === 'table' && (
-                    <div className="table-view">
-                        <h2>Weekly Progress</h2>
-
-                        <div className="habits-table">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Habit</th>
-                                        {weekRange.map(date => (
-                                            <th className='date-cell' key={date}>
-                                                {new Date(date).toLocaleDateString('en-US', { weekday: 'short' })}<br />
-                                                {new Date(date).getDate()}
-                                            </th>
-                                        ))}
-                                        <th>Streak</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {filteredHabits.map(habit => (
-                                        <tr key={habit.id}>
-                                            <td className="habit-name-cell">
-                                                <div className="habit-name-container">
-                                                    <span className={`habit-table-category ${habit.category}`}></span>
-                                                    {habit.name}
-                                                </div>
-                                            </td>
-                                            {weekRange.map(date => (
-                                                <td key={date} className="completion-cell">
-                                                    <button
-                                                        className={`completion-toggle ${isDateCompleted(habit.completedDates, date) ? 'completed' : ''}`}
-                                                        onClick={() => handleToggleCompletion(habit.id, date)}
-                                                    >
-                                                        {isDateCompleted(habit.completedDates, date) ? <Check size={16} /> : ''}
-                                                    </button>
-                                                </td>
-                                            ))}
-                                            <td className="streak-cell">
-                                                <div className="streak-display">
-                                                    <Award size={16} />
-                                                    <span>{habit.streak}</span>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-
-                            {filteredHabits.length === 0 && (
-                                <div className="empty-table-message">
-                                    <p>No habits to display. Add a habit or change your filter settings.</p>
-                                </div>
-                            )}
-                        </div>
-                    </div>
+                    <HabitTableView weekRange={weekRange} filteredHabits={filteredHabits} handleToggleCompletion={handleToggleCompletion} />
                 )}
             </div>
             <SignInDialog

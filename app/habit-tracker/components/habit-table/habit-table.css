@@ -1,0 +1,130 @@
+/* Table View */
+.table-view {
+    background: white;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  }
+  
+  .table-view h2 {
+    margin-bottom: 1.5rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+  
+  .habits-table {
+    overflow-x: auto;
+  }
+  
+  .habits-table table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+  
+  .habits-table th,
+  .habits-table td {
+    padding: 1rem;
+    text-align: center;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  
+  .habits-table th {
+    background: #f8fafc;
+    color: #64748b;
+    font-weight: 500;
+    font-size: 0.875rem;
+  }
+  
+  .habits-table th:first-child {
+    text-align: left;
+    border-top-left-radius: 0.5rem;
+  }
+  
+  .habits-table th:last-child {
+    border-top-right-radius: 0.5rem;
+  }
+  
+  .habit-name-cell {
+    text-align: left !important;
+    font-weight: 500;
+  }
+  
+  .habit-name-container {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  
+  .habit-table-category {
+    display: block;
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: 50%;
+  }
+  
+  .habit-table-category.health {
+    background: #10b981;
+  }
+  
+  .habit-table-category.personal {
+    background: #8b5cf6;
+  }
+  
+  .habit-table-category.finance {
+    background: #3b82f6;
+  }
+  
+  .habit-table-category.career {
+    background: #f59e0b;
+  }
+  
+  .habit-table-category.social {
+    background: #ec4899;
+  }
+  
+  .habit-table-category.other {
+    background: #6b7280;
+  }
+  
+  .completion-cell {
+    padding: 0.5rem;
+  }
+  
+  .completion-toggle {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 0.375rem;
+    border: 1px solid #e2e8f0;
+    background: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+  }
+  
+  .completion-toggle:hover {
+    background: #f1f5f9;
+  }
+  
+  .completion-toggle.completed {
+    background: #3b82f6;
+    color: white;
+    border-color: #3b82f6;
+  }
+  
+  .streak-cell {
+    font-weight: 500;
+  }
+  
+  .streak-display {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+  
+  .streak-display svg {
+    color: #f59e0b;
+  }
