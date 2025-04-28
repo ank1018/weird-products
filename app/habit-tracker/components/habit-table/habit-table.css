@@ -59,6 +59,7 @@
 .habit-table-category {
   display: block;
   width: 0.75rem;
+  min-width: 0.75rem;
   height: 0.75rem;
   border-radius: 50%;
 }

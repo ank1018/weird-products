@@ -107,6 +107,21 @@ export default function NavBarView() {
                     <div className="dropdown-header">
                       Welcome, {session.user?.name}
                     </div>
+                    <div className="dropdown-header">
+                      <Link
+                        href={'/habit-tracker'}
+                        onClick={() => setActiveDropdown(null)}
+                      >
+                        Habit Tracker
+                      </Link>
+                    </div>
+                    <div className="dropdown-header">
+                      <Link
+                        href={'/financial-planning'}
+                        onClick={() => setActiveDropdown(null)}
+                      >
+                        Financial Planning
+                      </Link></div>
                     <button onClick={() => signOut()} className="dropdown-item sign-out-button">
                       <LogOut size={16} />
                       <span>Sign out</span>

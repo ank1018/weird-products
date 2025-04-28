@@ -28,77 +28,8 @@ import PersonalTab from "./personal-tab";
 import AiInsightsTab from "./ai-insight-tab";
 import FinanceDescription from "./finance-description";
 import SavingsTab from "./savings-tab";
-
-interface FinancialData {
-  income: {
-    salary: number;
-    other: number;
-    total: number;
-  };
-  expenses: {
-    housing: number;
-    transportation: number;
-    food: number;
-    utilities: number;
-    entertainment: number;
-    healthcare: number;
-    education: number;
-    debt: number;
-    other: number;
-    total: number;
-  };
-  savings: {
-    emergency: number;
-    retirement: number;
-    investment: number;
-    other: number;
-    total: number;
-  };
-  investments: {
-    stocks: number;
-    bonds: number;
-    realEstate: number;
-    mutualFunds: number;
-    crypto: number;
-    other: number;
-    total: number;
-  };
-  debt: {
-    mortgage: { amount: number; interestRate: number };
-    car: { amount: number; interestRate: number };
-    student: { amount: number; interestRate: number };
-    creditCard: { amount: number; interestRate: number };
-    personal: { amount: number; interestRate: number };
-    other: { amount: number; interestRate: number };
-    total: number;
-  };
-  goals: {
-    shortTerm: {
-      amount: number;
-      timeline: number;
-      description: string;
-    };
-    mediumTerm: {
-      amount: number;
-      timeline: number;
-      description: string;
-    };
-    longTerm: {
-      amount: number;
-      timeline: number;
-      description: string;
-    };
-  };
-}
-
-// Update the PersonalInfo interface
-interface PersonalInfo {
-  age: number;
-  employmentStatus: "employed" | "self-employed" | "retired" | "student" | "other";
-  maritalStatus: "single" | "married" | "divorced" | "widowed";
-  dependents: number;
-  city: string;
-}
+import { useSession } from "next-auth/react";
+import { IFinancialData, PersonalInfo } from "../models/financial-data.model";
 
 // Add AI Insights state and types
 interface AIInsights {
@@ -110,7 +41,7 @@ interface AIInsights {
 
 const FinancialPlanning = () => {
   const [activeTab, setActiveTab] = useState("overview");
-  const [financialData, setFinancialData] = useState<FinancialData>({
+  const [financialData, setFinancialData] = useState<IFinancialData>({
     income: {
       salary: 0,
       other: 0,
@@ -185,22 +116,27 @@ const FinancialPlanning = () => {
   // Add a new state to track focused inputs
   const [focusedInputs, setFocusedInputs] = useState<Record<string, boolean>>({});
 
-  // Update the personal info state initialization
-  const [personalInfo, setPersonalInfo] = useState<PersonalInfo>(() => {
-    if (typeof window !== 'undefined') {
-      const savedInfo = localStorage.getItem('personalInfo');
-      if (savedInfo) {
-        return JSON.parse(savedInfo);
-      }
-    }
-    return {
-      age: 0,
-      employmentStatus: "employed",
-      maritalStatus: "single",
-      dependents: 0,
-      city: ""
-    };
+  const [personalInfo, setPersonalInfo] = useState<PersonalInfo>({
+    age: 0,
+    employmentStatus: "employed",
+    maritalStatus: "single",
+    dependents: 0,
+    city: ""
   });
+  const { data: session } = useSession();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (session?.user?.email) {
+        const res = await fetch('/api/financial-data');
+        const json = await res.json();
+        if (json.data) setFinancialData(json.data);
+        if (json.personalInfo) setPersonalInfo(json.personalInfo);
+        if (json.retirementAge !== undefined) setRetirementAge(json.retirementAge);
+      }
+    };
+    fetchData();
+  }, [session]);
 
   // Add AI Insights state and types
   const [aiInsights, setAIInsights] = useState<AIInsights>({
@@ -210,17 +146,32 @@ const FinancialPlanning = () => {
     source: 'fallback'
   });
 
+  const saveFinancialData = async (
+    data: IFinancialData,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    personalInfo: any,
+    retirementAge: number | null
+  ) => {
+    if (!session?.user?.email) return;
+    await fetch('/api/financial-data', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ data, personalInfo, retirementAge }),
+    });
+  };
+
   // Load saved data from localStorage after initial render
-  useEffect(() => {
-    const savedData = localStorage.getItem('financialData');
-    if (savedData) {
-      setFinancialData(JSON.parse(savedData));
-    }
-  }, []);
+  // useEffect(() => {
+  //   const savedData = localStorage.getItem('financialData');
+  //   if (savedData) {
+  //     setFinancialData(JSON.parse(savedData));
+  //   }
+  // }, []);
 
   // Save to localStorage whenever financialData changes
   useEffect(() => {
-    localStorage.setItem('financialData', JSON.stringify(financialData));
+    saveFinancialData(financialData, personalInfo, retirementAge)
+    // localStorage.setItem('financialData', JSON.stringify(financialData));
   }, [financialData]);
 
   // Load activeTab from localStorage
@@ -241,35 +192,35 @@ const FinancialPlanning = () => {
   }, [activeTab]);
 
   // Load retirementAge from localStorage
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const savedAge = localStorage.getItem('retirementAge');
-      if (savedAge) {
-        setRetirementAge(Number(savedAge));
-      }
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (typeof window !== 'undefined') {
+  //     const savedAge = localStorage.getItem('retirementAge');
+  //     if (savedAge) {
+  //       setRetirementAge(Number(savedAge));
+  //     }
+  //   }
+  // }, []);
 
   // Save retirementAge to localStorage when it changes
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('retirementAge', retirementAge.toString());
-    }
+    // if (typeof window !== 'undefined') {
+    //   localStorage.setItem('retirementAge', retirementAge.toString());
+    // }
   }, [retirementAge]);
 
   // First effect: Calculate totals and update financialData
   useEffect(() => {
-    const totalIncome = (financialData.income.salary || 0) + (financialData.income.other || 0);
-    const totalExpenses = Object.entries(financialData.expenses)
+    const totalIncome = (financialData?.income.salary || 0) + (financialData?.income.other || 0);
+    const totalExpenses = Object.entries(financialData?.expenses)
       .filter(([key]) => key !== 'total')
       .reduce((sum, [, value]) => sum + (value || 0), 0);
-    const totalSavings = Object.entries(financialData.savings)
+    const totalSavings = Object.entries(financialData?.savings)
       .filter(([key]) => key !== 'total')
       .reduce((sum, [, value]) => sum + (value || 0), 0);
-    const totalInvestments = Object.entries(financialData.investments)
+    const totalInvestments = Object.entries(financialData?.investments)
       .filter(([key]) => key !== 'total')
       .reduce((sum, [, value]) => sum + (value || 0), 0);
-    const totalDebt = Object.entries(financialData.debt)
+    const totalDebt = Object.entries(financialData?.debt)
       .filter(([key]) => key !== 'total')
       .reduce((sum, [, value]) => {
         const debtValue = value as { amount: number; interestRate: number };
@@ -285,41 +236,41 @@ const FinancialPlanning = () => {
       debt: { ...prev.debt, total: totalDebt },
     }));
   }, [
-    financialData.income.salary,
-    financialData.income.other,
-    financialData.expenses.housing,
-    financialData.expenses.transportation,
-    financialData.expenses.food,
-    financialData.expenses.utilities,
-    financialData.expenses.entertainment,
-    financialData.expenses.healthcare,
-    financialData.expenses.education,
-    financialData.expenses.debt,
-    financialData.expenses.other,
-    financialData.savings.emergency,
-    financialData.savings.retirement,
-    financialData.savings.investment,
-    financialData.savings.other,
-    financialData.investments.stocks,
-    financialData.investments.bonds,
-    financialData.investments.realEstate,
-    financialData.investments.mutualFunds,
-    financialData.investments.crypto,
-    financialData.investments.other,
-    financialData.debt.mortgage.amount,
-    financialData.debt.car.amount,
-    financialData.debt.student.amount,
-    financialData.debt.creditCard.amount,
-    financialData.debt.personal.amount,
-    financialData.debt.other.amount
+    financialData?.income.salary,
+    financialData?.income.other,
+    financialData?.expenses.housing,
+    financialData?.expenses.transportation,
+    financialData?.expenses.food,
+    financialData?.expenses.utilities,
+    financialData?.expenses.entertainment,
+    financialData?.expenses.healthcare,
+    financialData?.expenses.education,
+    financialData?.expenses.debt,
+    financialData?.expenses.other,
+    financialData?.savings.emergency,
+    financialData?.savings.retirement,
+    financialData?.savings.investment,
+    financialData?.savings.other,
+    financialData?.investments.stocks,
+    financialData?.investments.bonds,
+    financialData?.investments.realEstate,
+    financialData?.investments.mutualFunds,
+    financialData?.investments.crypto,
+    financialData?.investments.other,
+    financialData?.debt.mortgage.amount,
+    financialData?.debt.car.amount,
+    financialData?.debt.student.amount,
+    financialData?.debt.creditCard.amount,
+    financialData?.debt.personal.amount,
+    financialData?.debt.other.amount
   ]);
 
   // Second effect: Calculate metrics and generate recommendations
   useEffect(() => {
-    const totalIncome = financialData.income.total || 0;
-    const totalExpenses = financialData.expenses.total || 0;
-    const totalSavings = financialData.savings.total || 0;
-    const totalDebt = financialData.debt.total || 0;
+    const totalIncome = financialData?.income.total || 0;
+    const totalExpenses = financialData?.expenses.total || 0;
+    const totalSavings = financialData?.savings.total || 0;
+    const totalDebt = financialData?.debt.total || 0;
 
     const newMonthlyBudget = totalIncome - totalExpenses;
     const newSavingsRate = totalIncome > 0 ? (totalSavings / totalIncome) * 100 : 0;
@@ -328,11 +279,11 @@ const FinancialPlanning = () => {
     const score = calculateFinancialHealthScore({
       savingsRate: newSavingsRate,
       debtToIncomeRatio: newDebtToIncomeRatio,
-      emergencyFund: financialData.savings.emergency || 0,
+      emergencyFund: financialData?.savings.emergency || 0,
       monthlyExpenses: totalExpenses,
-      investmentDiversity: calculateInvestmentDiversity(financialData.investments),
+      investmentDiversity: calculateInvestmentDiversity(financialData?.investments),
       age: 30,
-      retirementSavings: financialData.savings.retirement || 0,
+      retirementSavings: financialData?.savings.retirement || 0,
     });
 
     const newRecommendations = generateRecommendations({
@@ -346,8 +297,8 @@ const FinancialPlanning = () => {
     const newRiskProfile = determineRiskProfile({
       age: 30,
       investmentExperience: "Moderate",
-      financialGoals: financialData.goals,
-      currentInvestments: financialData.investments,
+      financialGoals: financialData?.goals,
+      currentInvestments: financialData?.investments,
     });
     setMonthlyBudget(newMonthlyBudget);
     setSavingsRate(newSavingsRate);
@@ -356,14 +307,14 @@ const FinancialPlanning = () => {
     setRecommendations(newRecommendations);
     setRiskProfile(newRiskProfile);
   }, [
-    financialData.income.total,
-    financialData.expenses.total,
-    financialData.savings.total,
-    financialData.debt.total,
-    financialData.savings.emergency,
-    financialData.savings.retirement,
-    financialData.investments,
-    financialData.goals
+    financialData?.income.total,
+    financialData?.expenses.total,
+    financialData?.savings.total,
+    financialData?.debt.total,
+    financialData?.savings.emergency,
+    financialData?.savings.retirement,
+    financialData?.investments,
+    financialData?.goals
   ]);
 
   const calculateFinancialHealthScore = (metrics: {
@@ -399,7 +350,7 @@ const FinancialPlanning = () => {
       (retirementScore * 0.2)
     );
   };
-  const calculateInvestmentDiversity = (investments: FinancialData["investments"]) => {
+  const calculateInvestmentDiversity = (investments: IFinancialData["investments"]) => {
     const total = investments.total;
     if (total === 0) return 0;
 
@@ -419,7 +370,7 @@ const FinancialPlanning = () => {
   };
 
   const generateRecommendations = (data: {
-    financialData: FinancialData;
+    financialData: IFinancialData;
     financialHealthScore: number;
     monthlyBudget: number;
     savingsRate: number;
@@ -428,11 +379,11 @@ const FinancialPlanning = () => {
     const recommendations: string[] = [];
 
     // Emergency fund recommendations
-    const emergencyFundMonths = data.financialData.savings.emergency / (data.financialData.expenses.total / 12);
+    const emergencyFundMonths = data.financialData?.savings.emergency / (data.financialData?.expenses.total / 12);
     if (emergencyFundMonths < 3) {
-      recommendations.push(`Build your emergency fund to cover at least 3 months of expenses (₹${Math.round(data.financialData.expenses.total * 3)}).`);
+      recommendations.push(`Build your emergency fund to cover at least 3 months of expenses (₹${Math.round(data.financialData?.expenses.total * 3)}).`);
     } else if (emergencyFundMonths < 6) {
-      recommendations.push(`Consider increasing your emergency fund to cover 6 months of expenses (₹${Math.round(data.financialData.expenses.total * 6)}).`);
+      recommendations.push(`Consider increasing your emergency fund to cover 6 months of expenses (₹${Math.round(data.financialData?.expenses.total * 6)}).`);
     }
 
     // Debt recommendations
@@ -443,13 +394,13 @@ const FinancialPlanning = () => {
     }
 
     // Investment recommendations
-    const investmentDiversity = calculateInvestmentDiversity(data.financialData.investments);
+    const investmentDiversity = calculateInvestmentDiversity(data.financialData?.investments);
     if (investmentDiversity < 0.5) {
       recommendations.push("Diversify your investment portfolio to reduce risk.");
     }
 
     // Retirement recommendations
-    const retirementProgress = data.financialData.savings.retirement / (data.financialData.expenses.total * 12 * 25);
+    const retirementProgress = data.financialData?.savings.retirement / (data.financialData?.expenses.total * 12 * 25);
     if (retirementProgress < 0.5) {
       recommendations.push("Increase your retirement savings to ensure a comfortable retirement.");
     }
@@ -460,7 +411,7 @@ const FinancialPlanning = () => {
     }
 
     // Risk profile recommendations
-    if (data.financialData.investments.crypto > data.financialData.investments.total * 0.1) {
+    if (data.financialData?.investments.crypto > data.financialData?.investments.total * 0.1) {
       recommendations.push("Consider reducing your cryptocurrency exposure to align with your risk profile.");
     }
 
@@ -470,8 +421,8 @@ const FinancialPlanning = () => {
   const determineRiskProfile = (data: {
     age: number;
     investmentExperience: string;
-    financialGoals: FinancialData["goals"];
-    currentInvestments: FinancialData["investments"];
+    financialGoals: IFinancialData["goals"];
+    currentInvestments: IFinancialData["investments"];
   }) => {
     const { age, investmentExperience, financialGoals, currentInvestments } = data;
 
@@ -511,7 +462,7 @@ const FinancialPlanning = () => {
   };
 
   const getExpenseData = () => {
-    return Object.entries(financialData.expenses)
+    return Object.entries(financialData?.expenses)
       .filter(([key]) => key !== 'total')
       .map(([name, value]) => ({
         name: name.charAt(0).toUpperCase() + name.slice(1),
@@ -520,7 +471,7 @@ const FinancialPlanning = () => {
   };
 
   const getInvestmentData = () => {
-    return Object.entries(financialData.investments)
+    return Object.entries(financialData?.investments)
       .filter(([key]) => key !== 'total')
       .map(([name, value]) => ({
         name: name.charAt(0).toUpperCase() + name.slice(1),
@@ -531,7 +482,7 @@ const FinancialPlanning = () => {
   const getSavingsProjection = () => {
     const months = 12;
     const data = [];
-    let currentSavings = financialData.savings.total;
+    let currentSavings = financialData?.savings.total;
     const monthlyContribution = monthlyBudget * 0.2; // Assuming 20% savings rate
     const annualReturn = 0.07; // 7% annual return
 
@@ -568,7 +519,7 @@ const FinancialPlanning = () => {
   };
 
   const handleInputChange = (
-    category: keyof FinancialData,
+    category: keyof IFinancialData,
     value: number | string,
     subCategory?: string
   ) => {
@@ -580,7 +531,7 @@ const FinancialPlanning = () => {
           newData.goals = {
             ...newData.goals,
             [term]: {
-              ...newData.goals[term as keyof FinancialData["goals"]],
+              ...newData.goals[term as keyof IFinancialData["goals"]],
               [field]: value,
             },
           };
@@ -603,7 +554,7 @@ const FinancialPlanning = () => {
           // Handle debt updates with nested structure
           const [debtType, field] = subCategory.split(".");
           if (debtType && field) {
-            const debtTypeKey = debtType as keyof FinancialData["debt"];
+            const debtTypeKey = debtType as keyof IFinancialData["debt"];
             const debtValue = newData.debt[debtTypeKey] as { amount: number; interestRate: number };
 
             newData.debt = {
@@ -625,7 +576,7 @@ const FinancialPlanning = () => {
     });
   };
 
-  const handleGoalDescriptionChange = (term: keyof FinancialData["goals"], description: string) => {
+  const handleGoalDescriptionChange = (term: keyof IFinancialData["goals"], description: string) => {
     setFinancialData(prev => ({
       ...prev,
       goals: {
@@ -666,9 +617,7 @@ const FinancialPlanning = () => {
 
   // Save personal info to localStorage
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('personalInfo', JSON.stringify(personalInfo));
-    }
+    saveFinancialData(financialData, personalInfo, retirementAge)
   }, [personalInfo]);
 
   // Add function to check if all required data is filled
@@ -676,11 +625,11 @@ const FinancialPlanning = () => {
     return Boolean(
       personalInfo.age > 0 &&
       personalInfo.city &&
-      financialData.income.total > 0 &&
-      financialData.expenses.total > 0 &&
-      financialData.debt.total >= 0 &&
-      financialData.savings.total >= 0 &&
-      financialData.investments.total >= 0
+      financialData?.income.total > 0 &&
+      financialData?.expenses.total > 0 &&
+      financialData?.debt.total >= 0 &&
+      financialData?.savings.total >= 0 &&
+      financialData?.investments.total >= 0
     );
   };
 
@@ -704,12 +653,12 @@ const FinancialPlanning = () => {
       const analysisData = {
         personal: personalInfo,
         financial: {
-          income: financialData.income,
-          expenses: financialData.expenses,
-          debt: financialData.debt,
-          savings: financialData.savings,
-          investments: financialData.investments,
-          goals: financialData.goals
+          income: financialData?.income,
+          expenses: financialData?.expenses,
+          debt: financialData?.debt,
+          savings: financialData?.savings,
+          investments: financialData?.investments,
+          goals: financialData?.goals
         },
         metrics: {
           savingsRate,
@@ -752,7 +701,7 @@ const FinancialPlanning = () => {
     }
   };
 
-  const handleFinancialDataUpdate = (updates: Partial<FinancialData>) => {
+  const handleFinancialDataUpdate = (updates: Partial<IFinancialData>) => {
     setFinancialData(prev => ({
       ...prev,
       ...updates
@@ -966,4 +915,4 @@ const FinancialPlanning = () => {
   );
 };
 
-export default FinancialPlanning; 
+export default FinancialPlanning;

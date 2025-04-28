@@ -27,6 +27,7 @@
 }
 
 .edit-habit-type {
+  max-width: 100%;
   display: flex;
   gap: 1rem;
 }

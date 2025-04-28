@@ -30,7 +30,7 @@ const PersonalTab: React.FC<PersonalTabProps> = ({
           <div className="input-with-unit">
             <input
               type="number"
-              value={getInputValue('personal', 'age', personalInfo.age)}
+              value={getInputValue('personal', 'age', personalInfo?.age)}
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
               onChange={(e) => setPersonalInfo((prev: any) => ({ ...prev, age: Number(e.target.value) }))}
               onFocus={() => handleInputFocus('personal', 'age')}
@@ -44,7 +44,7 @@ const PersonalTab: React.FC<PersonalTabProps> = ({
         <div className="form-group">
           <label>Employment Status</label>
           <select
-            value={personalInfo.employmentStatus}
+            value={personalInfo?.employmentStatus}
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             onChange={(e) => setPersonalInfo((prev: any) => ({ ...prev, employmentStatus: e.target.value }))}
           >
@@ -59,7 +59,7 @@ const PersonalTab: React.FC<PersonalTabProps> = ({
         <div className="form-group">
           <label>Marital Status</label>
           <select
-            value={personalInfo.maritalStatus}
+            value={personalInfo?.maritalStatus}
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             onChange={(e) => setPersonalInfo((prev: any) => ({ ...prev, maritalStatus: e.target.value }))}
           >
@@ -75,7 +75,7 @@ const PersonalTab: React.FC<PersonalTabProps> = ({
           <div className="input-with-unit">
             <input
               type="number"
-              value={getInputValue('personal', 'dependents', personalInfo.dependents)}
+              value={getInputValue('personal', 'dependents', personalInfo?.dependents)}
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
               onChange={(e) => setPersonalInfo((prev: any) => ({ ...prev, dependents: Number(e.target.value) }))}
               onFocus={() => handleInputFocus('personal', 'dependents')}
@@ -90,7 +90,7 @@ const PersonalTab: React.FC<PersonalTabProps> = ({
           <label>City of Residence</label>
           <input
             type="text"
-            value={personalInfo.city}
+            value={personalInfo?.city}
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             onChange={(e) => setPersonalInfo((prev: any) => ({ ...prev, city: e.target.value }))}
             placeholder="Enter your city"

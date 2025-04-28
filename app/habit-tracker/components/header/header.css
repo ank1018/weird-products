@@ -199,6 +199,10 @@
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
+    .header-container {
+        flex-direction: column;
+    }
+
     .dashboard-header {
         margin-top: 3rem;
     }

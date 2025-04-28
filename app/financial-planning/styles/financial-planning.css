@@ -195,7 +195,10 @@
   gap: 2rem;
 }
 
-.expense-chart, .investment-chart, .debt-chart, .goals-chart {
+.expense-chart,
+.investment-chart,
+.debt-chart,
+.goals-chart {
   background: #f8fafc;
   border-radius: 0.75rem;
   padding: 1.5rem;
@@ -234,8 +237,8 @@
 
 .ia-customized-legend {
   display: flex;
-      justify-content: center;
-      gap: 1rem;
+  justify-content: center;
+  gap: 1rem;
 }
 
 .ia-investment-form {
@@ -251,7 +254,10 @@
 }
 
 /* Forms */
-.budget-form, .debt-form, .goals-form, .retirement-calculator {
+.budget-form,
+.debt-form,
+.goals-form,
+.retirement-calculator {
   background: #f8fafc;
   border-radius: 0.75rem;
   padding: 1.5rem;
@@ -367,7 +373,7 @@
 
 @media (min-width: 768px) {
   .tabs-container {
-      /* align-items: center; */
+    /* align-items: center; */
     /* justify-content: center; */
   }
 }
@@ -378,14 +384,17 @@
   margin-bottom: 1.5rem;
   line-height: 1.4;
 }
+
 .input-with-unit {
   position: relative;
   display: flex;
   align-items: center;
 }
+
 .input-with-unit input {
   padding-right: 2.5rem;
 }
+
 .unit {
   position: absolute;
   right: 0.75rem;
@@ -393,26 +402,31 @@
   font-size: 0.9rem;
   pointer-events: none;
 }
+
 .goal-group {
   margin-bottom: 2rem;
   padding: 1rem;
   border: 1px solid #eee;
   border-radius: 0.5rem;
 }
+
 .goal-group h4 {
   margin-bottom: 1rem;
   color: #333;
 }
+
 .personal-section {
   padding: 2rem;
   background: white;
   border-radius: 0.5rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
+
 .personal-form {
   max-width: 600px;
   margin: 0 auto;
 }
+
 .form-group select {
   width: 100%;
   padding: 0.75rem;
@@ -421,10 +435,12 @@
   font-size: 1rem;
   background-color: white;
 }
+
 .form-group select:focus {
   outline: none;
   border-color: #0070f3;
 }
+
 .debt-strategy {
   margin-top: 2rem;
   padding: 1.5rem;
@@ -432,53 +448,64 @@
   border-radius: 0.5rem;
   border: 1px solid #e9ecef;
 }
+
 .debt-strategy h4 {
   color: #333;
   margin-bottom: 1rem;
 }
+
 .debt-strategy h5 {
   color: #495057;
   margin: 1rem 0;
   font-size: 1.1rem;
 }
+
 .debt-strategy ul {
   list-style: none;
   padding: 0;
   margin: 0;
 }
+
 .debt-strategy li {
   display: flex;
   align-items: flex-start;
   margin-bottom: 0.75rem;
   color: #495057;
 }
+
 .debt-strategy li svg {
   margin-right: 0.5rem;
   flex-shrink: 0;
   color: #0070f3;
 }
+
 .strategy-summary {
   margin-bottom: 1.5rem;
 }
+
 .action-items {
   border-top: 1px solid #e9ecef;
   padding-top: 1.5rem;
 }
+
 .ai-insights-section {
   padding: 2rem;
   background: white;
   border-radius: 0.5rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
+
 .insights-header {
   margin-bottom: 2rem;
 }
+
 .api-source {
   display: block;
   margin-top: 0.5rem;
   font-size: 0.9rem;
   color: #666;
 }
+
 .insights-warning,
 .insights-error {
   display: flex;
@@ -489,9 +516,11 @@
   border-radius: 0.25rem;
   margin-bottom: 1rem;
 }
+
 .insights-error {
   background: #f8d7da;
 }
+
 .insights-loading {
   display: flex;
   flex-direction: column;
@@ -499,6 +528,7 @@
   gap: 1rem;
   padding: 2rem;
 }
+
 .loading-spinner {
   width: 40px;
   height: 40px;
@@ -507,15 +537,23 @@
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
+
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
+
 .insights-list {
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
+
 .insight-item {
   display: flex;
   align-items: flex-start;
@@ -525,7 +563,34 @@
   border-radius: 0.25rem;
   border-left: 4px solid #0070f3;
 }
+
 .insight-item svg {
   flex-shrink: 0;
   color: #0070f3;
+}
+
+@media (max-width: 768px) {
+  .content-section {
+    padding: 1rem;
+  }
+
+  .personal-section {
+    padding: 0;
+    background: white;
+    border-radius: 0.5rem;
+    box-shadow: none;
+  }
+
+  .budget-form,
+  .debt-form,
+  .goals-form,
+  .retirement-calculator {
+    background-color: #ffffff;
+    border-radius: 0.75rem;
+    padding: 0;
+  }
+
+  .health-score-card {
+    padding: 1rem;
+  }
 }
