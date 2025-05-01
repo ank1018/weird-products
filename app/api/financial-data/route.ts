@@ -22,24 +22,25 @@ export async function POST(req: NextRequest) {
     if (!session?.user?.email) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
     const { data, personalInfo, retirementAge } = await req.json();
-    
+
     // Create update object with only defined values
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const updateObj: any = {};
     if (data !== undefined) updateObj.data = data;
     if (personalInfo !== undefined) updateObj.personalInfo = personalInfo;
     if (retirementAge !== undefined) updateObj.retirementAge = retirementAge;
-    
+
     // Only update if there's something to update
     if (Object.keys(updateObj).length === 0) {
         return NextResponse.json({ message: 'No data to update' });
     }
-    
+
     const updated = await FinancialData.findOneAndUpdate(
         { userEmail: session.user.email },
         { $set: updateObj },  // Use $set to only update provided fields
         { upsert: true, new: true }
     );
-    
+
     return NextResponse.json({
         data: updated.data,
         personalInfo: updated.personalInfo,

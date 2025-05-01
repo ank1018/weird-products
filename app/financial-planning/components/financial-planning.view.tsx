@@ -155,6 +155,7 @@ const FinancialPlanning = () => {
     if (!session?.user?.email) return;
 
     try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const body: any = {};
       if (data !== undefined) body.data = data;
       if (personalInfo !== undefined) body.personalInfo = personalInfo;
