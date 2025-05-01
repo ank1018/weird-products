@@ -63,7 +63,7 @@ const Header: React.FC<HeaderProps> = ({
                         onClick={() => !session ? setShowSignInDialog(true) : setShowAddForm(!showAddForm)}
                         aria-label={showAddForm ? "Cancel adding habit" : "Add new habit"}
                     >
-                        <Plus size={16}/>
+                        <Plus size={16} />
                         <span>Add Habit</span>
                     </button>}
                 </div>
@@ -109,8 +109,8 @@ const Header: React.FC<HeaderProps> = ({
                                         onChange={() => setNewHabit({ ...newHabit, type: 'follow' })}
                                     />
                                     <ThumbsUp size={16} />
-                                    <span>Habit to Follow</span>
-                                    <p className="habit-type-description">Track habits you want to build and maintain</p>
+                                    <span>Habit to Build</span>
+                                    {/* <p className="habit-type-description">Track habits you want to build and maintain</p> */}
                                 </label>
 
                                 <label className={`habit-type-option ${newHabit.type === 'leave' ? 'selected' : ''}`}>
@@ -122,8 +122,8 @@ const Header: React.FC<HeaderProps> = ({
                                         onChange={() => setNewHabit({ ...newHabit, type: 'leave' })}
                                     />
                                     <ThumbsDown size={16} />
-                                    <span>Habit to Leave</span>
-                                    <p className="habit-type-description">Track habits you want to quit or avoid</p>
+                                    <span>Habit to Break</span>
+                                    {/* <p className="habit-type-description">Track habits you want to quit or avoid</p> */}
                                 </label>
                             </div>
                         </div>
