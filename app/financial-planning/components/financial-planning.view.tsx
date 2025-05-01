@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   DollarSign,
   TrendingUp,
@@ -30,6 +30,7 @@ import FinanceDescription from "./finance-description";
 import SavingsTab from "./savings-tab";
 import { useSession } from "next-auth/react";
 import { IFinancialData, PersonalInfo } from "../models/financial-data.model";
+import { debounce } from 'lodash';
 
 // Add AI Insights state and types
 interface AIInsights {
@@ -147,32 +148,46 @@ const FinancialPlanning = () => {
   });
 
   const saveFinancialData = async (
-    data: IFinancialData,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    personalInfo: any,
+    data: IFinancialData | undefined,
+    personalInfo: PersonalInfo | undefined,
     retirementAge: number | null
   ) => {
     if (!session?.user?.email) return;
-    await fetch('/api/financial-data', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ data, personalInfo, retirementAge }),
-    });
+
+    try {
+      const body: any = {};
+      if (data !== undefined) body.data = data;
+      if (personalInfo !== undefined) body.personalInfo = personalInfo;
+      if (retirementAge !== undefined && retirementAge !== null) body.retirementAge = retirementAge;
+
+      if (Object.keys(body).length === 0) return;
+
+      const response = await fetch('/api/financial-data', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+
+      if (!response.ok) {
+        console.error('Failed to save financial data:', await response.text());
+      }
+    } catch (error) {
+      console.error('Error saving financial data:', error);
+    }
   };
 
-  // Load saved data from localStorage after initial render
-  // useEffect(() => {
-  //   const savedData = localStorage.getItem('financialData');
-  //   if (savedData) {
-  //     setFinancialData(JSON.parse(savedData));
-  //   }
-  // }, []);
+  const debouncedSave = useCallback(
+    debounce((data: IFinancialData | undefined, personalInfo: PersonalInfo | undefined, retirementAge: number | null) => {
+      saveFinancialData(data, personalInfo, retirementAge);
+    }, 500),
+    [session?.user?.email]
+  );
 
-  // Save to localStorage whenever financialData changes
   useEffect(() => {
-    saveFinancialData(financialData, personalInfo, retirementAge)
-    // localStorage.setItem('financialData', JSON.stringify(financialData));
-  }, [financialData]);
+    if (session?.user?.email) {
+      debouncedSave(financialData, personalInfo, retirementAge);
+    }
+  }, [financialData, personalInfo, retirementAge, debouncedSave, session?.user?.email]);
 
   // Load activeTab from localStorage
   useEffect(() => {
@@ -191,22 +206,7 @@ const FinancialPlanning = () => {
     }
   }, [activeTab]);
 
-  // Load retirementAge from localStorage
-  // useEffect(() => {
-  //   if (typeof window !== 'undefined') {
-  //     const savedAge = localStorage.getItem('retirementAge');
-  //     if (savedAge) {
-  //       setRetirementAge(Number(savedAge));
-  //     }
-  //   }
-  // }, []);
 
-  // Save retirementAge to localStorage when it changes
-  useEffect(() => {
-    // if (typeof window !== 'undefined') {
-    //   localStorage.setItem('retirementAge', retirementAge.toString());
-    // }
-  }, [retirementAge]);
 
   // First effect: Calculate totals and update financialData
   useEffect(() => {
@@ -614,11 +614,6 @@ const FinancialPlanning = () => {
     const numValue = typeof value === 'number' ? value : 0;
     return formatCurrency(numValue);
   };
-
-  // Save personal info to localStorage
-  useEffect(() => {
-    saveFinancialData(financialData, personalInfo, retirementAge)
-  }, [personalInfo]);
 
   // Add function to check if all required data is filled
   const isDataComplete = (): boolean => {
