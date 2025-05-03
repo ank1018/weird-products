@@ -13,7 +13,7 @@ import { useSession } from 'next-auth/react';
 import Header from './header/header';
 import SignInDialog from '../../sign-in/sign-in-dialog';
 import HabitCardView from "./habit-card/habit-card.view";
-import HabitCalenderView from './habit-calender/habit-calender.view';
+import HabitCalenderView from './habit-calender/habit-calendar.view';
 import HabitTableView from './habit-table/habit-table.view';
 import { isDateCompleted } from '../helper/utils';
 
