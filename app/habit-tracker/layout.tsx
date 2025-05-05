@@ -5,7 +5,7 @@ export const metadata: Metadata = {
     title: 'Habit Tracker | Finance 101',
     description: 'Track your daily habits and build a better lifestyle.',
     keywords: ['habit tracker', 'daily habits', 'lifestyle', 'productivity', 'self-improvement'],
-    authors: [{ name: 'Ankur Singh' }],
+    // authors: [{ name: 'Ankur Singh' }],
     openGraph: {
         title: 'Habit Tracker | Finance 101',
         description: 'Track your daily habits and build a better lifestyle.',
@@ -32,4 +32,4 @@ export default function HabitTrackerLayout({
             {children}
         </div>
     )
-} 
+}
