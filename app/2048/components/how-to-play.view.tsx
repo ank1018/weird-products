@@ -180,6 +180,9 @@ const HowToPlay: React.FC<HowToPlayProps> = ({ isOpen, onClose }) => {
                     .how-to-play-content {
                         padding: 20px;
                         width: 95%;
+                        position: absolute;
+                        top: 0;
+                        bottom: 0;
                     }
 
                     .instruction-card {

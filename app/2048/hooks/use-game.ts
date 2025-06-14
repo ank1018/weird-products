@@ -8,6 +8,7 @@ interface Tile {
 }
 
 const BoardSize = 4;
+const HIGH_SCORE_KEY = '2048_high_score';
 
 // UUID generator function
 const generateUUID = () => {
@@ -21,7 +22,20 @@ const generateUUID = () => {
 export const useGame = () => {
     const [board, setBoard] = useState<Tile[][]>([]);
     const [score, setScore] = useState(0);
+    const [highScore, setHighScore] = useState(() => {
+        if (typeof window !== 'undefined') {
+            return parseInt(localStorage.getItem(HIGH_SCORE_KEY) || '0', 10);
+        }
+        return 0;
+    });
     const [gameOver, setGameOver] = useState(false);
+
+    // Update high score in localStorage when it changes
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            localStorage.setItem(HIGH_SCORE_KEY, highScore.toString());
+        }
+    }, [highScore]);
 
     const addRandomTile = useCallback((currentBoard: Tile[][]) => {
         const emptyTiles: { i: number; j: number }[] = [];
@@ -180,11 +194,16 @@ export const useGame = () => {
             setBoard(newBoard);
             setScore(newScore);
 
+            // Update high score if current score is higher
+            if (newScore > highScore) {
+                setHighScore(newScore);
+            }
+
             if (checkGameOver(newBoard)) {
                 setGameOver(true);
             }
         }
-    }, [board, score, gameOver, addRandomTile, checkGameOver]);
+    }, [board, score, gameOver, addRandomTile, checkGameOver, highScore]);
 
     // Add keyboard controls
     useEffect(() => {
@@ -224,6 +243,7 @@ export const useGame = () => {
     return {
         board,
         score,
+        highScore,
         gameOver,
         initializeBoard,
         moveTiles,

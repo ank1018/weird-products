@@ -11,6 +11,7 @@ interface Tile {
 interface GameContextType {
     board: Tile[][];
     score: number;
+    highScore: number;
     gameOver: boolean;
     moveTiles: (direction: 'up' | 'down' | 'left' | 'right') => void;
     initializeBoard: () => void;
