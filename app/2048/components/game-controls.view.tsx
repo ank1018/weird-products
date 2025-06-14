@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { ArrowUp, ArrowDown, ArrowLeft, ArrowRight, HelpCircle } from 'lucide-react';
+import { ArrowUp, ArrowDown, ArrowLeft, ArrowRight } from 'lucide-react';
 import { useGameContext } from '../context/game-context';
-import HowToPlay from './how-to-play.view';
 
 const GameControls: React.FC = () => {
     const { moveTiles, gameOver } = useGameContext();
-    const [isMobile, setIsMobile] = useState(false);
-    const [isHowToPlayOpen, setIsHowToPlayOpen] = useState(false);
+    const [, setIsMobile] = useState(false);
 
     useEffect(() => {
         const checkMobile = () => {

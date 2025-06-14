@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext } from 'react';
 import { useGame } from '../hooks/use-game';
 
 interface Tile {
@@ -20,10 +20,6 @@ interface GameContextType {
 const GameContext = createContext<GameContextType | undefined>(undefined);
 
 export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const [board, setBoard] = useState<Tile[][]>([]);
-    const [score, setScore] = useState(0);
-    const [gameOver, setGameOver] = useState(false);
-
     const gameState = useGame();
     return <GameContext.Provider value={gameState}>{children}</GameContext.Provider>;
 };

@@ -7,8 +7,6 @@ interface HowToPlayProps {
 }
 
 const HowToPlay: React.FC<HowToPlayProps> = ({ isOpen, onClose }) => {
-    if (!isOpen) return null;
-
     useEffect(() => {
         if (isOpen) {
             document.body.style.overflow = 'hidden';
@@ -17,6 +15,8 @@ const HowToPlay: React.FC<HowToPlayProps> = ({ isOpen, onClose }) => {
             document.body.style.overflow = 'auto';
         };
     }, [isOpen]);
+
+    if (!isOpen) return null;
 
     return (
         <div
