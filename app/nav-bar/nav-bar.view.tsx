@@ -26,6 +26,7 @@ export default function NavBarView() {
       { name: "Financial Planning", path: "/financial-planning" },
     ],
     games: [
+      { name: "2048", path: "/2048" },
       { name: "Find The Animal", path: "/find-the-animal" },
       { name: "Catch The Shapes", path: "/shadow-shapes" },
     ],
