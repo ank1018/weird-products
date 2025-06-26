@@ -12,7 +12,7 @@ const PrivacyPolicyView: React.FC = () => {
 
             <div className="section">
                 <h2>1. Introduction</h2>
-                <p>This Privacy Policy explains how the AI Interview Monitor Chrome extension ("we", "our", or "us") collects,
+                <p>This Privacy Policy explains how the AI Interview Monitor Chrome extension (&ldquo;we&rdquo;, &ldquo;our&rdquo;, or &ldquo;us&rdquo;) collects,
                     uses, and protects your information when you use our extension.</p>
 
                 <div className="highlight">
@@ -139,7 +139,7 @@ const PrivacyPolicyView: React.FC = () => {
             </div>
 
             <div className="section">
-                <h2>9. Children's Privacy</h2>
+                <h2>9. Children&apos;s Privacy</h2>
                 <p>This extension is not intended for use by children under 13 years of age. We do not knowingly collect
                     personal information from children under 13. If you are a parent or guardian and believe your child has
                     provided us with personal information, please contact us immediately.</p>
@@ -157,7 +157,7 @@ const PrivacyPolicyView: React.FC = () => {
                 <ul>
                     <li>Posting the new Privacy Policy in the extension</li>
                     <li>Sending you an email notification</li>
-                    <li>Updating the "Last updated" date</li>
+                    <li>Updating the &ldquo;Last updated&rdquo; date</li>
                 </ul>
                 <p>Your continued use of the extension after changes constitutes acceptance of the updated policy.</p>
             </div>
