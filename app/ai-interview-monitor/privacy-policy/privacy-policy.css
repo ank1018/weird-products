@@ -1,0 +1,59 @@
+.privacy-policy-container {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    color: #333;
+}
+
+.privacy-policy-container h1,
+.privacy-policy-container h2,
+.privacy-policy-container h3 {
+    color: #2c3e50;
+}
+
+.privacy-policy-container .header {
+    text-align: center;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 20px;
+    margin-bottom: 30px;
+}
+
+.privacy-policy-container .section {
+    margin-bottom: 30px;
+}
+
+.privacy-policy-container .highlight {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-left: 4px solid #3498db;
+    margin: 20px 0;
+}
+
+.privacy-policy-container .contact {
+    background-color: #e8f5e8;
+    padding: 15px;
+    border-radius: 5px;
+    margin-top: 30px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .privacy-policy-container {
+        padding: 15px;
+        font-size: 14px;
+    }
+
+    .privacy-policy-container h1 {
+        font-size: 24px;
+    }
+
+    .privacy-policy-container h2 {
+        font-size: 20px;
+    }
+
+    .privacy-policy-container h3 {
+        font-size: 16px;
+    }
+}
