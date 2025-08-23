@@ -2,8 +2,8 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { Menu, X, ChevronDown, LogIn, LogOut, User } from "lucide-react";
-import SignInDialog from '../sign-in/sign-in-dialog';
-import './nav-bar.css'
+import SignInDialog from "../sign-in/sign-in-dialog";
+import "./nav-bar.css";
 import { useSession, signOut } from "next-auth/react";
 
 export default function NavBarView() {
@@ -32,7 +32,8 @@ export default function NavBarView() {
     ],
     tools: [
       { name: "Check Your Personality", path: "/personality-predictor" },
-    ]
+      { name: "AI Marketing Agent", path: "/ai-marketing-agent" },
+    ],
   };
 
   return (
@@ -40,12 +41,14 @@ export default function NavBarView() {
       <nav className="navbar">
         {/* Brand / Logo - always visible */}
         <div className="nav-brand">
-          <Link href="/" className="nav-link brand-link" onClick={() => setMenuOpen(false)}>
+          <Link
+            href="/"
+            className="nav-link brand-link"
+            onClick={() => setMenuOpen(false)}
+          >
             WoW
           </Link>
         </div>
-
-
 
         <div className="left-section">
           {/* Desktop Navigation with Dropdowns */}
@@ -58,7 +61,12 @@ export default function NavBarView() {
                     onClick={() => toggleDropdown(category)}
                   >
                     {category.charAt(0).toUpperCase() + category.slice(1)}
-                    <ChevronDown className={`dropdown-icon ${activeDropdown === category ? 'rotated' : ''}`} size={16} />
+                    <ChevronDown
+                      className={`dropdown-icon ${
+                        activeDropdown === category ? "rotated" : ""
+                      }`}
+                      size={16}
+                    />
                   </button>
                   {activeDropdown === category && (
                     <ul className="dropdown-menu">
@@ -98,19 +106,29 @@ export default function NavBarView() {
               </button>
             ) : (
               <div className="user-dropdown">
-                <button className="dropdown-toggle" aria-haspopup="true" aria-expanded="false" onClick={() => toggleDropdown('profile')}>
+                <button
+                  className="dropdown-toggle"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                  onClick={() => toggleDropdown("profile")}
+                >
                   <User size={20} />
-                  <span className="nav-desktop">{session.user?.name || 'User'}</span>
-                  <ChevronDown size={16} className="dropdown-icon nav-desktop" />
+                  <span className="nav-desktop">
+                    {session.user?.name || "User"}
+                  </span>
+                  <ChevronDown
+                    size={16}
+                    className="dropdown-icon nav-desktop"
+                  />
                 </button>
-                {activeDropdown === 'profile' && (
+                {activeDropdown === "profile" && (
                   <div className="dropdown-menu">
                     <div className="dropdown-header">
                       Welcome, {session.user?.name}
                     </div>
                     <div className="dropdown-header">
                       <Link
-                        href={'/habit-tracker'}
+                        href={"/habit-tracker"}
                         onClick={() => setActiveDropdown(null)}
                       >
                         Habit Tracker
@@ -118,12 +136,16 @@ export default function NavBarView() {
                     </div>
                     <div className="dropdown-header">
                       <Link
-                        href={'/financial-planning'}
+                        href={"/financial-planning"}
                         onClick={() => setActiveDropdown(null)}
                       >
                         Financial Planning
-                      </Link></div>
-                    <button onClick={() => signOut()} className="dropdown-item sign-out-button">
+                      </Link>
+                    </div>
+                    <button
+                      onClick={() => signOut()}
+                      className="dropdown-item sign-out-button"
+                    >
                       <LogOut size={16} />
                       <span>Sign out</span>
                     </button>
@@ -156,7 +178,12 @@ export default function NavBarView() {
                   onClick={() => toggleDropdown(category)}
                 >
                   {category.charAt(0).toUpperCase() + category.slice(1)}
-                  <ChevronDown className={`dropdown-icon ${activeDropdown === category ? 'rotated' : ''}`} size={16} />
+                  <ChevronDown
+                    className={`dropdown-icon ${
+                      activeDropdown === category ? "rotated" : ""
+                    }`}
+                    size={16}
+                  />
                 </button>
 
                 {activeDropdown === category && (
