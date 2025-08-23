@@ -1,0 +1,76 @@
+.zenflow-terms-container {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.6;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  color: #333;
+}
+
+.zenflow-terms-container h1,
+.zenflow-terms-container h2,
+.zenflow-terms-container h3 {
+  color: #2c3e50;
+}
+
+.zenflow-terms-container .header {
+  text-align: center;
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 20px;
+  margin-bottom: 30px;
+}
+
+.zenflow-terms-container .section {
+  margin-bottom: 30px;
+}
+
+.zenflow-terms-container .highlight {
+  background-color: #f8f9fa;
+  padding: 15px;
+  border-left: 4px solid #3498db;
+  margin: 20px 0;
+}
+
+.zenflow-terms-container .contact {
+  background-color: #e8f5e8;
+  padding: 15px;
+  border-radius: 5px;
+  margin-top: 30px;
+}
+
+.zenflow-terms-container .footer {
+  background-color: #f8f9fa;
+  padding: 15px;
+  border-radius: 5px;
+  margin-top: 30px;
+  text-align: center;
+  font-style: italic;
+}
+
+.zenflow-terms-container ul {
+  margin-left: 20px;
+}
+
+.zenflow-terms-container li {
+  margin-bottom: 8px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .zenflow-terms-container {
+    padding: 15px;
+    font-size: 14px;
+  }
+
+  .zenflow-terms-container h1 {
+    font-size: 24px;
+  }
+
+  .zenflow-terms-container h2 {
+    font-size: 20px;
+  }
+
+  .zenflow-terms-container h3 {
+    font-size: 16px;
+  }
+}
